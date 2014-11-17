@@ -1,0 +1,66 @@
+*
+{
+	color: inherit;
+	text-decoration: none;
+	margin: 0;
+	padding: 0;
+}
+
+body
+{
+	font-size: 16px;
+	background-color: #ffffff;
+}
+
+.commentWrapper
+{
+	width: 13.75em;
+	min-height: 2.75em;
+    
+	background-color: #f9c82e;
+	border-bottom: 0.0625em solid #FFFFFF
+	font-size: 1em;
+	font-family: 'latolight';
+    color: white;
+	
+	padding: 1.25em 0.625em;
+}
+
+
+
+.commentWrapper:hover
+{
+	background-color: #e6b61e;
+    overflow-y: visible;
+	cursor:pointer;
+}
+
+.content-long {
+    text-align: inherit;
+    display: none;
+    color: inherit;
+}
+
+.content-short {
+    text-align: inherit;
+    display: block;
+	color: inherit;
+}
+
+.current {
+    display: block;
+}
+
+.commentWrapper img
+{
+	width: 2.75em;
+	height: 2.75em;
+	float: left;
+	margin: 0.125em;
+	margin-right: 0.5em;
+	margin-top: 0;
+}
+
+.active-comment {
+    background-color: #e6b61e;
+}
