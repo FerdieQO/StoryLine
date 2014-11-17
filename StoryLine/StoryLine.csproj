@@ -59,6 +59,15 @@
   <ItemGroup>
     <Content Include="game.html" />
     <Content Include="quintus.js" />
+    <Content Include="quintus_2d.js" />
+    <Content Include="quintus_anim.js" />
+    <Content Include="quintus_audio.js" />
+    <Content Include="quintus_input.js" />
+    <Content Include="quintus_scenes.js" />
+    <Content Include="quintus_sprites.js" />
+    <Content Include="quintus_tmx.js" />
+    <Content Include="quintus_touch.js" />
+    <Content Include="quintus_ui.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
