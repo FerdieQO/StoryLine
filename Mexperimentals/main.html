@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>StoryLine</title>
+        <link rel="shortcut icon" href="">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="src/lato/stylesheet.css"/>
+
+        <link rel="stylesheet" href="css/navbar.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/scenario.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+
+        <script src="js/comments.js"></script>
+
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container navbar-default">
+                <img class="logo hidden" src="src/Logo-StoryLine.png" alt="STORYLINE">
+                <img class="logo hidden" src="src/StoryLine-logo.png" alt="STORYLINE">
+                <img class="logo" src="src/Logo-StoryLine-2.png" alt="STORYLINE">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".menu-dropdown">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse menu-dropdown">
+                <ul class="nav navbar-nav">
+                    <li>Nieuw scenario</li>
+                    <li>Verwijder scenario</li>
+                </ul>
+            </div>
+        </nav>
+
+        <ul class="scenario-list">
+
+            <li class="scenarioWrapper">
+                <div class="scenario">
+                    <div class="color-bar talk"></div>
+                    <img class="event" src="src/events/actionIcon%5Bkletsen%5D.png">
+
+                    <p style="text-align: center;">Kletsen</p>
+                    <div class="element-divider"></div>
+
+                    <div class="emotions">
+                        <img class="emotion" src="src/emotions/emotieIcon%5Bnieuwsgierig%5D.png">
+                        <img class="emotion pull-right" src="src/emotions/emotieIcon%5Beenzaam%5D.png">
+                    </div>
+
+                    <div class="element-divider"></div>
+
+                    <div class="comment-list">
+                        <div class="commentWrapper">
+                            <p class="content-short"></p>
+                            <p class="content-long"></p>
+                            <textarea class="content-edit"></textarea>
+                        </div>
+                        <div class="commentWrapper">
+                            <p class="content-short"></p>
+                            <p class="content-long"></p>
+                            <textarea class="content-edit"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+
+            <li class="scenarioWrapper">
+                <div class="scenario">
+                    <div class="color-bar hold-hands"></div>
+                    <img class="event" src="src/events/actionIcon%5Bhanden%5D.png">
+                    <p style="text-align: center;">Handen vasthouden</p>
+                </div>
+            </li>
+
+
+            <li class="scenarioWrapper">
+                <div class="scenario">
+                    <div class="color-bar cuddle"></div>
+                    <img class="event" src="src/events/actionIcon%5Bknuffelen%5D.png">
+                    <p style="text-align: center;">Knuffelen</p>
+                </div>
+            </li>
+
+
+            <li class="scenarioWrapper">
+                <div class="scenario">
+                    <div class="color-bar kiss"></div>
+                    <img class="event" src="src/events/actionIcon%5Bkussen%5D.png">
+                    <p style="text-align: center;">Kussen</p>
+                </div>
+            </li>
+
+
+            <li class="scenarioWrapper">
+                <div class="color-bar"></div>
+                <p style="text-align: center;">Add new Scenario</p>
+            </li>
+
+        </ul>
+    </body>
+</html>
