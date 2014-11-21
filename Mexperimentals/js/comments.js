@@ -5,13 +5,17 @@ var main = function () {
     var contentShort = $('.content-short').empty().html("<img src='src/emotions/emotieIcon%5Bopgewonden%5D.png' alt='nope'/>Contains a small description..."),
         commentLong = $('.content-long').empty().html("<img src='src/emotions/emotieIcon%5Bopgewonden%5D.png' alt='nope'/>Has some details. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis diam consectetur quam porttitor faucibus vitae in diam. In at turpis dignissim, faucibus felis at, dictum ex. Curabitur faucibus, sapien quis finibus lacinia, odio arcu ultrices eros, nec scelerisque mauris neque id erat. Nullam elementum tincidunt rhoncus. Nulla facilisi. Ut suscipit dolor ipsum, et semper augue auctor ac. Etiam sem sem, congue id dolor et, semper pellentesque odio. Nullam id volutpat leo. Nulla facilisi. Nunc eget ullamcorper dui. Aliquam at nulla non eros tristique viverra sit amet in dolor. Sed placerat augue in ullamcorper dignissim. Not actual details.");
 
-    
+
     $('.commentWrapper').each(function () {
-        divs.push($(this).children('.content-short').text());
-        console.log($(this).children('.content-short').text());
-        $(this).children('.content-short').show();
-        divs.push($(this).children('.content-long').text());
-        console.log($(this).children('.content-long').text());
+        if ($(this).hasClass('new')) {
+            $(this).children('.content-edit').show();
+        } else {
+            divs.push($(this).children('.content-short').text());
+            console.log($(this).children('.content-short').text());
+            $(this).children('.content-short').show();
+            divs.push($(this).children('.content-long').text());
+            console.log($(this).children('.content-long').text());
+        }
     });
 
     $('.commentWrapper').click(function () {
@@ -45,6 +49,10 @@ var main = function () {
             });
             $(this).addClass('active-comment');
         }
+    });
+    
+    $('.comment-edit').keyup(function () {
+        
     });
 };
 

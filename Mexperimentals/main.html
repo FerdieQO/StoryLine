@@ -1,3 +1,7 @@
+<?php
+session_start();
+include 'php/connect.php';
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -47,10 +51,10 @@
         </nav>
 
         <ul class="scenario-list">
-
             <li class="scenarioWrapper">
+                <div class="color-bar talk"></div>
                 <div class="scenario">
-                    <div class="color-bar talk"></div>
+
                     <img class="event" src="src/events/actionIcon%5Bkletsen%5D.png">
 
                     <p style="text-align: center;">Kletsen</p>
@@ -67,21 +71,25 @@
                         <div class="commentWrapper">
                             <p class="content-short"></p>
                             <p class="content-long"></p>
-                            <textarea class="content-edit"></textarea>
+
                         </div>
                         <div class="commentWrapper">
                             <p class="content-short"></p>
                             <p class="content-long"></p>
-                            <textarea class="content-edit"></textarea>
+
+                        </div>
+                        <div class="commentWrapper new">
+                            <textarea class="form-control content-edit" rows="3">
+                            </textarea>
                         </div>
                     </div>
                 </div>
             </li>
 
-
             <li class="scenarioWrapper">
+                <div class="color-bar hold-hands"></div>
                 <div class="scenario">
-                    <div class="color-bar hold-hands"></div>
+
                     <img class="event" src="src/events/actionIcon%5Bhanden%5D.png">
                     <p style="text-align: center;">Handen vasthouden</p>
                 </div>
@@ -89,8 +97,9 @@
 
 
             <li class="scenarioWrapper">
+                <div class="color-bar cuddle"></div>
                 <div class="scenario">
-                    <div class="color-bar cuddle"></div>
+
                     <img class="event" src="src/events/actionIcon%5Bknuffelen%5D.png">
                     <p style="text-align: center;">Knuffelen</p>
                 </div>
@@ -98,8 +107,9 @@
 
 
             <li class="scenarioWrapper">
+                <div class="color-bar kiss"></div>
                 <div class="scenario">
-                    <div class="color-bar kiss"></div>
+
                     <img class="event" src="src/events/actionIcon%5Bkussen%5D.png">
                     <p style="text-align: center;">Kussen</p>
                 </div>
