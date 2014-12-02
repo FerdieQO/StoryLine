@@ -1,0 +1,2 @@
+var emotions = new Array();
+
