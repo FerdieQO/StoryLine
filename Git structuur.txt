@@ -1,0 +1,18 @@
+Good day everyone, ladies, hmm... and the gentlemen,
+
+Hierbij de nieuwe GIT en folderstructuur van StoryLine.
+Vanaf nu wordt de volledige source code in de map StoryLine gezet.
+De MASTER branche wordt enkel gebruikt voor versies en componenten die AF en GETEST zijn.
+Alleen stabiele builds in de MASTER dus!
+In dit geval wordt de basis zoals Merlijn die heeft gemaakt gebruikt als skelet van StoryLine, wat onze eerste MASTER commit wordt.
+Vanuit hier kunnen we namelijk alle features toe gaan voegen.
+Iedere feature die vanuit het skelet wordt gebouwd wordt ontwikkeld vanuit een aparte branch!
+Zie alsjeblieft de tekening om overzicht te krijgen op hoe het eruit ziet!
+
+Kort:
+- MASTER (in dit geval skelet)
+- Woordsuggesties
+- Scenario
+	-- Interface
+	-- Emoties en gebeurtenissen
+	-- Comments
