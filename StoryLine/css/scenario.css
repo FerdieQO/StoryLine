@@ -1,0 +1,201 @@
+
+/* Scenario-list */
+.scenario-list {
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: inline-flex;
+}
+
+.scenario-list > li:nth-child(even) {
+    background-color: #eee;
+}
+
+.scenario-list > li:nth-child(odd) {
+    background-color: #ddd;
+}
+/* !Scenario-list */
+
+/* Scenario */
+.scenarioWrapper {
+    min-width: 25em;
+    width: 25em;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: hidden;
+    
+    border-top: 1px solid #ccc;
+    border-bottom: 2px solid #ccc;
+}
+
+@media (max-width: 767px) {
+    .scenarioWrapper {
+        min-width: 80%;
+        width: 80%;
+        max-width: 25em;
+        height: 100%;
+        max-height: 100%;
+        border-top: 1px solid #ccc;
+        border-bottom: 2px solid #ccc;
+    }
+}
+
+.scenario {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+
+    background-color: inherit;
+}
+
+.color-bar {
+    height: 1em;
+}
+
+.scenario .element-divider {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    border-bottom: 3px solid #ccc;
+}
+
+.scenario .event {
+    margin-left: auto;
+    margin-right: auto;
+    width: inherit;
+}
+
+.scenario .emotions {
+    padding: 5%;
+}
+
+.scenario .emotion {
+    background-color: #ccc;
+    width: 47%;
+}
+
+/* Comments-section in scenario */
+.comment-list-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 90%;
+    margin-bottom: 1.25em;
+}
+
+.comment-list {
+    
+}
+
+.comment-list > div:nth-child(even) {
+    background-color: #d0d0d0;
+}
+
+.comment-list > div:nth-child(odd) {
+    background-color: #d5d5d5;
+}
+
+.commentWrapper
+{
+    margin-left: auto;
+    margin-right: auto;
+
+    min-height: 5em;
+
+    border-bottom: 1px solid #ccc;
+    font-size: 1em;
+    font-family: 'latolight';
+    color: white;
+
+    padding: 1.25em 0.625em;
+}
+
+.commentWrapper:hover
+{
+    background-color: #e6b61e;
+    overflow-y: visible;
+    cursor:pointer;
+}
+
+.content-short {
+    text-align: inherit;
+    display: none;
+    color: inherit;
+}
+
+.content-long {
+    text-align: inherit;
+    display: none;
+    color: inherit;
+}
+
+.content-edit {
+    text-align: inherit;
+    display: none;
+    
+}
+
+.commentWrapper textarea {
+    resize: none;
+    border: 0px;
+}
+
+.commentWrapper img
+{
+    width: 2.75em;
+    height: 2.75em;
+    float: left;
+    margin: 0.125em;
+    margin-right: 0.5em;
+    margin-top: 0;
+}
+
+.active-comment {
+    background-color: #fff;
+}
+/* !Comments-section in scenario */
+/* !Scenario */
+
+.active-scenario {
+    
+}
+
+/* Active color if the element in a talk scenario has class show or the scenario is active */
+li.scenarioWrapper.talk .light.show, li.scenarioWrapper.talk.active-scenario .light {
+    background-color: rgb(249, 200, 46);
+}
+
+/* Active color if the element in a talk scenario has class show or the scenario is active */
+li.scenarioWrapper.talk .dark.show, li.scenarioWrapper.talk.active-scenario .dark {
+    background-color: rgb(230, 182, 30);
+}
+
+.talk active-comment {
+    background-color: #e6b61e;
+}
+
+.hold-hands {
+    background-color: rgb(193, 57, 43);
+}
+
+/* Active color if the element in a talk scenario has class show or the scenario is active */
+li.scenarioWrapper.hold-hands .light.show, li.scenarioWrapper.hold-hands.active-scenario .light {
+    background-color: rgb(193, 57, 43);
+}
+
+/* Active color if the element in a talk scenario has class show or the scenario is active */
+li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-scenario .dark {
+    background-color: rgb(174, 39, 43);
+}
+
+.cuddle {
+    background-color: #5d2e4e;
+}
+
+.kiss {
+    background-color: #ccc;
+}
