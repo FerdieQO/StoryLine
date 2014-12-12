@@ -25,18 +25,12 @@ StoryLine.CommentManager.prototype = {
 
 
         // Temporary
-        var contentShort = $('.content-short').empty().html("<img src='src/emotions/emotieIcon%5Bopgewonden%5D.png' alt='nope'/>Contains a small description..."),
-            commentLong = $('.content-long').empty().html("<img src='src/emotions/emotieIcon%5Bopgewonden%5D.png' alt='nope'/>Has some details. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis diam consectetur quam porttitor faucibus vitae in diam. In at turpis dignissim, faucibus felis at, dictum ex. Curabitur faucibus, sapien quis finibus lacinia, odio arcu ultrices eros, nec scelerisque mauris neque id erat. Nullam elementum tincidunt rhoncus. Nulla facilisi. Ut suscipit dolor ipsum, et semper augue auctor ac. Etiam sem sem, congue id dolor et, semper pellentesque odio. Nullam id volutpat leo. Nulla facilisi. Nunc eget ullamcorper dui. Aliquam at nulla non eros tristique viverra sit amet in dolor. Sed placerat augue in ullamcorper dignissim. Not actual details.");
-
-        var count = 1;
         $('.commentWrapper').each(function () {
             if ($(this).hasClass('template')) {
                 $(this).children('.placeholder').show();
             } else {
                 var short = $(this).children('.content-short');
                 short.show();
-                short.html(short.html() + count);
-                count += 1;
             }
         });
 
@@ -44,17 +38,13 @@ StoryLine.CommentManager.prototype = {
             var commentWrapper = $(this);
             // if this commentWrapper is the template: make the textarea visible
             if ($(this).hasClass('template')) {
-                
+                //$(this).
             } else {
-                
-            }
-            
-            // otherwise toggle the visibility
-            
-            
-            var hasOpen = StoryLine.CommentManager.toggleComment(commentWrapper);
+                // otherwise toggle the visibility
+                var hasOpen = StoryLine.CommentManager.toggleComment(commentWrapper);
 
-            $(this).parent('.comment-list').sortable("option", "disabled", hasOpen);
+                $(this).parent('.comment-list').sortable("option", "disabled", hasOpen);
+            }
         });
 
         $('.content-edit').keyup(function () {
@@ -115,7 +105,7 @@ StoryLine.CommentManager.prototype = {
         var commentWrapper = $('<div>')
         .addClass('commentWrapper')
         .addClass('light');
-        
+
         var p = $('<p>').text(text);
         var img = $('<img>').src(img).prependTo(p);
 

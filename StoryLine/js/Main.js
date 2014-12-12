@@ -3,7 +3,6 @@ var StoryLine = StoryLine || {};
 
 
 StoryLine.Main = function () {
-    
     StoryLine.CommentManager = new StoryLine.CommentManager();
     StoryLine.DatabaseManager = new StoryLine.DatabaseManager();
     StoryLine.ScenarioManager = new StoryLine.ScenarioManager();

@@ -10,18 +10,29 @@ StoryLine.ScenarioManager = function () {
 StoryLine.ScenarioManager.prototype = {
     create: function () {
         // Set templateScenario
+        $('.scenario-list').load("../templates/scenario.html .scenarioWrapper.template");
+        var comments = $('.scenarioWrapper.template .comment-list');
+
+        //console.log($('.scenario'));
+        //console.log(comments);
+        comments.load("../templates/comment.html .commentWrapper.template", function () {
+            console.log("Lol");
+        });
         this.templateScenario = $('.scenarioWrapper.template');
-        
+        //console.log(comments);
+        //comments;
+
         // initialize each scenario
         // will eventually be replaced when implementing loading since the scenario's must then be created while loading.
         $('.scenarioWrapper:not(.template)').each(function (index, scenario) {
             // Clone scenarioWrapper.template
             var template = StoryLine.ScenarioManager.templateScenario.clone(true);
+
             var elements = template.contents();
-            console.log(elements);
+            //console.log(elements);
             elements.appendTo(scenario);
         });
-        
+
         // On mousedown on the scenario
         $('.scenarioWrapper').mousedown(function () {
             var scenarioWrapper = $(this);
@@ -37,13 +48,36 @@ StoryLine.ScenarioManager.prototype = {
         // Event
         // 
     },
-    createScenarioTemplate: function () {
-        // This is the template, the template can be cloned
+    cloneScenarioTemplate: function () {
+        // Create a new div scenarioWrapper
+        var scenarioWrapper = $('<div>').addClass('scenarioWrapper');
+        // Clone scenarioWrapper.template
+        var template = StoryLine.ScenarioManager.templateScenario.clone(true);
+
+        var elements = template.contents();
+        elements.appendTo(scenarioWrapper);
+        // Return the div, you'll need to hook it into the correct place.
+        return scenarioWrapper;
+    },
+    setScenarioEvent: function (scenarioWrapper, event) {
+        if (scenarioWrapper.hasClass('template')) {
+            return;
+        }
+        // how to remove class where you don't know which one it is?
+        // Current method is ugly as ****.
+        var events = ["talk", "kiss", "cuddle", "hold-hands"];
+        for (var i = 0; i < events.length; i++){
+            if (events[i] == event) {
+                scenarioWrapper.addClass(event);
+            } else {
+                scenarioWrapper.removeClass(event);
+            }
+        }
     },
     selectScenario: function (scenarioWrapper) {
         // change color (class)
         // enable sorting comments
-        
+
         var oldWrapper;
         var commentList = scenarioWrapper.children('.comment-list');
         if (scenarioWrapper.hasClass('active-scenario')) {
