@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>StoryLine</title>
+        <link rel="shortcut icon" href="">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="src/lato/stylesheet.css"/>
+
+        <link rel="stylesheet" href="css/colors.css">
+        <link rel="stylesheet" href="css/demo.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <div id="coloring">
+                <!-- 
+Template:
+
+overall classes: {
+'light' or 'dark' define color choice,
+'show' show the chosen color
+}
+NOTE: define color choices for every element
+
+div: [class: "scenario"]
+'talk', 'hold-hands', 'cuddle' or 'kiss' define the event type 
+
+
+div: [class: "element"]
+-->
+                <!-- [Scenario] -->
+                <!-- 'talk', 'hold-hands', 'cuddle', 'kiss' -->
+                <div class="scenario talk light">
+                    <!-- [Element] -->
+                    <div class="element light show"></div>
+                    <!-- [Element] -->
+                    <div class="element dark show"></div>
+                </div>
+                <div class="scenario hold-hands light">
+                    <div class="element light show"></div>
+                    <div class="element dark show"></div>
+                </div>
+                <div class="scenario cuddle light">
+                    <div class="element light show"></div>
+                    <div class="element dark show"></div>
+                </div>
+                <div class="scenario kiss light">
+                    <div class="element light show"></div>
+                    <div class="element dark show"></div>
+                </div>
+            </div>
+
+
+            <div id="items">
+                <!-- [Glyphicons] -->
+                <div class="icon">
+                    <span class="glyphicon glyphicon-chevron-left" style="color: white" aria-hidden="true"></span>
+                </div>
+            </div>
+            
+            <div id="helper-menu">
+                
+            </div>
+
+        </div>
+    </body>
+</html>
+

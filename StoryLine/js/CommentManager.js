@@ -1,9 +1,16 @@
 var StoryLine = StoryLine || {};
 
-StoryLine.CommentManager = function () {};
+StoryLine.CommentManager = function () {
+
+};
 
 StoryLine.CommentManager.prototype = {
     create: function () {
+
+        // Select the active scenario
+
+        // TODO: only for active scenario's
+
         // Make the commentlist sortable and exclude 
         $('.comment-list.sortable').sortable({
             axis: "y",
@@ -11,10 +18,11 @@ StoryLine.CommentManager.prototype = {
             delay: 150,
             //placeholder: "clone",
             //forcePlaceholderSize: true,
-            items: "div:not(.new)"
+            items: "div:not(.template)"
         });
 
-        $('.comment-list.new').disableSelection();
+        $('.comment-list.template').disableSelection();
+
 
         // Temporary
         var contentShort = $('.content-short').empty().html("<img src='src/emotions/emotieIcon%5Bopgewonden%5D.png' alt='nope'/>Contains a small description..."),
@@ -22,8 +30,8 @@ StoryLine.CommentManager.prototype = {
 
         var count = 1;
         $('.commentWrapper').each(function () {
-            if ($(this).hasClass('new')) {
-                $(this).children('.content-edit').show();
+            if ($(this).hasClass('template')) {
+                $(this).children('.placeholder').show();
             } else {
                 var short = $(this).children('.content-short');
                 short.show();
@@ -32,8 +40,18 @@ StoryLine.CommentManager.prototype = {
             }
         });
 
-        $('.commentWrapper').click(function () {
+        $('.commentWrapper').on("click", function () {
             var commentWrapper = $(this);
+            // if this commentWrapper is the template: make the textarea visible
+            if ($(this).hasClass('template')) {
+                
+            } else {
+                
+            }
+            
+            // otherwise toggle the visibility
+            
+            
             var hasOpen = StoryLine.CommentManager.toggleComment(commentWrapper);
 
             $(this).parent('.comment-list').sortable("option", "disabled", hasOpen);
@@ -73,7 +91,7 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         // Exclude the comment class which is for adding new comments
-        if (commentWrapper.hasClass('new')) {
+        if (commentWrapper.hasClass('template')) {
             return;
         }
 
@@ -91,6 +109,20 @@ StoryLine.CommentManager.prototype = {
             StoryLine.CommentManager.openComment(commentWrapper);
             return true;
         }
+    },
+    createComment: function (list, image, text) {
+        // Create wrapper element
+        var commentWrapper = $('<div>')
+        .addClass('commentWrapper')
+        .addClass('light');
+        
+        var p = $('<p>').text(text);
+        var img = $('<img>').src(img).prependTo(p);
+
+        // Create <img> and <p> elements (long-content and short-content)
+
+        // Insert new commentWrapper before the template
+        list.insertBefore(commentWrapper, list.lastChild);
     }
 };
 
