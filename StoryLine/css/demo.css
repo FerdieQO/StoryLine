@@ -1,0 +1,22 @@
+/* == Overall layout == */
+body {  }
+body > div {  }
+
+#wrapper { background-color: #fff; }
+#wrapper > div { padding: 0em; }
+
+/* == Scenario templates == */
+#coloring { background-color: #eee; display: table; }
+.scenario { width: 12em; padding: 1em; background-color: #ddd; display: table-cell; }
+.scenario .element { height: 10em; }
+
+/* == Items == */
+#items { background-color: #eee; }
+.icon { width: 3em; padding: 1em; background-color: #ddd; }
+
+
+
+/* == Helper menu == */
+#helper-menu {
+    
+}

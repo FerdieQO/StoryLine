@@ -1,5 +1,5 @@
 
-/* Scenario-list */
+/* == Scenario-list == */
 .scenario-list {
     padding: 0px;
     width: 100%;
@@ -17,9 +17,8 @@
 .scenario-list > li:nth-child(odd) {
     background-color: #ddd;
 }
-/* !Scenario-list */
 
-/* Scenario */
+/* == Scenario == */
 .scenarioWrapper {
     min-width: 25em;
     width: 25em;
@@ -78,7 +77,7 @@
     width: 47%;
 }
 
-/* Comments-section in scenario */
+/* == Comments-section in scenario == */
 .comment-list-wrapper {
     margin-left: auto;
     margin-right: auto;
@@ -111,7 +110,7 @@
     font-family: 'latolight';
     color: white;
 
-    padding: 1.25em 0.625em;
+    padding: 0.625em 0.625em;
 }
 
 .commentWrapper:hover
@@ -144,7 +143,7 @@
     border: 0px;
 }
 
-.commentWrapper img
+.commentWrapper > img
 {
     width: 2.75em;
     height: 2.75em;
@@ -154,11 +153,30 @@
     margin-top: 0;
 }
 
+.commentWrapper .placeholder {
+    display: none;
+    width: 100%;
+}
+
+.placeholder .top {
+    width: 100%;
+}
+
+.placeholder .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20%;
+}
+
+.placeholder .bottom {
+    width: 100%;
+}
+
 .active-comment {
     background-color: #fff;
 }
-/* !Comments-section in scenario */
-/* !Scenario */
+
 
 .active-scenario {
     
@@ -166,7 +184,7 @@
 
 /* Active color if the element in a talk scenario has class show or the scenario is active */
 li.scenarioWrapper.talk .light.show, li.scenarioWrapper.talk.active-scenario .light {
-    background-color: rgb(249, 200, 46);
+    background-color: #f9c82e;
 }
 
 /* Active color if the element in a talk scenario has class show or the scenario is active */
