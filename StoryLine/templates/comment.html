@@ -1,10 +1,40 @@
-<div class="commentWrapper template light">
-    <p class="content-short"></p>
-    <p class="content-long"></p>
-    <textarea class="form-control content-edit" rows="3"></textarea>
-    <div class="placeholder">
-        <img class="top" src="src/editButton(upper).png"/>
-        <img class="center" src="src/editButton(add).png"/>
-        <img class="bottom" src="src/editButton(lower).png"/>
-    </div>
-</div>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="../src/lato/stylesheet.css"/>
+
+        <link rel="stylesheet" href="../css/scenario.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+
+        <script src="../js/CommentManager.js"></script>
+        <script src="../js/ScenarioManager.js"></script>
+        <script src="../js/DatabaseManager.js"></script>
+        <script src="../js/Main.js"></script>
+    </head>
+
+    <body>
+        <div class="comment-list-wrapper">
+            <div class="comment-list sortable">
+                <div class="commentWrapper template light">
+                    <p class="content-short"></p>
+                    <p class="content-long"></p>
+                    <textarea class="form-control content-edit" rows="3"></textarea>
+                    <div class="placeholder">
+                        <img class="top" src="../src/editButton(upper).png"/>
+                        <img class="center" src="../src/editButton(add).png"/>
+                        <img class="bottom" src="../src/editButton(lower).png"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
