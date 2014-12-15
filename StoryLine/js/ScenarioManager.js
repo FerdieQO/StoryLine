@@ -51,8 +51,15 @@ StoryLine.ScenarioManager.prototype = {
                         callback(true);
                     }
                 });
+                
+                $(".scenarioWrapper").on("click", function(){
+                    console.log("frank de boer: 'ja beetje lekker euh euhm voeblle'");
+                    var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
+                });
             }
         });
+        
+        
     },
     initializeScenario: function (scenarioWrapper) {
         // Add all content here
