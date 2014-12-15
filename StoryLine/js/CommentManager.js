@@ -6,7 +6,7 @@ StoryLine.CommentManager = function () {
 
 StoryLine.CommentManager.prototype = {
     create: function () {
-
+        console.log("CommentManager.create");
         // Select the active scenario
 
         // TODO: only for active scenario's
@@ -26,7 +26,9 @@ StoryLine.CommentManager.prototype = {
 
         // Temporary
         $('.commentWrapper').each(function () {
+            console.log('Show placeholder');
             if ($(this).hasClass('template')) {
+                console.log('Show placeholder');
                 $(this).children('.placeholder').show();
             } else {
                 var short = $(this).children('.content-short');
@@ -38,6 +40,7 @@ StoryLine.CommentManager.prototype = {
             var commentWrapper = $(this);
             // if this commentWrapper is the template: make the textarea visible
             if ($(this).hasClass('template')) {
+                
                 //$(this).
             } else {
                 // otherwise toggle the visibility
@@ -102,9 +105,7 @@ StoryLine.CommentManager.prototype = {
     },
     createComment: function (list, image, text) {
         // Create wrapper element
-        var commentWrapper = $('<div>')
-        .addClass('commentWrapper')
-        .addClass('light');
+        var commentWrapper = $('<div>').addClass('commentWrapper').addClass('light');
 
         var p = $('<p>').text(text);
         var img = $('<img>').src(img).prependTo(p);

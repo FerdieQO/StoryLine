@@ -9,26 +9,16 @@ StoryLine.ScenarioManager = function () {
 };
 StoryLine.ScenarioManager.prototype = {
     create: function () {
-        // Set templateScenario
-        $('.scenario-list').load("../templates/scenario.html .scenarioWrapper.template");
-        var comments = $('.scenarioWrapper.template .comment-list');
-
-        //console.log($('.scenario'));
-        //console.log(comments);
-        comments.load("../templates/comment.html .commentWrapper.template", function () {
-            console.log("Lol");
-        });
+        console.log("ScenarioManager.create");
+        this.loadTemplateScenario();
         this.templateScenario = $('.scenarioWrapper.template');
-        //console.log(comments);
-        //comments;
 
         // initialize each scenario
         // will eventually be replaced when implementing loading since the scenario's must then be created while loading.
         $('.scenarioWrapper:not(.template)').each(function (index, scenario) {
             // Clone scenarioWrapper.template
-            var template = StoryLine.ScenarioManager.templateScenario.clone(true);
-
-            var elements = template.contents();
+            var template = StoryLine.ScenarioManager.templateScenario.clone(true),
+                elements = template.contents();
             //console.log(elements);
             elements.appendTo(scenario);
         });
@@ -43,6 +33,26 @@ StoryLine.ScenarioManager.prototype = {
             clearTimeout(StoryLine.ScenarioManager.timeoutId);
         });
     },
+    loadTemplateScenario: function () {
+        var scenarioList = $('.scenario-list'),
+            scenarioHandler = "../templates/scenario.html .scenarioWrapper.template";
+
+        scenarioList.load(scenarioHandler, function (scResponse, scStatus, scXhr) {
+            if (scStatus === "error") {
+                console.log("Loading template scenario failed");
+            } else {
+                var commentList = $('.comment-list'),
+                    commentHandler = "../templates/comment.html .commentWrapper.template";
+                commentList.load(commentHandler, function (cResponse, cStatus, cXhr) {
+                    if (cStatus === "error") {
+                        console.log("Loading template comment failed");
+                    } else {
+                        console.log("Loading template comment succeeded");
+                    }
+                });
+            }
+        });
+    },
     initializeScenario: function (scenarioWrapper) {
         // Add all content here
         // Event
@@ -50,7 +60,7 @@ StoryLine.ScenarioManager.prototype = {
     },
     cloneScenarioTemplate: function () {
         // Create a new div scenarioWrapper
-        var scenarioWrapper = $('<div>').addClass('scenarioWrapper');
+        var scenarioWrapper = $('<div>').addClass('scenarioWrapper').addClass('light');
         // Clone scenarioWrapper.template
         var template = StoryLine.ScenarioManager.templateScenario.clone(true);
 
@@ -65,8 +75,8 @@ StoryLine.ScenarioManager.prototype = {
         }
         // how to remove class where you don't know which one it is?
         // Current method is ugly as ****.
-        var events = ["talk", "kiss", "cuddle", "hold-hands"];
-        for (var i = 0; i < events.length; i++){
+        var events = ["talk", "kiss", "cuddle", "hold-hands"], i;
+        for (i = 0; i < events.length; i++){
             if (events[i] == event) {
                 scenarioWrapper.addClass(event);
             } else {
