@@ -47,8 +47,7 @@
     max-width: 100%;
     height: 100%;
     overflow-y: scroll;
-
-    background-color: inherit;
+	background-size: 100% 100%;
 }
 
 .color-bar {
@@ -192,14 +191,6 @@ li.scenarioWrapper.talk .dark.show, li.scenarioWrapper.talk.active-scenario .dar
     background-color: rgb(230, 182, 30);
 }
 
-.talk active-comment {
-    background-color: #e6b61e;
-}
-
-.hold-hands {
-    background-color: rgb(193, 57, 43);
-}
-
 /* Active color if the element in a talk scenario has class show or the scenario is active */
 li.scenarioWrapper.hold-hands .light.show, li.scenarioWrapper.hold-hands.active-scenario .light {
     background-color: rgb(193, 57, 43);
@@ -210,10 +201,42 @@ li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-s
     background-color: rgb(174, 39, 43);
 }
 
+.talk active-comment {
+    background-color: #f9c82e;
+}
+
+.hold-hands {
+    background-color: rgb(193, 57, 43);
+}
+
+
 .cuddle {
     background-color: #5d2e4e;
 }
 
 .kiss {
     background-color: #ccc;
+}
+
+.contextMenu 
+{
+    width: 8em;
+    height: 37.9em;
+    border-top: 1px solid #ccc;
+    border-bottom: 2px solid #ccc;
+	background-color: #FFFFFF;
+	padding: 1em;
+}
+
+.contextIcon
+{
+	width: 100%;
+	height: auto;
+	margin-bottom: 1em;
+	cursor: pointer;
+}
+
+.fix
+{
+	overflow: hidden;
 }
