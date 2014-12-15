@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var main = function() {
     $(document).on("click", ".event", function(){
         $(".contextMenu").fadeToggle("slow", function(){
@@ -8,7 +7,6 @@ var main = function() {
 };
 
 $(document).ready(main);
-=======
 $(function(){
 	$(document).ready(function(){
 		$(".contextMenu").hide();
@@ -91,4 +89,3 @@ function GetPositions () {
 		});
 	});
 }
->>>>>>> 25c02dd361698ef6242e33910bfc34589aac8740
