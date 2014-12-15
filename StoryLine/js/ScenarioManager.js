@@ -33,7 +33,7 @@ StoryLine.ScenarioManager.prototype = {
             clearTimeout(StoryLine.ScenarioManager.timeoutId);
         });
         
-        $(".scenario-list").on("click", function(){
+        $(".scenarioWrapper").on("click", function(){
             console.log("frank de boer: 'ja beetje lekker euh euhm voeblle'");
             var sct = this.cloneScenarioTemplate();
         });
