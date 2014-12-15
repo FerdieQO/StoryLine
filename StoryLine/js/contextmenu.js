@@ -50,11 +50,19 @@ $(function(){
     });
 });
 
+$(function(){
+	$('.scenario-list').scroll(function() {
+		GetPositions();
+	});
+});
+
 function GetPositions () {
 	$(".contextMenu").each(function(index, element) {
 		var myParent = $('.scenarioWrapper').eq(index);
-		var myLeft = myParent.position.left;
-		var myTop = myParent.position.top;
+		var other = $('#screenWrapper');
+		var myLeft = myParent.offset().left - other.offset().left + myParent.width();
+		console.log(myParent.width());
+		var myTop = myParent.offset.top;
 		
 		if($(myParent).hasClass('talk'))
 		{

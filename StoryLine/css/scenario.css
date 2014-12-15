@@ -222,3 +222,13 @@ li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-s
 {
 	overflow: hidden;
 }
+
+#screenWrapper
+{
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -10;
+}
