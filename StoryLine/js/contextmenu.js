@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var main = function() {
     $(document).on("click", ".event", function(){
         $(".contextMenu").fadeToggle("slow", function(){
@@ -7,9 +6,6 @@ var main = function() {
     });
 };
 
-$(document).ready(main);
-=======
->>>>>>> origin/contextmenu
 $(function(){
 	$(document).ready(function(){
 		$(".contextMenu").hide();
@@ -31,7 +27,6 @@ $(function(){
 		$(this).toggleClass('show');//.children('.scenario')
 		if($(this).hasClass('show') && $(this).hasClass('talk'))
 		{
-<<<<<<< HEAD
 			$(this).css({'background-color':'#f9c82e'});
 		}
 		else if($(this).hasClass('show') && $(this).hasClass('hold-hands'))
@@ -48,8 +43,6 @@ $(function(){
 		}
 		else
 		{
-			$(this).css({'background-color':'#cccccc'});
-=======
 			$(this).animate({'background-color':'#f9c82e'},500);
 		}
 		else if($(this).hasClass('show') && $(this).hasClass('hold-hands'))
@@ -67,7 +60,6 @@ $(function(){
 		else
 		{
 			$(this).animate({'background-color':'#cccccc'},500);
->>>>>>> origin/contextmenu
 		}
     });
 });
@@ -82,13 +74,6 @@ $(function(){
     });
 });
 
-<<<<<<< HEAD
-function GetPositions () {
-	$(".contextMenu").each(function(index, element) {
-		var myParent = $('.scenarioWrapper').eq(index);
-		var myLeft = myParent.position.left;
-		var myTop = myParent.position.top;
-=======
 $(function(){
 	$('.scenario-list').scroll(function() {
 		GetPositions();
@@ -102,7 +87,6 @@ function GetPositions () {
 		var myLeft = myParent.offset().left - other.offset().left + myParent.width();
 		console.log(myParent.width());
 		var myTop = myParent.offset.top;
->>>>>>> origin/contextmenu
 		
 		if($(myParent).hasClass('talk'))
 		{
@@ -127,8 +111,4 @@ function GetPositions () {
 			'right': myTop
 		});
 	});
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/contextmenu
