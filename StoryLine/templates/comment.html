@@ -14,10 +14,9 @@
 
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 
-        <script src="../js/CommentManager.js"></script>
-        <script src="../js/ScenarioManager.js"></script>
         <script src="../js/DatabaseManager.js"></script>
-        <script src="../js/Main.js"></script>
+        <script src="../js/CommentManager.js"></script>
+        <script src="../js/CommentMain.js"></script>
     </head>
 
     <body>
@@ -26,7 +25,12 @@
                 <div class="commentWrapper template light">
                     <p class="content-short"></p>
                     <p class="content-long"></p>
-                    <textarea class="form-control content-edit" rows="3"></textarea>
+                    <div class="content-edit">
+                        <textarea class="form-control" rows="5"></textarea>
+                        <div class="apply">Apply</div>
+                        <div class="cancel">Cancel</div>
+                    </div>
+
                     <div class="placeholder">
                         <img class="top" src="../src/editButton(upper).png"/>
                         <img class="center" src="../src/editButton(add).png"/>

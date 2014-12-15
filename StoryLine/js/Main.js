@@ -9,8 +9,10 @@ StoryLine.Main = function () {
 StoryLine.Main.prototype = {
     create: function () {
         StoryLine.DatabaseManager.create();
-        StoryLine.ScenarioManager.create();
-        StoryLine.CommentManager.create();
+        StoryLine.ScenarioManager.create(function () {
+            StoryLine.CommentManager.create();
+        });
+
     }
 };
 

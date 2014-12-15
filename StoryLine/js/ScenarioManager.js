@@ -3,51 +3,52 @@ var StoryLine = StoryLine || {};
 StoryLine.ScenarioManager = function () {
     var templateScenario = null,
         activeScenario = null,
-        timeoutId = 0,
-        create = function () {},
-        selectScenario = function () {};
+        timeoutId = 0;
 };
 StoryLine.ScenarioManager.prototype = {
-    create: function () {
-        console.log("ScenarioManager.create");
-        this.loadTemplateScenario();
-        this.templateScenario = $('.scenarioWrapper.template');
+    create: function (callback) {
+        this.loadTemplateScenario(function () {
+            StoryLine.ScenarioManager.templateScenario = $('.scenarioWrapper.template');
 
-        // initialize each scenario
-        // will eventually be replaced when implementing loading since the scenario's must then be created while loading.
-        $('.scenarioWrapper:not(.template)').each(function (index, scenario) {
-            // Clone scenarioWrapper.template
-            var template = StoryLine.ScenarioManager.templateScenario.clone(true),
-                elements = template.contents();
-            //console.log(elements);
-            elements.appendTo(scenario);
-        });
+            // initialize each scenario
+            // will eventually be replaced when implementing loading since the scenario's must then be created while loading.
+            $('.scenarioWrapper:not(.template)').each(function (index, scenario) {
+                // Clone scenarioWrapper.template
+                var template = StoryLine.ScenarioManager.templateScenario.clone(true),
+                    elements = template.contents();
+                //console.log(elements);
+                elements.appendTo(scenario);
+            });
 
-        // On mousedown on the scenario
-        $('.scenarioWrapper').mousedown(function () {
-            var scenarioWrapper = $(this);
-            StoryLine.ScenarioManager.timeoutId = setTimeout(function () {
-                StoryLine.ScenarioManager.selectScenario(scenarioWrapper);
-            }, 1000);
-        }).bind('mouseup mouseleave', function () {
-            clearTimeout(StoryLine.ScenarioManager.timeoutId);
+            // On mousedown on the scenario
+            $('.scenarioWrapper').mousedown(function () {
+                var scenarioWrapper = $(this);
+                StoryLine.ScenarioManager.timeoutId = setTimeout(function () {
+                    StoryLine.ScenarioManager.selectScenario(scenarioWrapper);
+                }, 1000);
+            }).bind('mouseup mouseleave', function () {
+                clearTimeout(StoryLine.ScenarioManager.timeoutId);
+            });
+            callback();
         });
     },
-    loadTemplateScenario: function () {
+    loadTemplateScenario: function (callback) {
         var scenarioList = $('.scenario-list'),
             scenarioHandler = "../templates/scenario.html .scenarioWrapper.template";
 
         scenarioList.load(scenarioHandler, function (scResponse, scStatus, scXhr) {
             if (scStatus === "error") {
-                console.log("Loading template scenario failed");
+                console.log("Loading template failed.");
+                callback(false);
             } else {
                 var commentList = $('.comment-list'),
                     commentHandler = "../templates/comment.html .commentWrapper.template";
                 commentList.load(commentHandler, function (cResponse, cStatus, cXhr) {
                     if (cStatus === "error") {
-                        console.log("Loading template comment failed");
+                        console.log("Loading template failed.");
+                        callback(false);
                     } else {
-                        console.log("Loading template comment succeeded");
+                        callback(true);
                     }
                 });
             }
@@ -76,7 +77,7 @@ StoryLine.ScenarioManager.prototype = {
         // how to remove class where you don't know which one it is?
         // Current method is ugly as ****.
         var events = ["talk", "kiss", "cuddle", "hold-hands"], i;
-        for (i = 0; i < events.length; i++){
+        for (i = 0; i < events.length; i++) {
             if (events[i] == event) {
                 scenarioWrapper.addClass(event);
             } else {
