@@ -202,12 +202,12 @@ li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-s
 
 .contextMenu 
 {
-    width: 8em;
+    width: 3em;
     height: 37.9em;
     border-top: 1px solid #ccc;
     border-bottom: 2px solid #ccc;
 	background-color: #FFFFFF;
-	padding: 1em;
+	padding: 0.25em;
 }
 
 .contextIcon
