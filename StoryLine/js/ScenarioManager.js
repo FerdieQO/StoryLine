@@ -52,9 +52,13 @@ StoryLine.ScenarioManager.prototype = {
                     }
                 });
                 
+                // vervangen door één klikbare sectie (namelijk de scenariowrapper)
                 $(".scenarioWrapper").on("click", function(){
-                    console.log("frank de boer: 'ja beetje lekker euh euhm voeblle'");
                     var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
+                    var list = $('.scenario-list');
+                    var tmp = $('.scenarioWrapper template');
+                    //sct.appendTo(list);
+                    list.insertBefore(sct, list.children(tmp).eq(0));
                 });
             }
         });
@@ -68,7 +72,7 @@ StoryLine.ScenarioManager.prototype = {
     },
     cloneScenarioTemplate: function () {
         // Create a new div scenarioWrapper
-        var scenarioWrapper = $('<div>').addClass('scenarioWrapper').addClass('light');
+        var scenarioWrapper = $('<li>').addClass('scenarioWrapper').addClass('light');
         // Clone scenarioWrapper.template
         var template = StoryLine.ScenarioManager.templateScenario.clone(true);
 
