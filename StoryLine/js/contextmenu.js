@@ -1,15 +1,6 @@
-var main = function() {
-    $(document).on("click", ".event", function(){
-        $(".contextMenu").fadeToggle("slow", function(){
-            
-        });
-    });
-};
-
 $(function(){
 	$(document).ready(function(){
 		$(".contextMenu").hide();
-		
 		GetPositions();
 	});
 });
@@ -27,7 +18,7 @@ $(function(){
 		$(this).toggleClass('show');//.children('.scenario')
         if($(this).hasClass('show') && $(this).hasClass('talk'))
         {
-            $(this).animate({'background-color':'#d3a30b'},500);
+            $(this).animate({'background-color':'#f9c82e'},500);
         }
 		else if($(this).hasClass('show') && $(this).hasClass('hold-hands'))
 		{
@@ -39,7 +30,7 @@ $(function(){
 		}
 		else if($(this).hasClass('show') && $(this).hasClass('kiss'))
 		{
-			$(this).animate({'background-color':'999999'});
+			$(this).animate({'background-color':'999999'}, 500);
 		}
 		else
 		{
