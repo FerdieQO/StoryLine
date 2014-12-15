@@ -32,11 +32,6 @@ StoryLine.ScenarioManager.prototype = {
         }).bind('mouseup mouseleave', function () {
             clearTimeout(StoryLine.ScenarioManager.timeoutId);
         });
-        
-        $(".scenarioWrapper").on("click", function(){
-            console.log("frank de boer: 'ja beetje lekker euh euhm voeblle'");
-            var sct = this.cloneScenarioTemplate();
-        });
     },
     loadTemplateScenario: function () {
         var scenarioList = $('.scenario-list'),
@@ -55,8 +50,15 @@ StoryLine.ScenarioManager.prototype = {
                         console.log("Loading template comment succeeded");
                     }
                 });
+                
+                $(".scenarioWrapper").on("click", function(){
+                    console.log("frank de boer: 'ja beetje lekker euh euhm voeblle'");
+                    var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
+                });
             }
         });
+        
+        
     },
     initializeScenario: function (scenarioWrapper) {
         // Add all content here
