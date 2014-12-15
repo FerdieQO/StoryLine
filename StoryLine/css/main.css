@@ -24,8 +24,9 @@ body {
 }
 
 .logo {
+	margin: 0.5em;
     margin-left: 0px;
 
-    max-height: 3.74em;
+    max-height: 2.75em;
     display: inline;
 }

@@ -32,6 +32,11 @@ StoryLine.ScenarioManager.prototype = {
         }).bind('mouseup mouseleave', function () {
             clearTimeout(StoryLine.ScenarioManager.timeoutId);
         });
+        
+        $(".scenario-list").on("click", function(){
+            console.log("frank de boer: 'ja beetje lekker euh euhm voeblle'");
+            var sct = this.cloneScenarioTemplate();
+        });
     },
     loadTemplateScenario: function () {
         var scenarioList = $('.scenario-list'),
