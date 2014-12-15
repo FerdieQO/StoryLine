@@ -1,0 +1,90 @@
+/* Comments-section in scenario */
+.comment-list-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 90%;
+    margin-bottom: 1.25em;
+}
+
+.comment-list {
+    
+}
+
+.comment-list > div:nth-child(even) {
+    background-color: #d0d0d0;
+}
+
+.comment-list > div:nth-child(odd) {
+    background-color: #d5d5d5;
+}
+
+.commentWrapper
+{
+    margin-left: auto;
+    margin-right: auto;
+
+    min-height: 5em;
+
+    border-bottom: 1px solid #ccc;
+    font-size: 1em;
+    font-family: 'latolight';
+    color: white;
+
+    padding: 1.25em 0.625em;
+}
+
+.commentWrapper:hover
+{
+    background-color: inherit;/*background-color: #e6b61e;*/
+    overflow-y: visible;
+    cursor:pointer;
+}
+
+.content-short {
+    white-space: pre;
+    text-align: inherit;
+    display: none;
+    color: inherit;
+}
+
+.content-long {
+    white-space: pre;
+    text-align: inherit;
+    display: none;
+    color: inherit;
+}
+
+.content-edit {
+    text-align: inherit;
+    display: none;
+}
+
+.commentWrapper textarea {
+    resize: none;
+    border: 0px;
+}
+
+.commentWrapper p > img
+{
+    width: 2.75em;
+    height: 2.75em;
+    float: left;
+    margin: 0.125em;
+    margin-right: 0.5em;
+    margin-top: 0;
+}
+
+.commentWrapper .placeholder {
+    display: none;
+    width: 100%;
+}
+
+.placeholder .top { width: 100%; }
+.placeholder .center { display: block; margin-left: auto; margin-right: auto; width: 20%; }
+.placeholder .bottom { width: 100%; }
+
+.active-comment {
+    background-color: #ddd;
+}
+/* !Comments-section in scenario */

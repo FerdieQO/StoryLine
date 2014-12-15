@@ -1,8 +1,10 @@
 var StoryLine = StoryLine || {};
 
 StoryLine.CommentManager = function () {
-    var prevText = "",
-        templateEmotion = '../src/editButton(full)(action).png';
+    this.templateComment = null;
+    this.prevText = "";
+    this.templateEmotion = "../src/editButton(full)(action).png";
+    this.editing = false;
 };
 
 StoryLine.CommentManager.prototype = {
@@ -16,9 +18,10 @@ StoryLine.CommentManager.prototype = {
             axis: "y",
             containment: "parent",
             delay: 150,
+            opacity: 0.25,
             //placeholder: "clone",
             //forcePlaceholderSize: true,
-            items: "div:not(.template)"
+            items: ".commentWrapper:not(.template)"
         });
 
         $('.comment-list.template').disableSelection();
@@ -33,27 +36,33 @@ StoryLine.CommentManager.prototype = {
                 short.show();
             }
         });
-        $('.commentWrapper .content-edit .apply').on("click", function () {
-            var editingComment = $('.commentWrapper.editing');
-            StoryLine.CommentManager.applyEditComment(editingComment);
-        });
-        $('.commentWrapper .content-edit .cancel').on("click", function () {
-            var editingComment = $('.commentWrapper.editing');
-            StoryLine.CommentManager.cancelEditComment(editingComment);
+        $('.commentWrapper .content-edit .button').on("click", function () {
+            var apply = $(this).hasClass('apply'),
+                abort = $(this).hasClass('abort'),
+                editingComment = $('.commentWrapper.editing');
+            if (apply || abort) {
+                StoryLine.CommentManager.finishEdit(editingComment, apply);
+            }
         });
         $('.commentWrapper').on("click", function () {
-            var commentWrapper = $(this);
-            // if this commentWrapper is the template: make the textarea visible
-            console.log('Onclick');
+            var cM = StoryLine.CommentManager,
+                commentWrapper = $(this);
+            if (cM.editing || commentWrapper.hasClass('editing')) {
+                return;
+            }
+
+            // if this commentWrapper is the template
             if (commentWrapper.hasClass('template')) {
-                if (!commentWrapper.hasClass('editing')) {
-                    StoryLine.CommentManager.editComment(commentWrapper);
-                }
+                var newComment = cM.cloneCommentTemplate(),
+                    template = cM.templateComment;
 
-
-
-                //.show();
-                //$(this).
+                newComment.insertBefore($(template));
+                cM.hidePlaceholder(newComment, function () {
+                    cM.showTextArea(newComment, true);
+                    newComment.addClass('editing');
+                });
+                StoryLine.CommentManager.templateComment.hide();
+                //StoryLine.CommentManager.editComment(commentWrapper);
             } else {
                 // otherwise toggle the visibility
                 var hasOpen = StoryLine.CommentManager.toggleComment(commentWrapper);
@@ -66,49 +75,51 @@ StoryLine.CommentManager.prototype = {
             //StoryLine.DatabaseManager.collectSuggestions();
         });
     },
+
+
     hideShortContent: function (commentWrapper, callback) {
         if (!commentWrapper) {
             return;
         }
-        var shortComment = commentWrapper.children('.content-short');
+        var shortContent = commentWrapper.children('.content-short');
         // If this element is already hidden
-        if (shortComment.css('display') === "none") {
+        if (shortContent.css('display') === "none") {
             return;
         }
-        shortComment.fadeOut(300, callback);
+        shortContent.fadeOut(300, callback);
     },
     showShortContent: function (commentWrapper) {
         if (!commentWrapper) {
             return;
         }
-        var shortComment = commentWrapper.children('.content-short');
+        var shortContent = commentWrapper.children('.content-short');
         // If this element is not hidden
-        if (shortComment.css('display') !== "none") {
+        if (shortContent.css('display') !== "none") {
             return;
         }
-        shortComment.fadeIn(300);
+        shortContent.fadeIn(300);
     },
     hideLongContent: function (commentWrapper, callback) {
         if (!commentWrapper) {
             return;
         }
-        var longComment = commentWrapper.children('.content-long');
+        var longContent = commentWrapper.children('.content-long');
         // If this element is already hidden
-        if (longComment.css('display') === "none") {
+        if (longContent.css('display') === "none") {
             return;
         }
-        longComment.hide("blind", {}, 300, callback);
+        longContent.hide("blind", {}, 300, callback);
     },
     showLongContent: function (commentWrapper) {
         if (!commentWrapper) {
             return;
         }
-        var longComment = commentWrapper.children('.content-long');
+        var longContent = commentWrapper.children('.content-long');
         // If this element is not hidden
-        if (longComment.css('display') !== "none") {
+        if (longContent.css('display') !== "none") {
             return;
         }
-        longComment.show("blind", {}, 300);
+        longContent.show("blind", {}, 300);
     },
     hideTextArea: function (commentWrapper, callback) {
         if (!commentWrapper) {
@@ -121,7 +132,7 @@ StoryLine.CommentManager.prototype = {
         }
         textArea.fadeOut(300, callback);
     },
-    showTextArea: function (commentWrapper) {
+    showTextArea: function (commentWrapper, gainFocus) {
         if (!commentWrapper) {
             return;
         }
@@ -130,7 +141,11 @@ StoryLine.CommentManager.prototype = {
         if (textArea.css('display') !== "none") {
             return;
         }
-        textArea.show();
+        textArea.fadeIn(300, function () {
+            if (gainFocus) {
+                textArea.children('.form-control').focus();
+            }
+        });
     },
     hidePlaceholder: function (commentWrapper, callback) {
         if (!commentWrapper) {
@@ -160,8 +175,8 @@ StoryLine.CommentManager.prototype = {
         if (!commentWrapper) {
             return;
         }
-        var shortComment = commentWrapper.children('.content-short');
-        shortComment.hide();
+        var shortContent = commentWrapper.children('.content-short');
+        shortContent.hide();
         this.hideLongContent(commentWrapper, function () {
             commentWrapper.switchClass('dark', 'light', 100);
             commentWrapper.removeClass('active-comment');
@@ -202,6 +217,53 @@ StoryLine.CommentManager.prototype = {
             return true;
         }
     },
+
+    cloneCommentTemplate: function () {
+        // Create a new div commentWrapper
+        var commentWrapper = $('<div>').addClass('commentWrapper').addClass('light');
+        // Clone commentWrapper.template
+        var template = StoryLine.CommentManager.templateComment.clone(true);
+
+        var elements = template.contents();
+        elements.appendTo(commentWrapper);
+
+        // Return the div, you'll need to hook it into the correct place.
+        return commentWrapper;
+    },
+
+    finishEdit: function (commentWrapper, apply) {
+        var cM = StoryLine.CommentManager;
+        if (apply) {
+            var shortContent = commentWrapper.children('.content-short'),
+                longContent = commentWrapper.children('.content-long'),
+                textArea = commentWrapper.children('.content-edit').children('.form-control');
+            var text = textArea.val().trim();
+
+            // Strip image from text
+            var img;
+            if (shortContent.has('img').length > 0) {
+                img = shortContent.children('img');
+            } else {
+                img = $('<img src=' + cM.templateEmotion + '>');
+            }
+
+            shortContent.text(text);
+            shortContent.prepend(img);
+            longContent.text(text);
+            longContent.prepend(img.clone(true));
+
+            this.hideTextArea(commentWrapper, function () {
+                commentWrapper.removeClass('editing');
+                cM.templateComment.fadeIn(300);
+                cM.showLongContent(commentWrapper);
+            });
+            textArea.val('');
+
+        } else {
+
+        }
+    },
+
     createComment: function (list, image, text) {
         // Create wrapper element
         var commentWrapper = $('<div>').addClass('commentWrapper').addClass('light');
@@ -210,75 +272,44 @@ StoryLine.CommentManager.prototype = {
         var img = $('<img>');
         img.attr('src', image);
         img.prependTo(p);
+
+        var comment = this.cloneCommentTemplate();
+        this.setCommentContent(comment, p);
+
         //commentWrapper.append(p);
         console.log(p);
 
         // Create <img> and <p> elements (long-content and short-content)
 
         // Insert new commentWrapper before the template
-        
-        $(list).append(commentWrapper);
+        comment.insertBefore($(list).children('.template'));
+        this.hideTextArea(comment, function () {
+            StoryLine.CommentManager.showLongContent(comment);
+        });
+        this.hideTextArea(this.templateComment, function () {
+            StoryLine.CommentManager.showPlaceholder(StoryLine.CommentManager.templateComment);
+        });
+        //$(list).append(commentWrapper);
     },
-    editComment: function (commentWrapper) {
+    editComment: function (commentWrapper, edit) {
         if (!commentWrapper) {
             return;
         }
 
-        var longComment = commentWrapper.children('.content-long'),
+        var longContent = commentWrapper.children('.content-long'),
             textArea = commentWrapper.children('.content-edit').children('.form-control');
 
-        this.prevText = longComment.text();
+        this.prevText = longContent.text();
 
-        this.hidePlaceholder(commentWrapper, function () {
-            commentWrapper.addClass('editing');
-            commentWrapper.switchClass('light', 'dark', 100);
-            StoryLine.CommentManager.showTextArea(commentWrapper);
-        });
-    },
-    applyEditComment: function (commentWrapper) {
-        
-        var textArea = commentWrapper.children('.content-edit').children('.form-control');
-        if (commentWrapper.hasClass('template')) {
-            // if template: create comment
-            this.createComment(commentWrapper.parent(), this.templateEmotion, textArea.val().trim());
+        if (edit) {
+            this.hidePlaceholder(commentWrapper, function () {
+                commentWrapper.addClass('editing');
+                commentWrapper.switchClass('light', 'dark', 100);
+                StoryLine.CommentManager.showTextArea(commentWrapper);
+            });
         } else {
 
         }
-
-/*
-        var shortComment = commentWrapper.children('.content-short'),
-            longComment = commentWrapper.children('.content-long'),
-            textArea = commentWrapper.children('.content-edit').children('.form-control');
-
-        // Short this in?
-        shortComment.text(textArea.val().trim());
-        longComment.text(textArea.val().trim());
-
-*/
-
-        // if template: create comment
-
-        // otherwise: edit long content
-    },
-    cancelEditComment: function (commentWrapper) {
-        // reset text in textarea to previous value
-        var textArea = commentWrapper.children('.content-edit').children('.form-control');
-        textArea.val(StoryLine.CommentManager.prevText);
-        StoryLine.CommentManager.prevText = "";
-
-        StoryLine.CommentManager.hideTextArea(commentWrapper, function () {
-            commentWrapper.removeClass('editing');
-            commentWrapper.switchClass('dark', 'light', 100);
-            // if template, show placeholder
-            if (commentWrapper.hasClass('template')) {
-                StoryLine.CommentManager.showPlaceholder(commentWrapper);
-            }
-            // if existing comment, show content
-            else {
-                StoryLine.CommentManager.showLongContent(commentWrapper);
-            }
-        });
-
 
     }
 };

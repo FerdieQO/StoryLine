@@ -1,14 +1,15 @@
 var StoryLine = StoryLine || {};
 
 StoryLine.ScenarioManager = function () {
-    var templateScenario = null,
-        activeScenario = null,
-        timeoutId = 0;
+    this.templateScenario = null;
+    this.activeScenario = null;
+    this.timeoutId = 0;
 };
 StoryLine.ScenarioManager.prototype = {
     create: function (callback) {
         this.loadTemplateScenario(function () {
             StoryLine.ScenarioManager.templateScenario = $('.scenarioWrapper.template');
+            StoryLine.CommentManager.templateComment = $('.scenarioWrapper.template .commentWrapper.template');
 
             // initialize each scenario
             // will eventually be replaced when implementing loading since the scenario's must then be created while loading.
@@ -53,7 +54,7 @@ StoryLine.ScenarioManager.prototype = {
                 });
                 
                 $(".scenarioWrapper").on("click", function(){
-                    console.log("frank de boer: 'ja beetje lekker euh euhm voeblle'");
+                    //console.log("frank de boer: 'ja beetje lekker euh euhm voeblle'");
                     var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
                 });
             }
