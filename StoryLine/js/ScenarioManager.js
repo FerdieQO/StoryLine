@@ -56,9 +56,8 @@ StoryLine.ScenarioManager.prototype = {
                 $(".scenarioWrapper").on("click", function(){
                     var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
                     var list = $('.scenario-list');
-                    var tmp = $('.scenarioWrapper template');
-                    //sct.appendTo(list);
-                    list.insertBefore(sct, list.children(tmp).eq(0));
+                    var tmp = $('.template');
+                    sct.insertBefore($(tmp));
                 });
             }
         });
