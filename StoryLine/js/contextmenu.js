@@ -11,6 +11,7 @@ $( window ).resize(function() {
 
 $(function(){
 	$('.scenarioWrapper').on("click", function(){
+        console.log("click!")
 		var myIndex = $(this).index();
 		if(myIndex > 0){myIndex /= 2;}
 		$('body, .scenario-list').toggleClass('fix');
