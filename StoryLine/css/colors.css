@@ -1,15 +1,15 @@
 /* == Talk colors == */
-.talk.light.show, .talk .light.show { background-color: #f9c82e; } /* Light background */
-.talk.dark.show, .talk .dark.show { background-color: #e6b61e; } /* Dark background */
+.talk.light.show, .talk .light.show, .talk.active .light { background-color: #f9c82e; } /* Light background */
+.talk.dark.show, .talk .dark.show, .talk.active .dark { background-color: #e6b61e; } /* Dark background */
 
 /* == Hold hands colors == */
-.hold-hands.light.show, .hold-hands .light.show { background-color: #c1392b; } /* Light background */
-.hold-hands.dark.show, .hold-hands .dark.show { background-color: #ae272b; } /* Dark background */
+.hold-hands.light.show, .hold-hands .light.show, .hold-hands.active .light { background-color: #c1392b; } /* Light background */
+.hold-hands.dark.show, .hold-hands .dark.show, .hold-hands.active .dark { background-color: #ae272b; } /* Dark background */
 
 /* == Cuddle colors == */
-.cuddle.light.show, .cuddle .light.show { background-color: #5d2e4e; } /* Light background */
-.cuddle.dark.show, .cuddle .dark.show { background-color: #4a233d; } /* Dark background */
+.cuddle.light.show, .cuddle .light.show, .cuddle.active .light { background-color: #5d2e4e; } /* Light background */
+.cuddle.dark.show, .cuddle .dark.show, .cuddle.active .dark { background-color: #4a233d; } /* Dark background */
 
 /* == Kiss colors == */
-.kiss.light.show, .kiss .light.show { background-color: #ccc; } /* Light background */
-.kiss.dark.show, .kiss .dark.show { background-color: #bbb; } /* Dark background */
+.kiss.light.show, .kiss .light.show, .kiss.active .light { background-color: #ccc; } /* Light background */
+.kiss.dark.show, .kiss .dark.show, .kiss.active .dark { background-color: #bbb; } /* Dark background */

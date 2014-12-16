@@ -9,7 +9,7 @@ StoryLine.ScenarioManager.prototype = {
     create: function (callback) {
         this.loadTemplateScenario(function () {
             StoryLine.ScenarioManager.templateScenario = $('.scenarioWrapper.template');
-            StoryLine.CommentManager.templateComment = $('.scenarioWrapper.template .commentWrapper.template');
+            //StoryLine.CommentManager.templateComment = $('.scenarioWrapper.template .commentWrapper.template');
 
             // initialize each scenario
             // will eventually be replaced when implementing loading since the scenario's must then be created while loading.
@@ -20,6 +20,7 @@ StoryLine.ScenarioManager.prototype = {
                 //console.log(elements);
                 elements.appendTo(scenario);
             });
+
 
             // On mousedown on the scenario
             $('.scenarioWrapper').mousedown(function () {
@@ -42,6 +43,25 @@ StoryLine.ScenarioManager.prototype = {
                 console.log("Loading template failed.");
                 callback(false);
             } else {
+                // vervangen door één klikbare sectie (namelijk de scenariowrapper)
+
+
+
+                $(".scenarioWrapper").on("click", function () {
+                    // Restrict clicking (like with comments):
+                    // Block if editing scenario's
+                    // 
+                    var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
+                    var list = $('.scenario-list');
+                    var tmp = $('.scenarioWrapper.template');
+                    //sct.appendTo(list);
+
+                    sct.insertBefore($(tmp));
+                    console.log(sct);
+                    StoryLine.ScenarioManager.showScenario($(sct));
+                });
+
+
                 var commentList = $('.comment-list'),
                     commentHandler = "../templates/comment.html .commentWrapper.template";
                 commentList.load(commentHandler, function (cResponse, cStatus, cXhr) {
@@ -52,19 +72,12 @@ StoryLine.ScenarioManager.prototype = {
                         callback(true);
                     }
                 });
-                
-                // vervangen door één klikbare sectie (namelijk de scenariowrapper)
-                $(".scenarioWrapper").on("click", function(){
-                    var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
-                    var list = $('.scenario-list');
-                    var tmp = $('.scenarioWrapper template');
-                    //sct.appendTo(list);
-                    list.insertBefore(sct, list.children(tmp).eq(0));
-                });
+
+
             }
         });
-        
-        
+
+
     },
     initializeScenario: function (scenarioWrapper) {
         // Add all content here
@@ -79,6 +92,7 @@ StoryLine.ScenarioManager.prototype = {
 
         var elements = template.contents();
         elements.appendTo(scenarioWrapper);
+        scenarioWrapper.children('.scenario').children('p').text("New");
         // Return the div, you'll need to hook it into the correct place.
         return scenarioWrapper;
     },
@@ -107,7 +121,7 @@ StoryLine.ScenarioManager.prototype = {
             // TODO: Comment it out cause this also triggers when clicking
             // on comments
             scenarioWrapper.removeClass('active-scenario');
-            activeScenario = null;
+            this.activeScenario = null;
         } else {
             oldWrapper = $('.active-scenario');
             if (oldWrapper) {
@@ -124,5 +138,20 @@ StoryLine.ScenarioManager.prototype = {
     unselectScenario: function (scenarioWrapper) {
         // change color (class)
         // disable sorting comments
+    },
+    // Switch from the scenario to the placeholder
+    showPlaceholder: function (scenarioWrapper) {
+        var placeholder = scenarioWrapper.children('.placeholder-wrapper'),
+            scenario = scenarioWrapper.children('.scenario');
+        scenario.hide();
+        placeholder.show();
+    },
+    // Switch from the placeholder to the scenario
+    showScenario: function (scenarioWrapper) {
+        var placeholder = scenarioWrapper.children('.placeholder-wrapper'),
+            scenario = scenarioWrapper.children('.scenario');
+        placeholder.hide();
+        scenario.show();
+        console.log("Show");
     }
 };

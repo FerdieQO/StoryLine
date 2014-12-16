@@ -1,10 +1,11 @@
 var StoryLine = StoryLine || {};
 
 StoryLine.CommentManager = function () {
-    this.templateComment = null;
+    this.currTemplate = null;
     this.prevText = "";
     this.templateEmotion = "../src/editButton(full)(action).png";
     this.editing = false;
+    this.editingNew = false;
 };
 
 StoryLine.CommentManager.prototype = {
@@ -36,7 +37,8 @@ StoryLine.CommentManager.prototype = {
                 short.show();
             }
         });
-        $('.commentWrapper .content-edit .button').on("click", function () {
+
+        $('.commentWrapper .content-edit .button').on("click", function (event) {
             var apply = $(this).hasClass('apply'),
                 abort = $(this).hasClass('abort'),
                 editingComment = $('.commentWrapper.editing');
@@ -44,31 +46,50 @@ StoryLine.CommentManager.prototype = {
                 StoryLine.CommentManager.finishEdit(editingComment, apply);
             }
         });
-        $('.commentWrapper').on("click", function () {
+
+        $('.commentWrapper').on("click", function (e) {
+            console.log(e);
+            // Only if the scenario manager allows it and definately not on the template scenario
             var cM = StoryLine.CommentManager,
-                commentWrapper = $(this);
+                commentWrapper = $(this), // $(this),
+                disableSort = false;
+            if (commentWrapper.parents('.scenarioWrapper').hasClass('template')) {
+                console.log("template");
+                return;
+            }
             if (cM.editing || commentWrapper.hasClass('editing')) {
                 return;
             }
-
             // if this commentWrapper is the template
             if (commentWrapper.hasClass('template')) {
-                var newComment = cM.cloneCommentTemplate(),
-                    template = cM.templateComment;
+                
+                var newComment = cM.cloneCommentTemplate(commentWrapper);
+                cM.prevText = "";
+                cM.editingNew = cM.editing = true;
 
-                newComment.insertBefore($(template));
+
+                newComment.insertBefore($(commentWrapper));
+
                 cM.hidePlaceholder(newComment, function () {
                     cM.showTextArea(newComment, true);
                     newComment.addClass('editing');
                 });
-                StoryLine.CommentManager.templateComment.hide();
-                //StoryLine.CommentManager.editComment(commentWrapper);
+
+                cM.currTemplate.hide();
             } else {
                 // otherwise toggle the visibility
+                // and open context menu?
+
                 var hasOpen = StoryLine.CommentManager.toggleComment(commentWrapper);
 
-                $(this).parent('.comment-list').sortable("option", "disabled", hasOpen);
+                if (hasOpen) {
+                    disableSort = true;
+                }
             }
+            if (cM.editing) {
+                disableSort = true;
+            }
+            $(this).parent('.comment-list').sortable("option", "disabled", disableSort);
         });
 
         $('.content-edit').keyup(function () {
@@ -130,7 +151,7 @@ StoryLine.CommentManager.prototype = {
         if (textArea.css('display') === "none") {
             return;
         }
-        textArea.fadeOut(300, callback);
+        textArea.fadeOut(200, callback);
     },
     showTextArea: function (commentWrapper, gainFocus) {
         if (!commentWrapper) {
@@ -141,7 +162,7 @@ StoryLine.CommentManager.prototype = {
         if (textArea.css('display') !== "none") {
             return;
         }
-        textArea.fadeIn(300, function () {
+        textArea.fadeIn(200, function () {
             if (gainFocus) {
                 textArea.children('.form-control').focus();
             }
@@ -156,7 +177,7 @@ StoryLine.CommentManager.prototype = {
         if (placeholder.css('display') === "none") {
             return;
         }
-        placeholder.fadeOut(300, callback);
+        placeholder.fadeOut(200, callback);
     },
     showPlaceholder: function (commentWrapper) {
         if (!commentWrapper) {
@@ -167,9 +188,8 @@ StoryLine.CommentManager.prototype = {
         if (placeholder.css('display') !== "none") {
             return;
         }
-        placeholder.fadeIn(300);
+        placeholder.fadeIn(200);
     },
-
 
     closeComment: function (commentWrapper) {
         if (!commentWrapper) {
@@ -217,14 +237,14 @@ StoryLine.CommentManager.prototype = {
             return true;
         }
     },
-
-    cloneCommentTemplate: function () {
+    cloneCommentTemplate: function (templateComment) {
+        this.currTemplate = templateComment;
         // Create a new div commentWrapper
         var commentWrapper = $('<div>').addClass('commentWrapper').addClass('light');
         // Clone commentWrapper.template
-        var template = StoryLine.CommentManager.templateComment.clone(true);
+        var newComment = templateComment.clone(true);
 
-        var elements = template.contents();
+        var elements = newComment.contents();
         elements.appendTo(commentWrapper);
 
         // Return the div, you'll need to hook it into the correct place.
@@ -232,15 +252,35 @@ StoryLine.CommentManager.prototype = {
     },
 
     finishEdit: function (commentWrapper, apply) {
-        var cM = StoryLine.CommentManager;
+        var cM = StoryLine.CommentManager,
+            shortContent = commentWrapper.children('.content-short'),
+            longContent = commentWrapper.children('.content-long'),
+            textArea = commentWrapper.children('.content-edit').children('.form-control');
+
         if (apply) {
-            var shortContent = commentWrapper.children('.content-short'),
-                longContent = commentWrapper.children('.content-long'),
-                textArea = commentWrapper.children('.content-edit').children('.form-control');
-            var text = textArea.val().trim();
+            var text = textArea.val().trim(), img;
+            // New value is empty
+            if (text.length <= 0) {
+                if (cM.prevText.trim().length <= 0) {
+                    // No new text and no old text: deleting new comment
+                    this.hideTextArea(commentWrapper, function () {
+                        commentWrapper.remove();
+                        cM.currTemplate.fadeIn(200);
+                    });
+                    this.resetEditing();
+                    return;
+                } else {
+                    this.hideTextArea(commentWrapper, function () {
+                        commentWrapper.removeClass('editing');
+                        cM.showLongContent(commentWrapper);
+                    });
+                    this.resetEditing();
+                    return;
+                    // TODO: Handle empty value, give a message or something
+                }
+            }
 
             // Strip image from text
-            var img;
             if (shortContent.has('img').length > 0) {
                 img = shortContent.children('img');
             } else {
@@ -254,64 +294,30 @@ StoryLine.CommentManager.prototype = {
 
             this.hideTextArea(commentWrapper, function () {
                 commentWrapper.removeClass('editing');
-                cM.templateComment.fadeIn(300);
+                cM.currTemplate.fadeIn(200);
                 cM.showLongContent(commentWrapper);
             });
             textArea.val('');
-
         } else {
-
+            // if this is a new comment:
+            if (cM.prevText.trim().length <= 0) {
+                // No new text and no old text: deleting new comment
+                this.hideTextArea(commentWrapper, function () {
+                    commentWrapper.remove();
+                    cM.currTemplate.fadeIn(200);
+                });
+            } else {
+                textArea.val(cM.prevText);
+                this.hideTextArea(commentWrapper, function () {
+                    commentWrapper.removeClass('editing');
+                    cM.showLongContent(commentWrapper);
+                });
+            }
         }
+        this.resetEditing();
     },
-
-    createComment: function (list, image, text) {
-        // Create wrapper element
-        var commentWrapper = $('<div>').addClass('commentWrapper').addClass('light');
-
-        var p = $('<p>').text(text);
-        var img = $('<img>');
-        img.attr('src', image);
-        img.prependTo(p);
-
-        var comment = this.cloneCommentTemplate();
-        this.setCommentContent(comment, p);
-
-        //commentWrapper.append(p);
-        console.log(p);
-
-        // Create <img> and <p> elements (long-content and short-content)
-
-        // Insert new commentWrapper before the template
-        comment.insertBefore($(list).children('.template'));
-        this.hideTextArea(comment, function () {
-            StoryLine.CommentManager.showLongContent(comment);
-        });
-        this.hideTextArea(this.templateComment, function () {
-            StoryLine.CommentManager.showPlaceholder(StoryLine.CommentManager.templateComment);
-        });
-        //$(list).append(commentWrapper);
-    },
-    editComment: function (commentWrapper, edit) {
-        if (!commentWrapper) {
-            return;
-        }
-
-        var longContent = commentWrapper.children('.content-long'),
-            textArea = commentWrapper.children('.content-edit').children('.form-control');
-
-        this.prevText = longContent.text();
-
-        if (edit) {
-            this.hidePlaceholder(commentWrapper, function () {
-                commentWrapper.addClass('editing');
-                commentWrapper.switchClass('light', 'dark', 100);
-                StoryLine.CommentManager.showTextArea(commentWrapper);
-            });
-        } else {
-
-        }
-
+    resetEditing: function () {
+        this.prevText = "";
+        this.editingNew = this.editing = false;
     }
 };
-
-
