@@ -9,8 +9,6 @@ StoryLine.ScenarioManager.prototype = {
     create: function (callback) {
         this.loadTemplateScenario(function () {
             StoryLine.ScenarioManager.templateScenario = $('.scenarioWrapper.template');
-            //StoryLine.CommentManager.templateComment = $('.scenarioWrapper.template .commentWrapper.template');
-
             // initialize each scenario
             // will eventually be replaced when implementing loading since the scenario's must then be created while loading.
             $('.scenarioWrapper:not(.template)').each(function (index, scenario) {
@@ -46,20 +44,29 @@ StoryLine.ScenarioManager.prototype = {
                 // vervangen door één klikbare sectie (namelijk de scenariowrapper)
 
 
-
-                $(".scenarioWrapper").on("click", function () {
+                // If I make this .click it will only be executed on the template scenario
+                $(".scenarioWrapper.template").click(function () {
                     // Restrict clicking (like with comments):
                     // Block if editing scenario's
-                    // 
                     var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
                     var list = $('.scenario-list');
                     var tmp = $('.scenarioWrapper.template');
-                    //sct.appendTo(list);
-
-                    sct.insertBefore($(tmp));
-                    console.log(sct);
+                    sct.insertBefore(tmp);
+                    var commentList = $(sct).children('.scenario').children('.comment-list-wrapper').children('.comment-list');
+                    StoryLine.CommentManager.initCommentList(commentList);
                     StoryLine.ScenarioManager.showScenario($(sct));
                 });
+                /*
+                $(".scenarioWrapper").on("click", function () {
+                    // Restrict clicking (like with comments):
+                    // Block if editing scenario's
+                    var sct = StoryLine.ScenarioManager.cloneScenarioTemplate();
+                    var list = $('.scenario-list');
+                    var tmp = $('.scenarioWrapper.template');
+                    sct.insertBefore(tmp);
+                    StoryLine.ScenarioManager.showScenario($(sct));
+                });
+                */
 
 
                 var commentList = $('.comment-list'),
@@ -72,26 +79,22 @@ StoryLine.ScenarioManager.prototype = {
                         callback(true);
                     }
                 });
-
-
             }
         });
-
-
     },
     initializeScenario: function (scenarioWrapper) {
         // Add all content here
         // Event
-        // 
     },
     cloneScenarioTemplate: function () {
         // Create a new div scenarioWrapper
-        var scenarioWrapper = $('<li>').addClass('scenarioWrapper').addClass('light');
+        var scenarioWrapper = $('<li class="scenarioWrapper light">');
         // Clone scenarioWrapper.template
-        var template = StoryLine.ScenarioManager.templateScenario.clone(true);
-
+        var template = StoryLine.ScenarioManager.templateScenario.clone(true, true);
         var elements = template.contents();
+
         elements.appendTo(scenarioWrapper);
+
         scenarioWrapper.children('.scenario').children('p').text("New");
         // Return the div, you'll need to hook it into the correct place.
         return scenarioWrapper;
@@ -114,7 +117,6 @@ StoryLine.ScenarioManager.prototype = {
     selectScenario: function (scenarioWrapper) {
         // change color (class)
         // enable sorting comments
-
         var oldWrapper;
         var commentList = scenarioWrapper.children('.comment-list');
         if (scenarioWrapper.hasClass('active-scenario')) {
@@ -152,6 +154,5 @@ StoryLine.ScenarioManager.prototype = {
             scenario = scenarioWrapper.children('.scenario');
         placeholder.hide();
         scenario.show();
-        console.log("Show");
     }
 };
