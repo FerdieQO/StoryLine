@@ -12,11 +12,11 @@
 }
 
 .comment-list > div:nth-child(even) {
-    background-color: #d0d0d0;
+    /*background-color: #d0d0d0;*/
 }
 
 .comment-list > div:nth-child(odd) {
-    background-color: #d5d5d5;
+    /*background-color: #d5d5d5;*/
 }
 
 .commentWrapper
@@ -26,7 +26,10 @@
 
     min-height: 5em;
 
-    border-bottom: 1px solid #ccc;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    /*border-bottom-color: #ccc;*/
+
     font-size: 1em;
     font-family: 'latolight';
     color: white;
@@ -36,7 +39,7 @@
 
 .commentWrapper:hover
 {
-    background-color: inherit;/*background-color: #e6b61e;*/
+    /*background-color: inherit;/*background-color: #e6b61e;*/
     overflow-y: visible;
     cursor:pointer;
 }
@@ -83,7 +86,7 @@
 .commentWrapper .placeholder .top { width: 100%;}
 .commentWrapper .placeholder .center { width: 20%; margin-left: 40%; margin-right: 40%; }
 .commentWrapper .placeholder .bottom { width: 100%; }
-
+/*
 .active-comment {
     background-color: #ddd;
 }
