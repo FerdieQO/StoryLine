@@ -1,3 +1,5 @@
+//WOLOLOOOOOOOOOO
+
 var StoryLine = StoryLine || {};
 
 StoryLine.CommentManager = function () {
@@ -17,7 +19,6 @@ StoryLine.CommentManager.prototype = {
             StoryLine.CommentManager.initCommentList($(this));
         });
         //this.initCommentLists();
-
 
         // Temporary
         $('.commentWrapper').each(function () {
