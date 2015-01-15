@@ -23,7 +23,7 @@ StoryLine.ContextMenuManager.prototype = {
             template = this.templateContextMenu.clone(true, true),
             elements = template.contents();
         elements.appendTo(contextMenu);
-        contextMenu.hide();
+        //contextMenu.hide();
         return contextMenu;
     },
     initContextMenu: function (scenarioWrapper, contextMenu) {
@@ -36,7 +36,7 @@ StoryLine.ContextMenuManager.prototype = {
             $('body, .scenario-list').toggleClass('fix');
             var contextMenu = $('.contextMenu').eq(myIndex);
             contextMenu.addClass('active');
-            contextMenu.animate({width: 'toggle'}, {duration: 350, queue: false});
+            //contextMenu.animate({width: 'toggle'}, {duration: 350, queue: false});
             $(this).toggleClass('active');//.children('.scenario')
             
             
@@ -60,7 +60,12 @@ StoryLine.ContextMenuManager.prototype = {
             var myIndex = $(this).parent().index();
             myIndex -= 1;
             if (myIndex > 0) { myIndex /= 2; }
-            $('.event').eq(myIndex).attr('src', $(this).attr('src'));
+            if(!$('.event').eq(myIndex).hasClass('delete')){
+                $('.event').eq(myIndex).attr('src', $(this).attr('src'));
+            }
+            else{
+                
+            }
         });
         
         this.getPositions();
