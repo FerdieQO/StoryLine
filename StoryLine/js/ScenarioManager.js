@@ -32,7 +32,34 @@ StoryLine.ScenarioManager.prototype = {
             });
             callback();
         });
+        
+        $('.scenarioWrapper:not(.template)').each(function (index, element) {
+            StoryLine.ScenarioManager.initScenario($(this));
+        });
     },
+    initScenario: function (scenarioWrapper) {
+        // Child specific behaviour
+        scenarioWrapper.children('.event').click(function () {
+            var scenario = $(this).parent();
+            if (StoryLine.ScenarioManager.isScenarioSelected(scenario)) {
+                StoryLine.ContextMenuManager.initContextMenu(scenario, 'event');
+            }
+
+            var myIndex = $(this).index();
+            if (myIndex > 0) { myIndex /= 2; }
+            $('body, .scenario-list').toggleClass('fix');
+            var contextMenu = $('.contextMenu').eq(myIndex);
+
+
+            //$(this).toggleClass('active');
+
+            contextMenu.addClass('active');
+            contextMenu.animate({width: 'toggle'}, {duration: 350, queue: false});
+            $(this).toggleClass('active');//.children('.scenario')
+        });
+    },
+    
+    
     loadTemplateScenario: function (callback) {
         var scenarioList = $('.scenario-list'),
             scenarioHandler = "../templates/scenario.html .scenarioWrapper.template,.contextMenu.template";
@@ -57,8 +84,10 @@ StoryLine.ScenarioManager.prototype = {
                     scInstance.insertBefore(tmp);
                     cmInstance.insertAfter(scInstance);
                     commentList = $(scInstance).children('.scenario').children('.comment-list-wrapper').children('.comment-list');
-                    StoryLine.ContextMenuManager.initContextMenu($(scInstance), $(cmInstance));
+                    
+                    StoryLine.ContextMenuManager.initContextMenu($(cmInstance));
                     StoryLine.CommentManager.initCommentList(commentList);
+                    StoryLine.ScenarioManager.initScenario($(this));
                     StoryLine.ScenarioManager.showScenario($(scInstance));
                 });
 
@@ -85,7 +114,6 @@ StoryLine.ScenarioManager.prototype = {
         // Return the div, you'll need to hook it into the correct place.
         return scenarioWrapper;
     },
-    
     setScenarioEvent: function (scenarioWrapper, event) {
         if (scenarioWrapper.hasClass('template')) {
             return;
@@ -101,9 +129,20 @@ StoryLine.ScenarioManager.prototype = {
             }
         }
     },
+    
+    isScenarioSelected: function (scenarioWrapper) {
+        return scenarioWrapper.hasClass('active');
+    },
     selectScenario: function (scenarioWrapper) {
         // change color (class)
         // enable sorting comments
+        if (this.activeScenario) {
+            this.activeScenario.removeClass('active');
+        }
+        scenarioWrapper.addClass('active');
+        this.activeScenario = scenarioWrapper;
+
+        /*
         var oldWrapper,
             oldCommentList,
             commentList = scenarioWrapper.children('.comment-list');
@@ -124,11 +163,17 @@ StoryLine.ScenarioManager.prototype = {
             commentList.addClass('sortable');
             this.activeScenario = scenarioWrapper;
         }
+        */
     },
     unselectScenario: function (scenarioWrapper) {
         // change color (class)
         // disable sorting comments
+        scenarioWrapper.removeClass('active');
+        if (this.activeScenario) {
+            this.activeScenario = null;
+        }
     },
+    
     // Switch from the scenario to the placeholder
     showPlaceholder: function (scenarioWrapper) {
         var placeholder = scenarioWrapper.children('.placeholder-wrapper'),
