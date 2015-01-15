@@ -92,6 +92,38 @@ StoryLine.CommentManager.prototype = {
         });
     },
     initCommentList: function (commentList) {
+        
+        var children = $(commentList).children('.commentWrapper');
+        console.log(children.length);
+        children.each(function () {
+            var myIndex = $(this).index(),
+                light = $(this).hasClass('light'),
+                medium = $(this).hasClass('medium'),
+                dark = $(this).hasClass('dark');
+            if (myIndex % 2 != 0) {
+                // Even
+                if (light) {
+                    $(this).removeClass('light');
+                }
+                if (dark) {
+                    $(this).removeClass('dark');
+                }
+                if (!medium) {
+                    $(this).addClass('medium');
+                }
+            } else {
+                // Odd
+                if (light) {
+                    $(this).removeClass('light');
+                }
+                if (medium) {
+                    $(this).removeClass('medium');
+                }
+                if (!dark) {
+                    $(this).addClass('dark');
+                }
+            }
+        });
         // Make the commentlist sortable
         $(commentList).sortable({
             connectWith: ".comment-list",
@@ -107,8 +139,8 @@ StoryLine.CommentManager.prototype = {
                 console.log("Start sorting");
             }
         });
-        console.log($(commentList));
-        console.log($(commentList).sortable('widget'));
+        //console.log($(commentList));
+        //console.log($(commentList).sortable('widget'));
         $(commentList).disableSelection();
         //$(commentList).sortable('refresh');
     },
@@ -239,7 +271,7 @@ StoryLine.CommentManager.prototype = {
         var shortContent = commentWrapper.children('.content-short');
         shortContent.hide();
         this.hideLongContent(commentWrapper, function () {
-            commentWrapper.switchClass('dark', 'light', 100);
+            commentWrapper.switchClass('medium', 'light', 100);
             commentWrapper.removeClass('active-comment');
             StoryLine.CommentManager.showShortContent(commentWrapper);
         });
@@ -249,7 +281,7 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         this.hideShortContent(commentWrapper, function () {
-            commentWrapper.switchClass('light', 'dark', 100);
+            commentWrapper.switchClass('light', 'medium', 100);
             commentWrapper.addClass('active-comment');
             StoryLine.CommentManager.showLongContent(commentWrapper);
         });
@@ -278,11 +310,11 @@ StoryLine.CommentManager.prototype = {
             return true;
         }
     },
-    
+
     cloneCommentTemplate: function (templateComment) {
         this.currTemplate = templateComment;
         // Create a new div commentWrapper
-        var commentWrapper = $('<div class="commentWrapper light">');
+        var commentWrapper = $('<div class="commentWrapper light dark-border">');
         // Clone commentWrapper.template
         var newComment = templateComment.clone(true, true);
 
@@ -292,7 +324,6 @@ StoryLine.CommentManager.prototype = {
         // Return the div, you'll need to hook it into the correct place.
         return newComment;
     },
-
     finishEdit: function (commentWrapper, apply) {
         var cM = StoryLine.CommentManager,
             shortContent = commentWrapper.children('.content-short'),
@@ -383,8 +414,9 @@ StoryLine.CommentManager.prototype = {
         //console.log("Sorting: " + (disable ? "disabled." : "enabled."));
     },
     resetEditing: function (commentWrapper) {
-        console.log(this.currTemplate.parents('.comment-list'));
-        console.log(this.currTemplate.parents('.comment-list').parents('.comment-list-wrapper').parents('.scenario').parents('.scenarioWrapper'));
+        //console.log(this.currTemplate.parents('.comment-list'));
+        //console.log(this.currTemplate.parents('.comment-list').parents('.comment-list-wrapper').parents('.scenario').parents('.scenarioWrapper'));
+        this.initCommentList(commentWrapper.parents('.comment-list'));
         this.initCommentList(this.currTemplate.parents('.comment-list'));
         this.prevText = "";
         this.editing = false;

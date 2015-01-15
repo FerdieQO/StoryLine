@@ -27,9 +27,13 @@
     height: 100%;
     max-height: 100%;
     overflow-y: hidden;
-    
-    border-top: 1px solid #ccc;
-    border-bottom: 2px solid #ccc;
+
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #ccc;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    /*border-bottom-color: #ccc;*/
 }
 
 @media (max-width: 767px) {
@@ -39,8 +43,13 @@
         max-width: 25em;
         height: 100%;
         max-height: 100%;
-        border-top: 1px solid #ccc;
-        border-bottom: 2px solid #ccc;
+        
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-top-color: #ccc;
+        border-bottom-width: 2px;
+        border-bottom-style: solid;
+        /*border-bottom-color: #ccc;*/
     }
 }
 
@@ -63,7 +72,7 @@
     max-width: 100%;
     height: calc(100% - 1em);
     overflow-y: scroll;
-	background-size: 100% 100%;
+    background-size: 100% 100%;
 }
 
 .color-bar {
@@ -74,8 +83,13 @@
     margin-left: auto;
     margin-right: auto;
     width: 90%;
-    border-bottom: 3px solid #ccc;
+    
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+    /*border-bottom-color: #ccc;*/
 }
+
+
 
 .scenario .event {
     margin-left: auto;
@@ -88,7 +102,7 @@
 }
 
 .scenario .emotion {
-    background-color: #ccc;
+    /*background-color: #ccc;*/
     width: 47%;
 }
 
@@ -96,28 +110,29 @@
 /* !Scenario */
 
 .active-scenario {
-    
+
 }
 
-/* Active color if the element in a talk scenario has class show or the scenario is active */
+/* Active color if the element in a talk scenario has class show or the scenario is active *//*
 li.scenarioWrapper.talk .light.show, li.scenarioWrapper.talk.active-scenario .light {
-    background-color: rgb(249, 200, 46);
+background-color: rgb(249, 200, 46);
 }
-
-/* Active color if the element in a talk scenario has class show or the scenario is active */
+*/
+/* Active color if the element in a talk scenario has class show or the scenario is active *//*
 li.scenarioWrapper.talk .dark.show, li.scenarioWrapper.talk.active-scenario .dark {
-    background-color: rgb(230, 182, 30);
+background-color: rgb(230, 182, 30);
 }
-
-/* Active color if the element in a talk scenario has class show or the scenario is active */
+*/
+/* Active color if the element in a talk scenario has class show or the scenario is active *//*
 li.scenarioWrapper.hold-hands .light.show, li.scenarioWrapper.hold-hands.active-scenario .light {
-    background-color: rgb(193, 57, 43);
+background-color: rgb(193, 57, 43);
 }
-
-/* Active color if the element in a talk scenario has class show or the scenario is active */
+*/
+/* Active color if the element in a talk scenario has class show or the scenario is active *//*
 li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-scenario .dark {
-    background-color: rgb(174, 39, 43);
+background-color: rgb(174, 39, 43);
 }
+*/
 
 .talk active-comment {
     background-color: #f9c82e;
@@ -140,31 +155,43 @@ li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-s
 {
     width: 3em;
     height: 37.9em;
-    border-top: 1px solid #ccc;
-    border-bottom: 2px solid #ccc;
-	background-color: #FFFFFF;
-	padding: 0.25em;
+    
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #ccc;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    /*border-bottom-color: #ccc;*/
+    
+    background-color: #FFFFFF;
+    padding: 0.25em;
+    z-index: 1;
+}
+
+.contextMenu.template
+{
+    display: none;
 }
 
 .contextIcon
 {
-	width: 2.5em;
-	height: auto;
-	margin-bottom: 1em;
-	cursor: pointer;
+    width: 2.5em;
+    height: auto;
+    margin-bottom: 1em;
+    cursor: pointer;
 }
 
 .fix
 {
-	overflow: hidden;
+    overflow: hidden;
 }
 
 #screenWrapper
 {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	z-index: -10;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
 }
