@@ -10,7 +10,7 @@
     overflow-y: hidden;
     display: inline-flex;
 }
-
+/*
 .scenario-list > li:nth-child(even) {
     background-color: #eee;
 }
@@ -30,7 +30,7 @@
 
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: #ccc;
+    /*border-top-color: #ccc;*/
     border-bottom-width: 2px;
     border-bottom-style: solid;
     /*border-bottom-color: #ccc;*/
@@ -46,7 +46,7 @@
         
         border-top-width: 1px;
         border-top-style: solid;
-        border-top-color: #ccc;
+        /*border-top-color: #ccc;*/
         border-bottom-width: 2px;
         border-bottom-style: solid;
         /*border-bottom-color: #ccc;*/
@@ -92,9 +92,8 @@
 
 
 .scenario .event {
-    margin-left: auto;
-    margin-right: auto;
-    width: inherit;
+    margin: 2px;
+    width: calc(100% - 4px);
 }
 
 .scenario .emotions {
@@ -133,7 +132,7 @@ li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-s
 background-color: rgb(174, 39, 43);
 }
 */
-
+/*
 .talk active-comment {
     background-color: #f9c82e;
 }
@@ -149,7 +148,7 @@ background-color: rgb(174, 39, 43);
 
 .kiss {
     background-color: #ccc;
-}
+}*/
 
 .contextMenu 
 {
@@ -158,10 +157,14 @@ background-color: rgb(174, 39, 43);
     
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: #ccc;
+    /*border-top-color: #ccc;*/
     border-bottom-width: 2px;
     border-bottom-style: solid;
     /*border-bottom-color: #ccc;*/
+    
+    font-size: 1em;
+    font-family: 'latolight';
+    color: white;
     
     background-color: #FFFFFF;
     padding: 0.25em;
@@ -179,6 +182,12 @@ background-color: rgb(174, 39, 43);
     height: auto;
     margin-bottom: 1em;
     cursor: pointer;
+}
+
+.highlight {
+    outline-style: dashed;
+    outline-width: 2px;
+/*    outline-color: inherit;*/
 }
 
 .fix

@@ -22,7 +22,6 @@ StoryLine.CommentManager.prototype = {
         // Temporary
         $('.commentWrapper').each(function () {
             if ($(this).hasClass('template')) {
-                console.log('Show placeholder');
                 $(this).children('.placeholder').show();
             } else {
                 var short = $(this).children('.content-short');
@@ -30,6 +29,7 @@ StoryLine.CommentManager.prototype = {
             }
         });
 
+        // Should eventually be changed to contextMenu
         $('.commentWrapper .content-edit .button').on("click", function (event) {
             var apply = $(this).hasClass('apply'),
                 abort = $(this).hasClass('abort'),
@@ -52,6 +52,11 @@ StoryLine.CommentManager.prototype = {
             }
             // if this commentWrapper is the template
             if (commentWrapper.hasClass('template')) {
+                if (cM.editing) {
+                    // Feedback that it isn't allowed
+                    return;
+                }
+                
 
                 var newComment = cM.cloneCommentTemplate(commentWrapper);
                 cM.prevText = "";
@@ -93,7 +98,7 @@ StoryLine.CommentManager.prototype = {
     initCommentList: function (commentList) {
         
         var children = $(commentList).children('.commentWrapper');
-        console.log(children.length);
+        //console.log(children.length);
         children.each(function () {
             var myIndex = $(this).index(),
                 light = $(this).hasClass('light'),
@@ -270,7 +275,7 @@ StoryLine.CommentManager.prototype = {
         var shortContent = commentWrapper.children('.content-short');
         shortContent.hide();
         this.hideLongContent(commentWrapper, function () {
-            commentWrapper.switchClass('medium', 'light', 100);
+            //commentWrapper.switchClass('dark', 'medium', 100);
             commentWrapper.removeClass('active-comment');
             StoryLine.CommentManager.showShortContent(commentWrapper);
         });
@@ -280,7 +285,7 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         this.hideShortContent(commentWrapper, function () {
-            commentWrapper.switchClass('light', 'medium', 100);
+            //commentWrapper.switchClass('medium', 'dark', 100);
             commentWrapper.addClass('active-comment');
             StoryLine.CommentManager.showLongContent(commentWrapper);
         });

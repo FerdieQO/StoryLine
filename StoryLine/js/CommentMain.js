@@ -8,7 +8,6 @@ StoryLine.CommentMain = function () {
 StoryLine.CommentMain.prototype = {
     create: function () {
         StoryLine.DatabaseManager.create();
-        //StoryLine.CommentManager.templateComment = $('.commentWrapper.template');
         StoryLine.CommentManager.create();
     }
 };
