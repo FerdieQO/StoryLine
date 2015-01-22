@@ -89,7 +89,12 @@
     /*border-bottom-color: #ccc;*/
 }
 
-
+.scenario > p {
+    font-size: 1em;
+    font-family: 'latolight';
+    font-weight: bolder;
+    color: white;
+}
 
 .scenario .event {
     margin: 2px;
@@ -111,44 +116,6 @@
 .active-scenario {
 
 }
-
-/* Active color if the element in a talk scenario has class show or the scenario is active *//*
-li.scenarioWrapper.talk .light.show, li.scenarioWrapper.talk.active-scenario .light {
-background-color: rgb(249, 200, 46);
-}
-*/
-/* Active color if the element in a talk scenario has class show or the scenario is active *//*
-li.scenarioWrapper.talk .dark.show, li.scenarioWrapper.talk.active-scenario .dark {
-background-color: rgb(230, 182, 30);
-}
-*/
-/* Active color if the element in a talk scenario has class show or the scenario is active *//*
-li.scenarioWrapper.hold-hands .light.show, li.scenarioWrapper.hold-hands.active-scenario .light {
-background-color: rgb(193, 57, 43);
-}
-*/
-/* Active color if the element in a talk scenario has class show or the scenario is active *//*
-li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-scenario .dark {
-background-color: rgb(174, 39, 43);
-}
-*/
-/*
-.talk active-comment {
-    background-color: #f9c82e;
-}
-
-.hold-hands {
-    background-color: rgb(193, 57, 43);
-}
-
-
-.cuddle {
-    background-color: #5d2e4e;
-}
-
-.kiss {
-    background-color: #ccc;
-}*/
 
 .contextMenu 
 {

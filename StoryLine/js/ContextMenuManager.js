@@ -64,15 +64,12 @@ StoryLine.ContextMenuManager.prototype = {
                     if (myIndex > 0) { myIndex /= 2; }
                     //console.log(StoryLine.ContextMenuManager.activeTarget);
                     var src = $(this).attr('src');
-                    //console.log(src);
-
-                    if (src == '../src/GUI/actionIcon[kletsen].png') {
+                    if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[kletsen].png')) {
                         if (StoryLine.ContextMenuManager.activeTarget.hasClass('event')) {
                             StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "talk");
                         }
                         StoryLine.ContextMenuManager.activeTarget.attr('src', src);
-                    }
-                    else if (src == '../src/GUI/actionIcon[handen].png') {
+                    } else if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[handen].png')) {
                         if (StoryLine.ContextMenuManager.activeTarget.hasClass('event')) {
                             StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "hold-hands");
                         }

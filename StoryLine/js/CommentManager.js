@@ -3,7 +3,7 @@ var StoryLine = StoryLine || {};
 StoryLine.CommentManager = function () {
     this.currTemplate = null;
     this.prevText = "";
-    this.templateEmotion = "../src/editButton(full)(action).png";
+    this.templateEmotion = "src/editButton(full)(action).png";
     this.editing = false;
 };
 
@@ -12,12 +12,9 @@ StoryLine.CommentManager.prototype = {
         // Select the active scenario
 
         // TODO: only for active scenario's
-        //var commentList = $('.comment-list.sortable');
         $('.comment-list').each(function () {
             StoryLine.CommentManager.initCommentList($(this));
         });
-        //this.initCommentLists();
-
 
         // Temporary
         $('.commentWrapper').each(function () {

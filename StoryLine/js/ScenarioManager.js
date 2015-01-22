@@ -152,7 +152,7 @@ StoryLine.ScenarioManager.prototype = {
 
     loadTemplateScenario: function (callback) {
         var scenarioList = $('.scenario-list'),
-            scenarioHandler = "../templates/scenario.html .scenarioWrapper.template,.contextMenu.template";
+            scenarioHandler = "templates/scenario.html .scenarioWrapper.template,.contextMenu.template";
 
         scenarioList.load(scenarioHandler, function (scResponse, scStatus, scXhr) {
             if (scStatus === "error") {
@@ -183,7 +183,7 @@ StoryLine.ScenarioManager.prototype = {
                 });
 
                 var commentList = $('.comment-list'),
-                    commentHandler = "../templates/comment.html .commentWrapper.template";
+                    commentHandler = "templates/comment.html .commentWrapper.template";
                 commentList.load(commentHandler, function (cResponse, cStatus, cXhr) {
                     if (cStatus === "error") {
                         console.log("Loading template failed.");
