@@ -238,8 +238,10 @@ StoryLine.ScenarioManager.prototype = {
             this.unselectScenario(this.activeScenario);
             //this.activeScenario.removeClass('active');
         }
-        scenarioWrapper.addClass('active');
-        this.activeScenario = scenarioWrapper;
+        StoryLine.Main.scrollToItem(scenarioWrapper, function () {
+            scenarioWrapper.addClass('active');
+            StoryLine.ScenarioManager.activeScenario = scenarioWrapper;
+        });
 
         /*
         var oldWrapper,
