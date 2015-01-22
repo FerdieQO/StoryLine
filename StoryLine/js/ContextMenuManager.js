@@ -30,7 +30,7 @@ StoryLine.ContextMenuManager.prototype = {
         scenarioWrapper.click(function () {
             StoryLine.ContextMenuManager.getPositions();
             // Differentiate behaviour and content.
-            
+
             var myIndex = $(this).index();
             if (myIndex > 0) { myIndex /= 2; }
             $('body, .scenario-list').toggleClass('fix');
@@ -38,8 +38,8 @@ StoryLine.ContextMenuManager.prototype = {
             contextMenu.addClass('active');
             //contextMenu.animate({width: 'toggle'}, {duration: 350, queue: false});
             $(this).toggleClass('active');//.children('.scenario')
-            
-            
+
+
             /*
             if ($(this).hasClass('show')) {
                 if ($(this).hasClass('talk')) {
@@ -59,15 +59,53 @@ StoryLine.ContextMenuManager.prototype = {
         contextMenu.children('.contextIcon').on("click", function () {
             var myIndex = $(this).parent().index();
             myIndex -= 1;
-            if (myIndex > 0) { myIndex /= 2; }
+            if (myIndex > 0) { myIndex /= 2; } // sjoerd magic
+
+            if($(this).hasClass('edit'))
+            {
+                var editingComment = $('.active-comment');
+                var formControl = editingComment.children('.content-edit').children('.form-control');
+                var longContent = editingComment.children('.content-long');
+
+                StoryLine.CommentManager.prevText = "";
+                StoryLine.CommentManager.editing = true;
+
+                var short = StoryLine.CommentManager.isShortContentDisplayed(editingComment);
+                var long = StoryLine.CommentManager.isLongContentDisplayed(editingComment);
+
+                var callback = function () 
+                    {
+                        console.log("derpty derp");
+                        StoryLine.CommentManager.showTextArea(editingComment, true);
+                        editingComment.addClass('editing');
+                    };
+                
+                if(short)
+                {
+                    console.log("shits short yo");
+                    StoryLine.CommentManager.hideShortContent(editingComment, callback);
+                } 
+                else if (long)
+                {
+                    console.log("shits long yo");
+                    StoryLine.CommentManager.hideLongContent(editingComment, callback);
+                } 
+                else
+                {
+                    console.log("ERROR: No content displayed. Editing not possible.");
+                }
+                
+                return;
+            }
+
             if(!$('.event').eq(myIndex).hasClass('delete')){
                 $('.event').eq(myIndex).attr('src', $(this).attr('src'));
             }
             else{
-                
+
             }
         });
-        
+
         this.getPositions();
     },
     getPositions: function () {
@@ -91,6 +129,10 @@ StoryLine.ContextMenuManager.prototype = {
             }
             if ($(myParent).hasClass('kiss')) {
                 $(this).addClass('kiss');
+                //$(this).css({'background-color': '#665454'});
+            }
+            if ($(myParent).hasClass('edit')) {
+                $(this).addClass('edit');
                 //$(this).css({'background-color': '#665454'});
             }
 
