@@ -3,7 +3,7 @@ var StoryLine = StoryLine || {};
 StoryLine.CommentManager = function () {
     this.currTemplate = null;
     this.prevText = "";
-    this.templateEmotion = "../src/editButton(full)(action).png";
+    this.templateEmotion = "src/editButton(full)(action).png";
     this.editing = false;
 };
 
@@ -12,16 +12,13 @@ StoryLine.CommentManager.prototype = {
         // Select the active scenario
 
         // TODO: only for active scenario's
-        //var commentList = $('.comment-list.sortable');
         $('.comment-list').each(function () {
             StoryLine.CommentManager.initCommentList($(this));
         });
-        //this.initCommentLists();
 
         // Temporary
         $('.commentWrapper').each(function () {
             if ($(this).hasClass('template')) {
-                console.log('Show placeholder');
                 $(this).children('.placeholder').show();
             } else {
                 var short = $(this).children('.content-short');
@@ -29,6 +26,7 @@ StoryLine.CommentManager.prototype = {
             }
         });
 
+        // Should eventually be changed to contextMenu
         $('.commentWrapper .content-edit .button').on("click", function (event) {
             var apply = $(this).hasClass('apply'),
                 abort = $(this).hasClass('abort'),
@@ -51,7 +49,12 @@ StoryLine.CommentManager.prototype = {
             }
             // if this commentWrapper is the template
             if (commentWrapper.hasClass('template')) {
- 
+                if (cM.editing) {
+                    // Feedback that it isn't allowed
+                    return;
+                }
+                
+
                 var newComment = cM.cloneCommentTemplate(commentWrapper);
                 cM.prevText = "";
                 cM.editing = true;
@@ -92,7 +95,7 @@ StoryLine.CommentManager.prototype = {
     initCommentList: function (commentList) {
         
         var children = $(commentList).children('.commentWrapper');
-        console.log(children.length);
+        //console.log(children.length);
         children.each(function () {
             var myIndex = $(this).index(),
                 light = $(this).hasClass('light'),
@@ -269,7 +272,7 @@ StoryLine.CommentManager.prototype = {
         var shortContent = commentWrapper.children('.content-short');
         shortContent.hide();
         this.hideLongContent(commentWrapper, function () {
-            commentWrapper.switchClass('medium', 'light', 100);
+            //commentWrapper.switchClass('dark', 'medium', 100);
             commentWrapper.removeClass('active-comment');
             StoryLine.CommentManager.showShortContent(commentWrapper);
         });
@@ -279,7 +282,7 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         this.hideShortContent(commentWrapper, function () {
-            commentWrapper.switchClass('light', 'medium', 100);
+            //commentWrapper.switchClass('medium', 'dark', 100);
             commentWrapper.addClass('active-comment');
             StoryLine.CommentManager.showLongContent(commentWrapper);
         });
@@ -326,7 +329,10 @@ StoryLine.CommentManager.prototype = {
         var cM = StoryLine.CommentManager,
             shortContent = commentWrapper.children('.content-short'),
             longContent = commentWrapper.children('.content-long'),
-            textArea = commentWrapper.children('.content-edit').children('.form-control');
+            textArea = commentWrapper.children('.content-edit').children('.form-control'),
+            callback = function (cW) {
+                StoryLine.CommentManager.resetEditing(cW);
+            };
 
         if (apply) {
             var text = textArea.val().trim(), img;
@@ -337,16 +343,15 @@ StoryLine.CommentManager.prototype = {
                     this.hideTextArea(commentWrapper, function () {
                         commentWrapper.remove();
                         cM.currTemplate.fadeIn(200);
+                        callback(commentWrapper);
                     });
-                    this.resetEditing(commentWrapper);
                     return;
                 } else {
                     this.hideTextArea(commentWrapper, function () {
                         commentWrapper.removeClass('editing');
                         cM.showLongContent(commentWrapper);
-                        console.log("omdat merlijn het zegt");
+                        callback(commentWrapper);
                     });
-                    this.resetEditing(commentWrapper);
                     return;
                     // TODO: Handle empty value, give a message or something
                 }
@@ -370,6 +375,7 @@ StoryLine.CommentManager.prototype = {
                 cM.showShortContent(commentWrapper);
             });
             textArea.val('');
+            callback(commentWrapper);
         } else {
             // if this is a new comment:
             if (cM.prevText.trim().length <= 0) {
@@ -377,16 +383,18 @@ StoryLine.CommentManager.prototype = {
                 this.hideTextArea(commentWrapper, function () {
                     commentWrapper.remove();
                     cM.currTemplate.fadeIn(200);
+                    callback(commentWrapper);
                 });
             } else {
                 textArea.val(cM.prevText);
                 this.hideTextArea(commentWrapper, function () {
                     commentWrapper.removeClass('editing');
                     cM.showLongContent(commentWrapper);
+                    callback(commentWrapper);
                 });
             }
         }
-        this.resetEditing(commentWrapper);
+        
     },
     toggleSortable: function (commentWrapper) {
         $('.sortable').sortable('refresh');

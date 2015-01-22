@@ -9,14 +9,20 @@
     overflow-x: auto;
     overflow-y: hidden;
     display: inline-flex;
+    
+    text-shadow: 
+        1px 1px 1px rgba(0, 0, 0, 0.75),
+        -1px 1px 1px rgba(0, 0, 0, 0.75),
+        -1px -1px 1px rgba(0, 0, 0, 0.75),
+        1px -1px 1px rgba(0, 0, 0, 0.75);
 }
-
+/*
 .scenario-list > li:nth-child(even) {
-    background-color: #eee;
+background-color: #eee;
 }
 
 .scenario-list > li:nth-child(odd) {
-    background-color: #ddd;
+background-color: #ddd;
 }
 /* !Scenario-list */
 
@@ -30,7 +36,7 @@
 
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: #ccc;
+    /*border-top-color: #ccc;*/
     border-bottom-width: 2px;
     border-bottom-style: solid;
     /*border-bottom-color: #ccc;*/
@@ -43,10 +49,10 @@
         max-width: 25em;
         height: 100%;
         max-height: 100%;
-        
+
         border-top-width: 1px;
         border-top-style: solid;
-        border-top-color: #ccc;
+        /*border-top-color: #ccc;*/
         border-bottom-width: 2px;
         border-bottom-style: solid;
         /*border-bottom-color: #ccc;*/
@@ -83,18 +89,28 @@
     margin-left: auto;
     margin-right: auto;
     width: 90%;
-    
+
     border-bottom-width: 3px;
     border-bottom-style: solid;
     /*border-bottom-color: #ccc;*/
 }
 
-
+.scenario > p {
+    font-size: 1em;
+    font-family: 'latolight';
+    font-weight: bolder;
+    
+    /* text-shadow: 
+        1px 1px 1px rgba(0, 0, 0, 0.5),
+        -1px 1px 1px rgba(0, 0, 0, 0.5),
+        -1px -1px 1px rgba(0, 0, 0, 0.5),
+        1px -1px 1px rgba(0, 0, 0, 0.5);*/
+    color: white;
+}
 
 .scenario .event {
-    margin-left: auto;
-    margin-right: auto;
-    width: inherit;
+    margin: 2px;
+    width: calc(100% - 4px);
 }
 
 .scenario .emotions {
@@ -113,58 +129,27 @@
 
 }
 
-/* Active color if the element in a talk scenario has class show or the scenario is active *//*
-li.scenarioWrapper.talk .light.show, li.scenarioWrapper.talk.active-scenario .light {
-background-color: rgb(249, 200, 46);
-}
-*/
-/* Active color if the element in a talk scenario has class show or the scenario is active *//*
-li.scenarioWrapper.talk .dark.show, li.scenarioWrapper.talk.active-scenario .dark {
-background-color: rgb(230, 182, 30);
-}
-*/
-/* Active color if the element in a talk scenario has class show or the scenario is active *//*
-li.scenarioWrapper.hold-hands .light.show, li.scenarioWrapper.hold-hands.active-scenario .light {
-background-color: rgb(193, 57, 43);
-}
-*/
-/* Active color if the element in a talk scenario has class show or the scenario is active *//*
-li.scenarioWrapper.hold-hands .dark.show, li.scenarioWrapper.hold-hands.active-scenario .dark {
-background-color: rgb(174, 39, 43);
-}
-*/
-
-.talk active-comment {
-    background-color: #f9c82e;
-}
-
-.hold-hands {
-    background-color: rgb(193, 57, 43);
-}
-
-
-.cuddle {
-    background-color: #5d2e4e;
-}
-
-.kiss {
-    background-color: #ccc;
-}
-
 .contextMenu 
 {
     width: 3em;
-    height: 37.9em;
-    
+    height: 100%;
+    max-height: 100%;
+    overflow-y: hidden;
+
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: #ccc;
+    /*border-top-color: #ccc;*/
     border-bottom-width: 2px;
     border-bottom-style: solid;
     /*border-bottom-color: #ccc;*/
-    
+
+    font-size: 1em;
+    font-family: 'latolight';
+    color: white;
+
     background-color: #FFFFFF;
     padding: 0.25em;
+
     z-index: 1;
 }
 
@@ -179,6 +164,12 @@ background-color: rgb(174, 39, 43);
     height: auto;
     margin-bottom: 1em;
     cursor: pointer;
+}
+
+.highlight {
+    outline-style: dashed;
+    outline-width: 2px;
+    /*    outline-color: inherit;*/
 }
 
 .fix

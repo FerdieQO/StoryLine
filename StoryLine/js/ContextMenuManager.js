@@ -2,14 +2,19 @@ var StoryLine = StoryLine || {};
 
 StoryLine.ContextMenuManager = function () {
     this.templateContextMenu = null;
+    this.activeContextMenu = null;
+    // Contains the element which it is active for.
+    this.activeTarget = null;
 };
 
 StoryLine.ContextMenuManager.prototype = {
     create: function () {
+        // Initialise each contextMenu except for the template
         $('.contextMenu:not(.template)').each(function (index, element) {
             StoryLine.ContextMenuManager.initContextMenu($(this));
         });
 
+        // 
         $('.scenario-list').scroll(function () {
             StoryLine.ContextMenuManager.getPositions();
         });
@@ -18,102 +23,144 @@ StoryLine.ContextMenuManager.prototype = {
             StoryLine.ContextMenuManager.getPositions();
         });
     },
+    /// Returns a new contextMenu div
     cloneContextMenuTemplate: function () {
-        var contextMenu = $('<div class="contextMenu dark">'),
-            template = this.templateContextMenu.clone(true, true),
+        var contextMenu = $('<div class="contextMenu dark medium-border">'),
+            template = this.templateContextMenu.clone(true),
             elements = template.contents();
         elements.appendTo(contextMenu);
-        //contextMenu.hide();
+        contextMenu.hide();
         return contextMenu;
     },
-    initContextMenu: function (scenarioWrapper, contextMenu) {
-        scenarioWrapper.click(function () {
-            StoryLine.ContextMenuManager.getPositions();
-            // Differentiate behaviour and content.
+    getContextMenu: function (scenarioWrapper) {
+        var myIndex = scenarioWrapper.index(),
+            contextMenu;
+        if (myIndex > 0) { myIndex /= 2; }
+        contextMenu = $('.contextMenu').eq(myIndex);
+        return contextMenu === undefined ? false : contextMenu;
+    },
+    initContextMenu: function (scenarioWrapper, menuTarget) {
+        StoryLine.ContextMenuManager.getPositions();
+        // Get the contextMenu for this scenarioWrapper
+        var contextMenu = this.getContextMenu($(scenarioWrapper));
+        //console.log(contextMenu);
 
-            var myIndex = $(this).index();
-            if (myIndex > 0) { myIndex /= 2; }
-            $('body, .scenario-list').toggleClass('fix');
-            var contextMenu = $('.contextMenu').eq(myIndex);
-            contextMenu.addClass('active');
-            //contextMenu.animate({width: 'toggle'}, {duration: 350, queue: false});
-            $(this).toggleClass('active');//.children('.scenario')
+        // TODO: Set the buttons here (menuTarget for which target was clicked at; string event/emotion/etc.)
 
+        // removeChild apparently doesn't work ?
+        // I'm even tempted to change how the buttons work so they are all in the contextMenu and their visibility gets toggled.
+        if (contextMenu) {
+            var icons = contextMenu.children('.contextIcon');
+            contextMenu.children('.contextIcon').each(function () {
+                //console.log(this);
 
-            /*
-            if ($(this).hasClass('show')) {
-                if ($(this).hasClass('talk')) {
-                    $(this).animate({'background-color': '#f9c82e'}, 500);
-                } else if ($(this).hasClass('hold-hands')) {
-                    $(this).animate({'background-color': '#c1392b'}, 500);
-                } else if ($(this).hasClass('cuddle')) {
-                    $(this).animate({'background-color': '#5d2e4e'}, 500);
-                } else if ($(this).hasClass('kiss')) {
-                    $(this).animate({'background-color': '#999999'}, 500);
-                }
-            } else {
-                $(this).animate({'background-color': '#cccccc'}, 500);
-            }*/
+                // override onclick so it won't be called multiple times
+                this.onclick = function () {
+                    //console.log(this);
+                    var menu = $(this).parent();
+                    var myIndex = menu.index();
+                    myIndex -= 1;
+                    //console.log(myIndex);
+                    if (myIndex > 0) { myIndex /= 2; }
+                    //console.log(StoryLine.ContextMenuManager.activeTarget);
+                    var src = $(this).attr('src');
+                    if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[kletsen].png')) {
+                        if (StoryLine.ContextMenuManager.activeTarget.hasClass('event')) {
+                            StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "talk");
+                        }
+                        StoryLine.ContextMenuManager.activeTarget.attr('src', src);
+                    } else if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[handen].png')) {
+                        if (StoryLine.ContextMenuManager.activeTarget.hasClass('event')) {
+                            StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "hold-hands");
+                        }
+                        StoryLine.ContextMenuManager.activeTarget.attr('src', src);
+                    }
+
+                    // close it on success
+                    StoryLine.ContextMenuManager.hideContextMenu(menu);
+                };
+            });
+            //contextMenu.children('.contextIcon').click();
+        }
+
+        return contextMenu;
+    },
+    isContextMenuDisplayed: function (contextMenu) {
+        if (!contextMenu) {
+            console.warn("contextMenu does not exist.");
+            return false;
+        }
+        var active, displayed;
+        active = contextMenu.hasClass('active');
+        displayed = contextMenu.css('display') !== "none";
+        // Return active if displayed
+        return displayed ? active : false;
+    },
+    hideContextMenu: function (contextMenu, callback) {
+        if (!contextMenu) {
+            return;
+        }
+        if (!this.isContextMenuDisplayed(contextMenu) || !contextMenu.hasClass('active')) {
+            if (contextMenu.is(StoryLine.ContextMenuManager.activeContextMenu)) {
+                this.activeContextMenu = null;
+                this.activeTarget = null;
+            }
+            return;
+        }
+        contextMenu.animate({width: 'toggle', queue: false}, 350, function () {
+            contextMenu.removeClass('active');
+
+            if (contextMenu.is(StoryLine.ContextMenuManager.activeContextMenu)) {
+                StoryLine.ContextMenuManager.activeContextMenu = null;
+                StoryLine.ContextMenuManager.activeTarget.removeClass('highlight');
+                StoryLine.ContextMenuManager.activeTarget = null;
+                StoryLine.Main.unlockScrolling();
+            }
+            if (callback) {
+                callback();
+            }
         });
 
-        contextMenu.children('.contextIcon').on("click", function () {
-            var myIndex = $(this).parent().index();
-            myIndex -= 1;
-            if (myIndex > 0) { myIndex /= 2; } // sjoerd magic
-
-            if($(this).hasClass('edit'))
-            {
-                var editingComment = $('.active-comment');
-                var formControl = editingComment.children('.content-edit').children('.form-control');
-                var longContent = editingComment.children('.content-long');
-
-                StoryLine.CommentManager.prevText = "";
-                StoryLine.CommentManager.editing = true;
-
-                var short = StoryLine.CommentManager.isShortContentDisplayed(editingComment);
-                var long = StoryLine.CommentManager.isLongContentDisplayed(editingComment);
-
-                var callback = function () 
-                    {
-                        console.log("derpty derp");
-                        StoryLine.CommentManager.showTextArea(editingComment, true);
-                        editingComment.addClass('editing');
-                    };
-                
-                if(short)
-                {
-                    console.log("shits short yo");
-                    StoryLine.CommentManager.hideShortContent(editingComment, callback);
-                } 
-                else if (long)
-                {
-                    console.log("shits long yo");
-                    StoryLine.CommentManager.hideLongContent(editingComment, callback);
-                } 
-                else
-                {
-                    console.log("ERROR: No content displayed. Editing not possible.");
+        //$(this).toggleClass('active');//.children('.scenario')
+    },
+    showContextMenu: function (contextMenu, menuTarget) {
+        if (!contextMenu) {
+            return;
+        }
+        if (this.isContextMenuDisplayed(contextMenu) || contextMenu.hasClass('active')) {
+            if (!this.activeContextMenu || !this.activeContextMenu.is(contextMenu)) {
+                if (this.activeContextMenu) {
+                    this.activeContextMenu.removeClass('highlight');
                 }
-                
-                return;
+                menuTarget.addClass('highlight');
+                this.activeContextMenu = contextMenu;
+                this.activeTarget = menuTarget;
             }
-
-            if(!$('.event').eq(myIndex).hasClass('delete')){
-                $('.event').eq(myIndex).attr('src', $(this).attr('src'));
-            }
-            else{
-
-            }
+            return;
+        }
+        contextMenu.addClass('active');
+        contextMenu.animate({width: 'toggle', queue: false}, 350, function () {
+            menuTarget.addClass('highlight');
+            StoryLine.ContextMenuManager.activeContextMenu = contextMenu;
+            StoryLine.ContextMenuManager.activeTarget = menuTarget;
         });
+    },
+    openContextMenu: function (scenarioWrapper, menuTarget) {
+        var contextMenu = this.initContextMenu(scenarioWrapper, menuTarget);
+        StoryLine.Main.lockScrollviewToScenario(scenarioWrapper);
+        this.showContextMenu(contextMenu, menuTarget);
+    },
+    closeContextMenu: function (scenarioWrapper, callback) {
+        var contextMenu = this.getContextMenu(scenarioWrapper);
 
-        this.getPositions();
+        this.hideContextMenu(contextMenu, callback);
     },
     getPositions: function () {
         $('.contextMenu').each(function (index, element) {
-            var myParent = $('.scenarioWrapper').eq(index);
-            var other = $('#screenWrapper');
-            var myLeft = myParent.offset().left - other.offset().left + myParent.width();
-            var myTop = myParent.offset.top;
+            var myParent = $('.scenarioWrapper').eq(index),
+                other = $('#screenWrapper'),
+                myLeft = myParent.offset().left - other.offset().left + myParent.width(),
+                myTop = myParent.offset.top;
 
             if ($(myParent).hasClass('talk')) {
                 $(this).addClass('talk');
@@ -129,10 +176,6 @@ StoryLine.ContextMenuManager.prototype = {
             }
             if ($(myParent).hasClass('kiss')) {
                 $(this).addClass('kiss');
-                //$(this).css({'background-color': '#665454'});
-            }
-            if ($(myParent).hasClass('edit')) {
-                $(this).addClass('edit');
                 //$(this).css({'background-color': '#665454'});
             }
 
