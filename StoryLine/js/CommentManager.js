@@ -1,5 +1,3 @@
-//WOLOLOOOOOOOOOO
-
 var StoryLine = StoryLine || {};
 
 StoryLine.CommentManager = function () {
@@ -53,7 +51,7 @@ StoryLine.CommentManager.prototype = {
             }
             // if this commentWrapper is the template
             if (commentWrapper.hasClass('template')) {
-
+ 
                 var newComment = cM.cloneCommentTemplate(commentWrapper);
                 cM.prevText = "";
                 cM.editing = true;
@@ -346,6 +344,7 @@ StoryLine.CommentManager.prototype = {
                     this.hideTextArea(commentWrapper, function () {
                         commentWrapper.removeClass('editing');
                         cM.showLongContent(commentWrapper);
+                        console.log("omdat merlijn het zegt");
                     });
                     this.resetEditing(commentWrapper);
                     return;
