@@ -329,7 +329,10 @@ StoryLine.CommentManager.prototype = {
         var cM = StoryLine.CommentManager,
             shortContent = commentWrapper.children('.content-short'),
             longContent = commentWrapper.children('.content-long'),
-            textArea = commentWrapper.children('.content-edit').children('.form-control');
+            textArea = commentWrapper.children('.content-edit').children('.form-control'),
+            callback = function (cW) {
+                StoryLine.CommentManager.resetEditing(cW);
+            };
 
         if (apply) {
             var text = textArea.val().trim(), img;
@@ -340,15 +343,15 @@ StoryLine.CommentManager.prototype = {
                     this.hideTextArea(commentWrapper, function () {
                         commentWrapper.remove();
                         cM.currTemplate.fadeIn(200);
+                        callback(commentWrapper);
                     });
-                    this.resetEditing(commentWrapper);
                     return;
                 } else {
                     this.hideTextArea(commentWrapper, function () {
                         commentWrapper.removeClass('editing');
                         cM.showLongContent(commentWrapper);
+                        callback(commentWrapper);
                     });
-                    this.resetEditing(commentWrapper);
                     return;
                     // TODO: Handle empty value, give a message or something
                 }
@@ -372,6 +375,7 @@ StoryLine.CommentManager.prototype = {
                 cM.showShortContent(commentWrapper);
             });
             textArea.val('');
+            callback(commentWrapper);
         } else {
             // if this is a new comment:
             if (cM.prevText.trim().length <= 0) {
@@ -379,16 +383,18 @@ StoryLine.CommentManager.prototype = {
                 this.hideTextArea(commentWrapper, function () {
                     commentWrapper.remove();
                     cM.currTemplate.fadeIn(200);
+                    callback(commentWrapper);
                 });
             } else {
                 textArea.val(cM.prevText);
                 this.hideTextArea(commentWrapper, function () {
                     commentWrapper.removeClass('editing');
                     cM.showLongContent(commentWrapper);
+                    callback(commentWrapper);
                 });
             }
         }
-        this.resetEditing(commentWrapper);
+        
     },
     toggleSortable: function (commentWrapper) {
         $('.sortable').sortable('refresh');
