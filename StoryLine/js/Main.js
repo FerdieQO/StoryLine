@@ -18,10 +18,23 @@ StoryLine.Main.prototype = {
             StoryLine.ContextMenuManager.create();
         });
     },
-    lockScrolling: function () {
+    lockScrollviewToScenario: function (scenarioWrapper) {
+        // http://api.jquery.com/scrollLeft/
+        if (scenarioWrapper) {
+            var index = scenarioWrapper.index(),
+                width = scenarioWrapper.width();
+            index /= 2;
+            //console.log(index + " * " + width);
+            
+            // Check if the element is within viewport
+            scenarioWrapper.parent('.scenario-list').scrollLeft(index * width);
+            //scenarioWrapper.parent('.scenario-list').scrollLeft(index * width);
+        }
+
         this.scrolling = false;
         $('body, .scenario-list').addClass('fix');
     },
+    
     unlockScrolling: function () {
         this.scrolling = true;
         $('body, .scenario-list').removeClass('fix');

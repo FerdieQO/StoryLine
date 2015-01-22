@@ -25,7 +25,7 @@ StoryLine.ContextMenuManager.prototype = {
     },
     /// Returns a new contextMenu div
     cloneContextMenuTemplate: function () {
-        var contextMenu = $('<div class="contextMenu dark">'),
+        var contextMenu = $('<div class="contextMenu dark medium-border">'),
             template = this.templateContextMenu.clone(true),
             elements = template.contents();
         elements.appendTo(contextMenu);
@@ -114,6 +114,7 @@ StoryLine.ContextMenuManager.prototype = {
                 StoryLine.ContextMenuManager.activeContextMenu = null;
                 StoryLine.ContextMenuManager.activeTarget.removeClass('highlight');
                 StoryLine.ContextMenuManager.activeTarget = null;
+                StoryLine.Main.unlockScrolling();
             }
             if (callback) {
                 callback();
@@ -146,6 +147,7 @@ StoryLine.ContextMenuManager.prototype = {
     },
     openContextMenu: function (scenarioWrapper, menuTarget) {
         var contextMenu = this.initContextMenu(scenarioWrapper, menuTarget);
+        StoryLine.Main.lockScrollviewToScenario(scenarioWrapper);
         this.showContextMenu(contextMenu, menuTarget);
     },
     closeContextMenu: function (scenarioWrapper, callback) {
