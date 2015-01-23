@@ -19,30 +19,29 @@ StoryLine.Main.prototype = {
         });
     },
     lockScrollviewToScenario: function (scenarioWrapper) {
-        this.scrollToItem(scenarioWrapper, function () {
+        this.scrollToScenario(scenarioWrapper, function () {
             StoryLine.Main.scrolling = false;
             $('body, .scenario-list').addClass('fix');
         });
     },
-    scrollToItem: function (scenarioWrapper, callback) {
+    scrollToScenario: function (scenarioWrapper, callback) {
         // http://api.jquery.com/scrollLeft/
         if (scenarioWrapper) {
             var index = scenarioWrapper.index(),
                 width = scenarioWrapper.width();
             index /= 2;
-            console.log(index + " * " + width);
+            //console.log(index + " * " + width);
 
             // Check if the element is within viewport
-            if (!this.isInScrollView(scenarioWrapper)) {
+            if (!this.isScenarioInScrollView(scenarioWrapper)) {
                 // align to center:
 
                 // center - (width + contextMenu.width)
                 var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
                 var w = contextMenu.width();
 
+                // TODO: get correct offset
                 scenarioWrapper.parent('.scenario-list').animate({scrollLeft: index * width}, 200, callback);
-
-                //scenarioWrapper.parent('.scenario-list').scrollLeft(index * width);
             } else {
                 callback();
             }
@@ -50,7 +49,7 @@ StoryLine.Main.prototype = {
             console.warn("Undefined: scenarioWrapper");
         }
     },
-    isInScrollView: function (scenarioWrapper) {
+    isScenarioInScrollView: function (scenarioWrapper) {
         // http://stackoverflow.com/questions/487073/check-if-element-is-visible-after-scrolling
         var viewLeft = $(scenarioWrapper).parent('.scenario-list').scrollLeft();
         var viewRight = $(scenarioWrapper).parent('.scenario-list').width();
@@ -60,7 +59,6 @@ StoryLine.Main.prototype = {
 
         return ((elementRight <= viewRight) && (elementLeft >= viewLeft));
     },
-
     unlockScrolling: function () {
         this.scrolling = true;
         $('body, .scenario-list').removeClass('fix');

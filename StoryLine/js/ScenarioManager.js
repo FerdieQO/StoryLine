@@ -4,7 +4,6 @@ StoryLine.ScenarioManager = function () {
     this.templateScenario = null;
     // Current active scenario: if the scenario is selected or the context-menu is open on this scenario
     this.activeScenario = null;
-    this.timeoutId = 0;
 };
 StoryLine.ScenarioManager.prototype = {
     create: function (callback) {
@@ -59,77 +58,143 @@ StoryLine.ScenarioManager.prototype = {
         // On click of the scenario
         scenarioWrapper.on('click', function (event) {
             // The clicked target
-            var sM = StoryLine.ScenarioManager, cMM = StoryLine.ContextMenuManager;
+            var cM = StoryLine.CommentManager, cMM = StoryLine.ContextMenuManager, sM = StoryLine.ScenarioManager;
             var target = $(event.target);
+            // Variables around the clicked element.
+            var targetElement = sM.extractElementFromTarget(target);
+            var targetScenario = sM.getParent(target, 'scenarioWrapper', 7);
+            var targetContextMenu = targetScenario ? cMM.getContextMenu(targetScenario) : false;
 
-            var targetElement = StoryLine.ScenarioManager.extractElementFromTarget(target);
+            // Variables around the active element (that opened the contextMenu).
+            var activeElement = cMM.activeTarget;
+            var activeScenario = sM.activeScenario;
+            var activeContextMenu = cMM.activeContextMenu;
 
-            var scenario = sM.getParent(target, 'scenarioWrapper', 7);
-            var contextMenu;
-
-            var initLog = '';
-            if (scenario === false) {
-                initLog += 'No scenarioWrapper found.';
-            } else {
-                contextMenu = cMM.getContextMenu(scenario);
-                if (contextMenu === false) {
-                    initLog += 'No contextMenu found.';
-                }
+            if (!targetElement || !targetScenario || !targetContextMenu) {
+                console.warn("One of these is undefined: targetElement " + targetElement + ", targetScenario " + targetScenario + " or targetContextMenu " + targetContextMenu);
             }
-            if (initLog.length > 0) {
-                console.log(initLog);
+            if (!activeElement || !activeScenario || !activeContextMenu) {
+                console.log("One of these is undefined: activeElement " + activeElement + ", activeScenario " + activeScenario + " or activeContextMenu " + activeContextMenu);
             }
 
             // bools
-            var onActiveScenario = sM.isScenarioSelected(scenario);
-            var onActiveTarget = targetElement.is(cMM.activeTarget);
+            var onActiveScenario = sM.isScenarioSelected(targetScenario);
+            var onActiveTarget = targetElement.is(activeElement);
             // If editing a (new) comment, no focus-change is allowed until the change is completed.
 
-            if (StoryLine.CommentManager.editing) {
-                console.log('Nope.avi: editing.');
-                return;
-            }
+            // Special cases for comments, if editing a comment, do nothing since the buttons themself handle the edit
+            if (activeElement && activeElement.hasClass('commentWrapper')) {
+                // The contextMenu is open for a element and the contextMenu is open for a comment
+                if (cM.editing) {
+                    // We are editing that comment aswell
+                    console.log('Nope.avi: editing.');
+                    return; // Block the rest, no change is allowed until the edit is finished
+                } else {
+                    // We are not editing that comment or any other
+                    if (onActiveTarget) {
+                        // We clicked the comment that is active
 
+                        // Close that comment and the contextMenu
+                        cMM.closeContextMenu(activeScenario, function () {
+                            cM.closeComment(activeElement);
+                        });
+                        return;
+                    } else if (targetElement.hasClass('commentWrapper')) {
+                        // We clicked a different comment
+                        cMM.closeContextMenu(activeScenario, function () {
+                            cM.closeComment(activeElement);
+                            if (targetElement.hasClass('template')) {
+                                var newComment = cM.addComment(targetElement);
+                                cMM.openContextMenu(targetScenario, newComment);
+                                cM.editComment(newComment, function () {}, function () {
+                                    cMM.closeContextMenu(targetScenario);
+                                });
+                                cM.currTemplate.hide();
+                            } else {
+                                cM.openComment(targetElement);
+                                cMM.openContextMenu(targetScenario, targetElement);
+                            }
+                        });
+                        return;
+                    }
+                }
+            } else {
+                // The contextMenu is closed or open for other elements
+                if (targetElement.hasClass('commentWrapper')) {
+                    if (onActiveScenario) {
+                        // A scenario is active
+                        if (targetElement.hasClass('template')) {
+                            var addComment = function () {
+                                var newComment = cM.addComment(targetElement);
+                                cMM.openContextMenu(targetScenario, newComment);
+                                cM.editComment(newComment, function () {}, function () {
+                                    cMM.closeContextMenu(targetScenario);
+                                });
+                                cM.currTemplate.hide();
+                            };
+                            if (activeElement) {
+                                cMM.closeContextMenu(activeScenario, addComment);
+                            } else {
+                                addComment();
+                            }
+                            return;
+                        } else {
+                            if (activeElement) {
+                                cMM.closeContextMenu(activeScenario, function () {
+                                    cMM.openContextMenu(targetScenario, targetElement);
+                                });
+                            } else {
+                                cMM.openContextMenu(targetScenario, targetElement);
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
             if (onActiveScenario && onActiveTarget) { // If this is the active scenario and we clicked the active element.
                 if (!targetElement.hasClass('commentWrapper')) {
                     // Close the contextmenu
-                    cMM.hideContextMenu(contextMenu);
+                    cMM.hideContextMenu(targetContextMenu);
                 }
             } else if (onActiveScenario) { // If this is the active scenario.
                 // Behaviour per target
                 if (targetElement.hasClass('scenarioWrapper')) {
-                    if (cMM.activeContextMenu) { // If there is a contextMenu open, close it first
-                        cMM.hideContextMenu(contextMenu);
+                    if (activeContextMenu) { // If there is a contextMenu open, close it first
+                        cMM.hideContextMenu(activeContextMenu);
                     } else {
-                        sM.unselectScenario(scenario);
+                        cMM.openContextMenu(targetScenario, targetElement);
+                        //sM.unselectScenario(activeScenario);
                     }
                 } else if (targetElement.hasClass('event')) {
-                    if (cMM.activeContextMenu) {
+                    if (activeContextMenu) {
 
                     } else {
-                        cMM.openContextMenu(scenario, targetElement);
+                        cMM.openContextMenu(targetScenario, targetElement);
                     }
                 } else if (targetElement.hasClass('emotion')) {
-                    if (cMM.activeContextMenu) {
-                        cMM.closeContextMenu(scenario, function () {
-                            cMM.openContextMenu(scenario, targetElement); 
+                    if (activeContextMenu) {
+                        cMM.closeContextMenu(activeScenario, function () {
+                            cMM.openContextMenu(targetScenario, targetElement); 
                         });
                     } else {
-                        cMM.openContextMenu(scenario, targetElement);
+                        cMM.openContextMenu(targetScenario, targetElement);
                     }
                 } else if (targetElement.hasClass('commentWrapper')) {
+                    if (targetElement.hasClass('template')) {
+
+                    }
                     //cMM.openContextMenu(scenario, targetElement);
                 }
-            } else { // If editing anything else.
+            } else {
                 // Close context menu of active or select scenario if none is active
                 if (sM.activeScenario) {
-                    if (cMM.activeContextMenu) {
-                        cMM.hideContextMenu(cMM.activeContextMenu);
+                    if (activeContextMenu) {
+                        cMM.hideContextMenu(activeContextMenu);
                     } else {
-                        sM.unselectScenario(sM.activeScenario);
+                        sM.unselectScenario(activeScenario);
                     }
                 } else {
-                    sM.selectScenario(scenario);
+                    sM.selectScenario(targetScenario);
                 }
             }
         });
@@ -164,6 +229,10 @@ StoryLine.ScenarioManager.prototype = {
 
                 // If I make this .click it will only be executed on the template scenario
                 $(".scenarioWrapper.template").on("click", function () {
+                    if (StoryLine.ContextMenuManager.activeTarget) {
+                        return;
+                    }
+
                     // Restrict clicking (like with comments):
                     // Block if editing scenario's
                     var scInstance = StoryLine.ScenarioManager.cloneScenarioTemplate(),
@@ -214,18 +283,35 @@ StoryLine.ScenarioManager.prototype = {
 
         // http://stackoverflow.com/questions/1227286/get-class-list-for-element-with-jquery
         var events = ["talk", "kiss", "cuddle", "hold-hands"], i,
-            titles = ["Kletsen", "Zoenen", "Knuffelen", "Handen vasthouden"];
+            titles = ["Kletsen", "Zoenen", "Knuffelen", "Handen vasthouden"],
+            eventTitle,
+            oldEvent;
+        
         for (i = 0; i < events.length; i++) {
             if (events[i] == event) {
-                scenarioWrapper.addClass(event);
-                StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper).addClass(event);
-                scenarioWrapper.children('.scenario').children('p').text(titles[i]);
-            } else {
-                scenarioWrapper.removeClass(events[i]);
-                StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper).removeClass(events[i]);
+                eventTitle = titles[i];
+            }
+            if (scenarioWrapper.hasClass(events[i])) {
+                console.log('Setting oldEvent: ' + events[i]);
+                oldEvent = events[i];
             }
         }
+        
+        var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
 
+        if (oldEvent && event) {
+            $(scenarioWrapper).switchClass(oldEvent, event, { duration: 200, children: true });
+            $(contextMenu).switchClass(oldEvent, event, { duration: 200, children: true });
+            scenarioWrapper.children('.scenario').children('p').text(eventTitle);
+        } else if (event) {
+            $(scenarioWrapper).addClass(event, { duration: 200, children: true });
+            $(contextMenu).addClass(event, { duration: 200, children: true });
+            scenarioWrapper.children('.scenario').children('p').text(eventTitle);
+        } else if (other) {
+            $(scenarioWrapper).removeClass(events[other], { duration: 200, children: true });
+            $(contextMenu).removeClass(events[other], { duration: 200, children: true });
+            scenarioWrapper.children('.scenario').children('p').text('Geen gebeurtenis.');
+        }
     },
 
     isScenarioSelected: function (scenarioWrapper) {
@@ -238,8 +324,9 @@ StoryLine.ScenarioManager.prototype = {
             this.unselectScenario(this.activeScenario);
             //this.activeScenario.removeClass('active');
         }
-        StoryLine.Main.scrollToItem(scenarioWrapper, function () {
-            scenarioWrapper.addClass('active');
+        StoryLine.Main.scrollToScenario(scenarioWrapper, function () {
+            $(scenarioWrapper).addClass('active', { duration: 200, children: true });
+            //scenarioWrapper.addClass('active');
             StoryLine.ScenarioManager.activeScenario = scenarioWrapper;
         });
 
@@ -274,13 +361,13 @@ StoryLine.ScenarioManager.prototype = {
         // disable sorting comments
         if (scenarioWrapper.is(this.activeScenario)) {
             StoryLine.ContextMenuManager.closeContextMenu(scenarioWrapper);
-            scenarioWrapper.removeClass('active');
+            $(scenarioWrapper).removeClass('active', { duration: 200, children: true });
             this.activeScenario = null;
         } else {
-            scenarioWrapper.removeClass('active');
+            scenarioWrapper.removeClass('active', { duration: 200, children: true });
             StoryLine.ContextMenuManager.closeContextMenu(scenarioWrapper);
             if (this.activeScenario) {
-                this.activeScenario.removeClass('active');
+                this.activeScenario.removeClass('active', { duration: 200, children: true });
                 this.activeScenario = null;
             }
         }

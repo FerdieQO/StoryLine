@@ -42,13 +42,16 @@ StoryLine.ContextMenuManager.prototype = {
     initContextMenu: function (scenarioWrapper, menuTarget) {
         StoryLine.ContextMenuManager.getPositions();
         // Get the contextMenu for this scenarioWrapper
-        var contextMenu = this.getContextMenu($(scenarioWrapper));
+        var cMM = StoryLine.ContextMenuManager,
+            cM = StoryLine.CommentManager,
+            contextMenu = this.getContextMenu($(scenarioWrapper));
         //console.log(contextMenu);
 
         // TODO: Set the buttons here (menuTarget for which target was clicked at; string event/emotion/etc.)
 
         // removeChild apparently doesn't work ?
         // I'm even tempted to change how the buttons work so they are all in the contextMenu and their visibility gets toggled.
+        // A.k.a. keep with the css classes like edit or delete
         if (contextMenu) {
             var icons = contextMenu.children('.contextIcon');
             contextMenu.children('.contextIcon').each(function () {
@@ -56,28 +59,35 @@ StoryLine.ContextMenuManager.prototype = {
 
                 // override onclick so it won't be called multiple times
                 this.onclick = function () {
-                    //console.log(this);
                     var menu = $(this).parent();
                     var myIndex = menu.index();
+                    var hide;
                     myIndex -= 1;
-                    //console.log(myIndex);
                     if (myIndex > 0) { myIndex /= 2; }
-                    //console.log(StoryLine.ContextMenuManager.activeTarget);
+                    // Replace with classes? cause it's flippin' ugly
                     var src = $(this).attr('src');
                     if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[kletsen].png')) {
-                        if (StoryLine.ContextMenuManager.activeTarget.hasClass('event')) {
+                        if (cMM.activeTarget.hasClass('event')) {
                             StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "talk");
+                            hide = true;
                         }
-                        StoryLine.ContextMenuManager.activeTarget.attr('src', src);
+                        cMM.activeTarget.attr('src', src);
                     } else if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[handen].png')) {
-                        if (StoryLine.ContextMenuManager.activeTarget.hasClass('event')) {
+                        if (cMM.activeTarget.hasClass('event')) {
                             StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "hold-hands");
+                            hide = true;
                         }
-                        StoryLine.ContextMenuManager.activeTarget.attr('src', src);
+                        cMM.activeTarget.attr('src', src);
+                    } else if ($(this).hasClass('edit')) {
+                        if (cMM.activeTarget.hasClass('commentWrapper')) {
+                            cM.editComment(cMM.activeTarget, function () {}, function () {});
+                        }
                     }
 
-                    // close it on success
-                    StoryLine.ContextMenuManager.hideContextMenu(menu);
+                    // close it on success and it needs to be closed
+                    if (hide) {
+                        StoryLine.ContextMenuManager.hideContextMenu(menu);
+                    }
                 };
             });
             //contextMenu.children('.contextIcon').click();

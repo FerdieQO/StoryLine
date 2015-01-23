@@ -2,6 +2,7 @@ var StoryLine = StoryLine || {};
 
 StoryLine.CommentManager = function () {
     this.currTemplate = null;
+    this.finishEditListener = null;
     this.prevText = "";
     this.templateEmotion = "src/editButton(full)(action).png";
     this.editing = false;
@@ -53,34 +54,24 @@ StoryLine.CommentManager.prototype = {
                     // Feedback that it isn't allowed
                     return;
                 }
-                
 
-                var newComment = cM.cloneCommentTemplate(commentWrapper);
-                cM.prevText = "";
-                cM.editing = true;
-
-                //commentWrapper.parent('.comment-list').append(newComment);
-                newComment.insertBefore(commentWrapper);
+                /*
+                var newComment = cM.addComment(commentWrapper);
                 //cM.initCommentList($(cM.currList));
                 //cM.initCommentLists();
                 //$(commentWrapper.parent('.comment-list')).sortable('refresh');
-
-
-                cM.hidePlaceholder(newComment, function () {
-                    cM.showTextArea(newComment, true);
-                    newComment.addClass('editing');
-                });
-
-                cM.currTemplate.hide();
+                cM.editComment(newComment, function () {
+                    cM.currTemplate.hide();
+                });*/
             } else {
                 // otherwise toggle the visibility
                 // and open context menu?
-
+                /*
                 var hasOpen = StoryLine.CommentManager.toggleComment(commentWrapper);
 
                 if (hasOpen) {
                     disableSort = true;
-                }
+                }*/
             }
             if (cM.editing) {
                 disableSort = true;
@@ -93,7 +84,7 @@ StoryLine.CommentManager.prototype = {
         });
     },
     initCommentList: function (commentList) {
-        
+
         var children = $(commentList).children('.commentWrapper');
         //console.log(children.length);
         children.each(function () {
@@ -159,6 +150,11 @@ StoryLine.CommentManager.prototype = {
         return element.css('display') !== "none";
     },
 
+    isAnyContentDisplayed: function (commentWrapper) {
+        return this.isShortContentDisplayed(commentWrapper) || this.isLongContentDisplayed(commentWrapper) ||
+            this.isTextAreaDisplayed(commentWrapper) || this.isPlaceholderDisplayed(commentWrapper);
+    },
+
     isShortContentDisplayed: function (commentWrapper) {
         return this.isContentDisplayed(commentWrapper, '.content-short');
     },
@@ -172,12 +168,13 @@ StoryLine.CommentManager.prototype = {
         return this.isContentDisplayed(commentWrapper, '.placeholder');
     },
 
+
     hideShortContent: function (commentWrapper, callback) {
         if (!commentWrapper) {
             return;
         }
         if (!this.isShortContentDisplayed(commentWrapper)) {
-            return;
+            return true;
         }
         var shortContent = commentWrapper.children('.content-short');
         shortContent.fadeOut(300, callback);
@@ -187,7 +184,7 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         if (!this.isLongContentDisplayed(commentWrapper)) {
-            return;
+            return true;
         }
         var longContent = commentWrapper.children('.content-long');
         longContent.hide("blind", {}, 300, callback);
@@ -197,7 +194,7 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         if (!this.isTextAreaDisplayed(commentWrapper)) {
-            return;
+            return true;
         }
         var textArea = commentWrapper.children('.content-edit');
         textArea.fadeOut(200, callback);
@@ -207,7 +204,7 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         if (!this.isPlaceholderDisplayed(commentWrapper)) {
-            return;
+            return true;
         }
         var placeholder = commentWrapper.children('.placeholder');
         placeholder.fadeOut(200, callback);
@@ -217,7 +214,8 @@ StoryLine.CommentManager.prototype = {
         if (!commentWrapper) {
             return;
         }
-        if (this.isShortContentDisplayed(commentWrapper)) {
+        // All must be closed
+        if (this.isAnyContentDisplayed(commentWrapper)) {
             return;
         }
         var shortContent = commentWrapper.children('.content-short');
@@ -229,7 +227,8 @@ StoryLine.CommentManager.prototype = {
         if (!commentWrapper) {
             return;
         }
-        if (this.isLongContentDisplayed(commentWrapper)) {
+        // All must be closed
+        if (this.isAnyContentDisplayed(commentWrapper)) {
             return;
         }
         var longContent = commentWrapper.children('.content-long');
@@ -241,7 +240,8 @@ StoryLine.CommentManager.prototype = {
         if (!commentWrapper) {
             return;
         }
-        if (this.isTextAreaDisplayed(commentWrapper)) {
+        // All must be closed
+        if (this.isAnyContentDisplayed(commentWrapper)) {
             return;
         }
         var textArea = commentWrapper.children('.content-edit');
@@ -256,7 +256,8 @@ StoryLine.CommentManager.prototype = {
         if (!commentWrapper) {
             return;
         }
-        if (this.isPlaceholderDisplayed(commentWrapper)) {
+        // All must be closed
+        if (this.isAnyContentDisplayed(commentWrapper)) {
             return;
         }
         var placeholder = commentWrapper.children('.placeholder');
@@ -265,26 +266,107 @@ StoryLine.CommentManager.prototype = {
         });
     },
 
+    hideAllContent: function (commentWrapper, callback) { // Callback is called when all elements are closed
+        if (!commentWrapper) {
+            return;
+        }
+        // Bools for the elements that when closed are true
+        var short, long, text, place;
+
+        var check = function () {
+            if (short && long && text && place) {
+                callback();
+            }
+        };
+
+        // All must be closed
+        //if (this.isAnyContentDisplayed(commentWrapper)) {
+        short = this.hideShortContent(commentWrapper, function () { short = true; check(); });
+        long = this.hideLongContent(commentWrapper, function () { long = true; check(); });
+        text = this.hideTextArea(commentWrapper, function () { text = true; check(); });
+        place = this.hidePlaceholder(commentWrapper, function () { place = true; check(); });
+        //}
+    },
+
+    onlyShowShortContent: function (commentWrapper, callback) {
+        this.hideAllContent(commentWrapper, function () {
+            StoryLine.CommentManager.showShortContent(commentWrapper);
+            if (callback) {
+                callback();
+            }
+        });
+    },
+    onlyShowLongContent: function (commentWrapper, callback) {
+        this.hideAllContent(commentWrapper, function () {
+            StoryLine.CommentManager.showLongContent(commentWrapper);
+            if (callback) {
+                callback();
+            }
+        });
+    },
+    onlyShowTextArea: function (commentWrapper, gainfocus, callback) {
+        this.hideAllContent(commentWrapper, function () {
+            StoryLine.CommentManager.showTextArea(commentWrapper, gainfocus);
+            if (callback) {
+                callback();
+            }
+        });
+    },
+    onlyShowPlaceholder: function (commentWrapper, callback) {
+        this.hideAllContent(commentWrapper, function () {
+            StoryLine.CommentManager.showPlaceholder(commentWrapper);
+            if (callback) {
+                callback();
+            }
+        });
+    },
+
+    addComment: function (templateCommentWrapper) {
+        var newComment = StoryLine.CommentManager.cloneCommentTemplate(templateCommentWrapper);
+        newComment.insertBefore(templateCommentWrapper);
+        return $(newComment);
+    },
+    editComment: function (commentWrapper, callback, finishListener) {
+        if (!commentWrapper) {
+            return;
+        }
+        var cM = StoryLine.CommentManager;
+
+        // Hide active element if not edit form
+        if (!this.isTextAreaDisplayed(commentWrapper)) {
+
+            cM.prevText = commentWrapper.children('.content-long').text();
+            $(commentWrapper).children('.content-edit').children('.form-control').val(cM.prevText);
+            cM.editing = true;
+
+            this.onlyShowTextArea(commentWrapper, true, function () {
+                commentWrapper.addClass('editing');
+                if (finishListener) {
+                    cM.finishEditListener = finishListener;
+                }
+                if (callback) {
+                    callback();
+                }
+            });
+        }
+    },
+
     closeComment: function (commentWrapper) {
         if (!commentWrapper) {
             return;
         }
-        var shortContent = commentWrapper.children('.content-short');
-        shortContent.hide();
-        this.hideLongContent(commentWrapper, function () {
-            //commentWrapper.switchClass('dark', 'medium', 100);
+
+        this.onlyShowShortContent(commentWrapper, function () {
             commentWrapper.removeClass('active-comment');
-            StoryLine.CommentManager.showShortContent(commentWrapper);
         });
     },
     openComment: function (commentWrapper) {
         if (!commentWrapper) {
             return;
         }
-        this.hideShortContent(commentWrapper, function () {
-            //commentWrapper.switchClass('medium', 'dark', 100);
+
+        this.onlyShowLongContent(commentWrapper, function () {
             commentWrapper.addClass('active-comment');
-            StoryLine.CommentManager.showLongContent(commentWrapper);
         });
     },
     toggleComment: function (commentWrapper) {
@@ -327,31 +409,43 @@ StoryLine.CommentManager.prototype = {
     },
     finishEdit: function (commentWrapper, apply) {
         var cM = StoryLine.CommentManager,
+            prevLength = StoryLine.CommentManager.prevText.trim().length,
             shortContent = commentWrapper.children('.content-short'),
             longContent = commentWrapper.children('.content-long'),
             textArea = commentWrapper.children('.content-edit').children('.form-control'),
-            callback = function (cW) {
-                StoryLine.CommentManager.resetEditing(cW);
+            reset = function (cW) {
+                cM.resetEditing(cW);
+                if (cM.finishEditListener) {
+                    console.log('Finish');
+                    cM.finishEditListener();
+                }
             };
 
         if (apply) {
             var text = textArea.val().trim(), img;
             // New value is empty
             if (text.length <= 0) {
-                if (cM.prevText.trim().length <= 0) {
+                if (prevLength <= 0) {
                     // No new text and no old text: deleting new comment
-                    this.hideTextArea(commentWrapper, function () {
+                    this.hideAllContent(commentWrapper, function () {
                         commentWrapper.remove();
                         cM.currTemplate.fadeIn(200);
-                        callback(commentWrapper);
+                        reset(commentWrapper);
                     });
                     return;
                 } else {
+                    cM.onlyShowLongContent(commentWrapper, function () {
+                        commentWrapper.removeClass('editing');
+                        reset(commentWrapper);
+                    });
+
+                    /*
                     this.hideTextArea(commentWrapper, function () {
                         commentWrapper.removeClass('editing');
-                        cM.showLongContent(commentWrapper);
-                        callback(commentWrapper);
+                        cM.onlyShowLongContent(commentWrapper);
+                        reset(commentWrapper);
                     });
+                    */
                     return;
                     // TODO: Handle empty value, give a message or something
                 }
@@ -369,32 +463,43 @@ StoryLine.CommentManager.prototype = {
             longContent.text(text);
             longContent.prepend(img.clone(true));
 
+
+            this.onlyShowLongContent(commentWrapper, function () {
+                textArea.val('');
+                commentWrapper.removeClass('editing');
+                if (prevLength <= 0) {
+                    cM.currTemplate.fadeIn(200);
+                }
+                reset(commentWrapper);
+            });
+
+            /*
             this.hideTextArea(commentWrapper, function () {
                 commentWrapper.removeClass('editing');
                 cM.currTemplate.fadeIn(200);
-                cM.showShortContent(commentWrapper);
+                cM.closeComment(commentWrapper);
             });
             textArea.val('');
-            callback(commentWrapper);
+            */
+
         } else {
             // if this is a new comment:
-            if (cM.prevText.trim().length <= 0) {
+            if (prevLength <= 0) {
                 // No new text and no old text: deleting new comment
-                this.hideTextArea(commentWrapper, function () {
+                this.hideAllContent(commentWrapper, function () {
                     commentWrapper.remove();
                     cM.currTemplate.fadeIn(200);
-                    callback(commentWrapper);
+                    reset(commentWrapper);
                 });
             } else {
                 textArea.val(cM.prevText);
-                this.hideTextArea(commentWrapper, function () {
+                this.onlyShowLongContent(commentWrapper, function () {
                     commentWrapper.removeClass('editing');
-                    cM.showLongContent(commentWrapper);
-                    callback(commentWrapper);
+                    reset(commentWrapper);
                 });
             }
         }
-        
+
     },
     toggleSortable: function (commentWrapper) {
         $('.sortable').sortable('refresh');

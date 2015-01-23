@@ -11,10 +11,10 @@
     display: inline-flex;
     
     text-shadow: 
-        1px 1px 1px rgba(0, 0, 0, 0.75),
-        -1px 1px 1px rgba(0, 0, 0, 0.75),
-        -1px -1px 1px rgba(0, 0, 0, 0.75),
-        1px -1px 1px rgba(0, 0, 0, 0.75);
+        1px 1px 10px rgba(0, 0, 0, 0.5),
+        -1px 1px 10px rgba(0, 0, 0, 0.5),
+        -1px -1px 10px rgba(0, 0, 0, 0.5),
+        1px -1px 10px rgba(0, 0, 0, 0.5);
 }
 /*
 .scenario-list > li:nth-child(even) {
@@ -113,6 +113,10 @@ background-color: #ddd;
     width: calc(100% - 4px);
 }
 
+.scenarioWrapper.active .scenario .event:hover {
+    cursor: pointer;
+}
+
 .scenario .emotions {
     padding: 5%;
 }
@@ -122,6 +126,10 @@ background-color: #ddd;
     width: 47%;
 }
 
+.scenarioWrapper.active .scenario .emotion:hover {
+    cursor: pointer;
+}
+
 
 /* !Scenario */
 
@@ -129,42 +137,7 @@ background-color: #ddd;
 
 }
 
-.contextMenu 
-{
-    width: 3em;
-    height: 100%;
-    max-height: 100%;
-    overflow-y: hidden;
 
-    border-top-width: 1px;
-    border-top-style: solid;
-    /*border-top-color: #ccc;*/
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    /*border-bottom-color: #ccc;*/
-
-    font-size: 1em;
-    font-family: 'latolight';
-    color: white;
-
-    background-color: #FFFFFF;
-    padding: 0.25em;
-
-    z-index: 1;
-}
-
-.contextMenu.template
-{
-    display: none;
-}
-
-.contextIcon
-{
-    width: 2.5em;
-    height: auto;
-    margin-bottom: 1em;
-    cursor: pointer;
-}
 
 .highlight {
     outline-style: dashed;
