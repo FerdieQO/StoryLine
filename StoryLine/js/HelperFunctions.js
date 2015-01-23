@@ -1,7 +1,9 @@
 var StoryLine = StoryLine || {};
 
+// This class is for static functions, general functions that don't belong in any specific manager and are used by one or some of them.
+
 StoryLine.HelperFunctions = function () {
-    console.log('Huh?');
+    
 };
 
 StoryLine.HelperFunctions.prototype = {

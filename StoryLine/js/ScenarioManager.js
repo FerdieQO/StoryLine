@@ -74,7 +74,7 @@ StoryLine.ScenarioManager.prototype = {
                 console.warn("One of these is undefined: targetElement " + targetElement + ", targetScenario " + targetScenario + " or targetContextMenu " + targetContextMenu);
             }
             if (!activeElement || !activeScenario || !activeContextMenu) {
-                console.log("One of these is undefined: activeElement " + activeElement + ", activeScenario " + activeScenario + " or activeContextMenu " + activeContextMenu);
+                console.log("Not critical:\n One of these is undefined: activeElement " + activeElement + ", activeScenario " + activeScenario + " or activeContextMenu " + activeContextMenu);
             }
 
             // bools
@@ -87,7 +87,7 @@ StoryLine.ScenarioManager.prototype = {
                 // The contextMenu is open for a element and the contextMenu is open for a comment
                 if (cM.editing) {
                     // We are editing that comment aswell
-                    console.log('Nope.avi: editing.');
+                    // console.log('Nope.avi: editing.');
                     return; // Block the rest, no change is allowed until the edit is finished
                 } else {
                     // We are not editing that comment or any other
@@ -165,13 +165,7 @@ StoryLine.ScenarioManager.prototype = {
                         cMM.openContextMenu(targetScenario, targetElement);
                         //sM.unselectScenario(activeScenario);
                     }
-                } else if (targetElement.hasClass('event')) {
-                    if (activeContextMenu) {
-
-                    } else {
-                        cMM.openContextMenu(targetScenario, targetElement);
-                    }
-                } else if (targetElement.hasClass('emotion')) {
+                } else if (targetElement.hasClass('event') || targetElement.hasClass('emotion')) {
                     if (activeContextMenu) {
                         cMM.closeContextMenu(activeScenario, function () {
                             cMM.openContextMenu(targetScenario, targetElement); 
@@ -201,16 +195,16 @@ StoryLine.ScenarioManager.prototype = {
     },
     extractElementFromTarget: function (target) {
         if (target.hasClass('event')) { // event
-            console.log('Event');
+            // console.log('Event');
             return target;
         } else if (target.hasClass('emotion')) { // emotion
-            console.log('Emotion');
+            // console.log('Emotion');
             return target;
         } else if (StoryLine.ScenarioManager.hasParent(target, 'commentWrapper', 3)) { // commentWrapper
-            console.log('Comment');
+            // console.log('Comment');
             return StoryLine.ScenarioManager.getParent(target, 'commentWrapper', 3);
         } else { // scenarioWrapper
-            console.log('Scenario');
+            // console.log('Scenario');
             return StoryLine.ScenarioManager.getParent(target, 'scenarioWrapper', 7);
         }
     },
@@ -221,7 +215,7 @@ StoryLine.ScenarioManager.prototype = {
 
         scenarioList.load(scenarioHandler, function (scResponse, scStatus, scXhr) {
             if (scStatus === "error") {
-                console.log("Loading template failed.");
+                console.log("Loading scenario-template failed.");
                 callback(false);
             } else {
                 // vervangen door één klikbare sectie (namelijk de scenariowrapper)
@@ -255,7 +249,7 @@ StoryLine.ScenarioManager.prototype = {
                     commentHandler = "templates/comment.html .commentWrapper.template";
                 commentList.load(commentHandler, function (cResponse, cStatus, cXhr) {
                     if (cStatus === "error") {
-                        console.log("Loading template failed.");
+                        console.log("Loading comment-template failed.");
                         callback(false);
                     } else {
                         callback(true);
@@ -292,7 +286,7 @@ StoryLine.ScenarioManager.prototype = {
                 eventTitle = titles[i];
             }
             if (scenarioWrapper.hasClass(events[i])) {
-                console.log('Setting oldEvent: ' + events[i]);
+                // console.log('Setting oldEvent: ' + events[i]);
                 oldEvent = events[i];
             }
         }
