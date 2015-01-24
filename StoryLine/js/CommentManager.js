@@ -22,8 +22,8 @@ StoryLine.CommentManager.prototype = {
             if ($(this).hasClass('template')) {
                 $(this).children('.placeholder').show();
             } else {
-                var short = $(this).children('.content-short');
-                short.show();
+                var content = $(this).children('.content');
+                content.show();
             }
         });
 
@@ -138,7 +138,7 @@ StoryLine.CommentManager.prototype = {
     },
 
     // check if the element is displayed
-    isContentDisplayed: function (commentWrapper, element) {
+    isElementDisplayed: function (commentWrapper, element) {
         if (!commentWrapper) {
             return false;
         }
@@ -151,45 +151,35 @@ StoryLine.CommentManager.prototype = {
     },
 
     isAnyContentDisplayed: function (commentWrapper) {
-        return this.isShortContentDisplayed(commentWrapper) || this.isLongContentDisplayed(commentWrapper) ||
-            this.isTextAreaDisplayed(commentWrapper) || this.isPlaceholderDisplayed(commentWrapper);
+        return this.isContentDisplayed(commentWrapper) || this.isTextAreaDisplayed(commentWrapper) || this.isPlaceholderDisplayed(commentWrapper);
     },
 
-    isShortContentDisplayed: function (commentWrapper) {
-        return this.isContentDisplayed(commentWrapper, '.content-short');
-    },
-    isLongContentDisplayed: function (commentWrapper) {
-        return this.isContentDisplayed(commentWrapper, '.content-long');
+    isContentDisplayed: function (commentWrapper) {
+        return this.isElementDisplayed(commentWrapper, '.content');
     },
     isTextAreaDisplayed: function (commentWrapper) {
-        return this.isContentDisplayed(commentWrapper, '.content-edit');
+        return this.isElementDisplayed(commentWrapper, '.content-edit');
     },
     isPlaceholderDisplayed: function (commentWrapper) {
-        return this.isContentDisplayed(commentWrapper, '.placeholder');
+        return this.isElementDisplayed(commentWrapper, '.placeholder');
     },
 
 
-    hideShortContent: function (commentWrapper, callback) {
+    hideContent: function (commentWrapper, instant, callback) {
         if (!commentWrapper) {
             return;
         }
-        if (!this.isShortContentDisplayed(commentWrapper)) {
+        if (!this.isElementDisplayed(commentWrapper)) {
             return true;
         }
-        var shortContent = commentWrapper.children('.content-short');
-        shortContent.fadeOut(300, callback);
-    },
-    hideLongContent: function (commentWrapper, callback) {
-        if (!commentWrapper) {
-            return;
+        var content = commentWrapper.children('.content');
+        if (instant === true) {
+            content.hide();
+        } else {
+            content.fadeOut(300, callback);
         }
-        if (!this.isLongContentDisplayed(commentWrapper)) {
-            return true;
-        }
-        var longContent = commentWrapper.children('.content-long');
-        longContent.hide("blind", {}, 300, callback);
     },
-    hideTextArea: function (commentWrapper, callback) {
+    hideTextArea: function (commentWrapper, instant, callback) {
         if (!commentWrapper) {
             return;
         }
@@ -197,9 +187,13 @@ StoryLine.CommentManager.prototype = {
             return true;
         }
         var textArea = commentWrapper.children('.content-edit');
-        textArea.fadeOut(200, callback);
+        if (instant === true) {
+            textArea.hide();
+        } else {
+            textArea.fadeOut(200, callback);
+        }
     },
-    hidePlaceholder: function (commentWrapper, callback) {
+    hidePlaceholder: function (commentWrapper, instant, callback) {
         if (!commentWrapper) {
             return;
         }
@@ -207,10 +201,14 @@ StoryLine.CommentManager.prototype = {
             return true;
         }
         var placeholder = commentWrapper.children('.placeholder');
-        placeholder.fadeOut(200, callback);
+        if (instant === true) {
+            placeholder.hide();
+        } else {
+            placeholder.fadeOut(200, callback);
+        }
     },
 
-    showShortContent: function (commentWrapper) {
+    showContent: function (commentWrapper, instant, callback) {
         if (!commentWrapper) {
             return;
         }
@@ -218,25 +216,20 @@ StoryLine.CommentManager.prototype = {
         if (this.isAnyContentDisplayed(commentWrapper)) {
             return;
         }
-        var shortContent = commentWrapper.children('.content-short');
-        shortContent.fadeIn(300, function () {
+        var content = commentWrapper.children('.content');
+        if (instant === true) {
+            content.show();
             StoryLine.CommentManager.toggleSortable(commentWrapper);
-        });
-    },
-    showLongContent: function (commentWrapper) {
-        if (!commentWrapper) {
-            return;
+        } else {
+            content.fadeIn(300, function () {
+                StoryLine.CommentManager.toggleSortable(commentWrapper);
+                if (callback) {
+                    callback();
+                }
+            });
         }
-        // All must be closed
-        if (this.isAnyContentDisplayed(commentWrapper)) {
-            return;
-        }
-        var longContent = commentWrapper.children('.content-long');
-        longContent.show("blind", {}, 300, function () {
-            StoryLine.CommentManager.toggleSortable(commentWrapper);
-        });
     },
-    showTextArea: function (commentWrapper, gainFocus) {
+    showTextArea: function (commentWrapper, gainFocus, instant) {
         if (!commentWrapper) {
             return;
         }
@@ -245,14 +238,22 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         var textArea = commentWrapper.children('.content-edit');
-        textArea.fadeIn(200, function () {
+        if (instant === true) {
+            textArea.show();
             StoryLine.CommentManager.toggleSortable(commentWrapper);
             if (gainFocus) {
                 textArea.children('.form-control').focus();
             }
-        });
+        } else {
+            textArea.fadeIn(200, function () {
+                StoryLine.CommentManager.toggleSortable(commentWrapper);
+                if (gainFocus) {
+                    textArea.children('.form-control').focus();
+                }
+            });
+        }
     },
-    showPlaceholder: function (commentWrapper) {
+    showPlaceholder: function (commentWrapper, instant) {
         if (!commentWrapper) {
             return;
         }
@@ -261,52 +262,82 @@ StoryLine.CommentManager.prototype = {
             return;
         }
         var placeholder = commentWrapper.children('.placeholder');
-        placeholder.fadeIn(200, function () {
+        if (instant === true) {
+            placeholder.show();
             StoryLine.CommentManager.toggleSortable(commentWrapper);
-        });
+        } else {
+            placeholder.fadeIn(200, function () {
+                StoryLine.CommentManager.toggleSortable(commentWrapper);
+            });
+        }
     },
 
-    hideAllContent: function (commentWrapper, callback) { // Callback is called when all elements are closed
+    hideAllContent: function (commentWrapper, instant, callback) { // Callback is called when all elements are closed
         if (!commentWrapper) {
             return;
         }
         // Bools for the elements that when closed are true
-        var short, long, text, place;
+        var content, text, place;
 
         var check = function () {
-            if (short && long && text && place) {
-                callback();
+            if (content && text && place) {
+                if (callback) {
+                    callback();
+                }
             }
         };
 
         // All must be closed
         //if (this.isAnyContentDisplayed(commentWrapper)) {
-        short = this.hideShortContent(commentWrapper, function () { short = true; check(); });
-        long = this.hideLongContent(commentWrapper, function () { long = true; check(); });
-        text = this.hideTextArea(commentWrapper, function () { text = true; check(); });
-        place = this.hidePlaceholder(commentWrapper, function () { place = true; check(); });
+        content = this.hideContent(commentWrapper, instant, function () { content = true; check(); });
+        text = this.hideTextArea(commentWrapper, instant, function () { text = true; check(); });
+        place = this.hidePlaceholder(commentWrapper, instant, function () { place = true; check(); });
+
+        if (instant === true) {
+            if (callback) {
+                callback();
+            }
+        }
         //}
     },
 
-    onlyShowShortContent: function (commentWrapper, callback) {
-        this.hideAllContent(commentWrapper, function () {
-            StoryLine.CommentManager.showShortContent(commentWrapper);
+    experimentalClose: function (commentWrapper, callback) {
+        commentWrapper.removeClass('active-comment', { duration: 100, children: true, complete: function () {
             if (callback) {
                 callback();
             }
-        });
+        }  });
     },
-    onlyShowLongContent: function (commentWrapper, callback) {
-        this.hideAllContent(commentWrapper, function () {
-            StoryLine.CommentManager.showLongContent(commentWrapper);
+
+    experimentalOpen: function (commentWrapper, callback) {
+        commentWrapper.addClass('active-comment', { duration: 100, children: true, complete: function () {
             if (callback) {
                 callback();
             }
-        });
+        } });
     },
-    onlyShowTextArea: function (commentWrapper, gainfocus, callback) {
-        this.hideAllContent(commentWrapper, function () {
-            StoryLine.CommentManager.showTextArea(commentWrapper, gainfocus);
+
+    onlyShowContent: function (commentWrapper, instant, callback) {
+        if (instant === true) {
+            this.hidePlaceholder(commentWrapper, true);
+            this.hideTextArea(commentWrapper, true);
+            this.showContent(commentWrapper, true);
+            if (callback) {
+                callback();
+            }
+        } else {
+            this.hideAllContent(commentWrapper, false, function () {
+                StoryLine.CommentManager.showContent(commentWrapper, false, function () {
+                    if (callback) {
+                        callback();
+                    }
+                });
+            });
+        }
+    },
+    onlyShowTextArea: function (commentWrapper, gainfocus, instant, callback) {
+        this.hideAllContent(commentWrapper, instant, function () {
+            StoryLine.CommentManager.showTextArea(commentWrapper, gainfocus, instant);
             if (callback) {
                 callback();
             }
@@ -327,23 +358,29 @@ StoryLine.CommentManager.prototype = {
         return $(newComment);
     },
     editComment: function (commentWrapper, callback, finishListener) {
+        // Idea for dynamic textarea:
+        // http://alistapart.com/article/expanding-text-areas-made-elegant
         if (!commentWrapper) {
             return;
         }
         var cM = StoryLine.CommentManager;
 
+
+
         // Hide active element if not edit form
         if (!this.isTextAreaDisplayed(commentWrapper)) {
 
-            cM.prevText = commentWrapper.children('.content-long').text();
+            if (finishListener) {
+                this.finishEditListener = finishListener;
+            }
+
+            cM.prevText = commentWrapper.children('.content').text();
             $(commentWrapper).children('.content-edit').children('.form-control').val(cM.prevText);
             cM.editing = true;
 
-            this.onlyShowTextArea(commentWrapper, true, function () {
+            this.onlyShowTextArea(commentWrapper, true, false, function () {
                 commentWrapper.addClass('editing');
-                if (finishListener) {
-                    cM.finishEditListener = finishListener;
-                }
+
                 if (callback) {
                     callback();
                 }
@@ -351,22 +388,61 @@ StoryLine.CommentManager.prototype = {
         }
     },
 
-    closeComment: function (commentWrapper) {
+    closeComment: function (commentWrapper, instant, callback) {
         if (!commentWrapper) {
             return;
         }
 
-        this.onlyShowShortContent(commentWrapper, function () {
-            commentWrapper.removeClass('active-comment');
+        this.onlyShowContent(commentWrapper, instant, function () {
+            StoryLine.CommentManager.experimentalClose(commentWrapper, function () {
+                var element = commentWrapper;
+                /*
+                $(element).dotdotdot({
+                    // The text to add as ellipsis.
+                    ellipsis : '... ',
+
+                    // How to cut off the text/html: 'word'/'letter'/'children'
+                    wrap : 'word',
+
+                    // Wrap-option fallback to 'letter' for long words
+                    fallbackToLetter: true,
+
+                    // jQuery-selector for the element to keep and put after the ellipsis.
+                    after : null,
+
+                    // Whether to update the ellipsis: true/'window'
+                    watch : false,
+                    // Optionally set a max-height, if null, the height will be measured.
+                    height : '2.8em',
+
+                    // Deviation for the height-option.
+                    tolerance : 0,
+
+                    // Callback function that is fired after the ellipsis is added, receives two parameters: isTruncated(boolean), orgContent(string).
+                    callback : function( isTruncated, orgContent ) { console.log('callback function'); },
+
+                    lastCharacter : {
+
+                        // Remove these characters from the end of the truncated text.
+                        remove : [ ' ', ',', ';', '.', '!', '?' ],
+
+                        // Don't add an ellipsis if this array contains the last character of the truncated text.
+                        noEllipsis : []
+                    }
+                });
+                */
+                if (callback) {
+                    callback();
+                }});
         });
     },
-    openComment: function (commentWrapper) {
+    openComment: function (commentWrapper, instant, callback) {
         if (!commentWrapper) {
+            console.log('commentWrapper is null');
             return;
         }
-
-        this.onlyShowLongContent(commentWrapper, function () {
-            commentWrapper.addClass('active-comment');
+        this.onlyShowContent(commentWrapper, instant, function () {
+            StoryLine.CommentManager.experimentalOpen(commentWrapper, callback);
         });
     },
     toggleComment: function (commentWrapper) {
@@ -380,16 +456,16 @@ StoryLine.CommentManager.prototype = {
 
         // Close this comment if it's the active comment
         if (commentWrapper.hasClass('active-comment')) {
-            StoryLine.CommentManager.closeComment(commentWrapper);
+            StoryLine.CommentManager.closeComment(commentWrapper, true);
             return false;
         } else {
             // Close the active comment
             var activeCommentWrapper = $('.active-comment');
             if (activeCommentWrapper) {
-                StoryLine.CommentManager.closeComment(activeCommentWrapper);
+                StoryLine.CommentManager.closeComment(activeCommentWrapper, true);
             }
             // Open the clicked comment
-            StoryLine.CommentManager.openComment(commentWrapper);
+            StoryLine.CommentManager.openComment(commentWrapper, true);
             return true;
         }
     },
@@ -410,14 +486,12 @@ StoryLine.CommentManager.prototype = {
     finishEdit: function (commentWrapper, apply) {
         var cM = StoryLine.CommentManager,
             prevLength = StoryLine.CommentManager.prevText.trim().length,
-            shortContent = commentWrapper.children('.content-short'),
-            longContent = commentWrapper.children('.content-long'),
+            content = commentWrapper.children('.content'),
             textArea = commentWrapper.children('.content-edit').children('.form-control'),
             reset = function (cW) {
                 cM.resetEditing(cW);
                 if (cM.finishEditListener) {
-                    console.log('Finish');
-                    cM.finishEditListener();
+                    cM.finishEditListener(apply);
                 }
             };
 
@@ -434,7 +508,7 @@ StoryLine.CommentManager.prototype = {
                     });
                     return;
                 } else {
-                    cM.onlyShowLongContent(commentWrapper, function () {
+                    cM.openComment(commentWrapper, false, function () {
                         commentWrapper.removeClass('editing');
                         reset(commentWrapper);
                     });
@@ -452,26 +526,24 @@ StoryLine.CommentManager.prototype = {
             }
 
             // Strip image from text
-            if (shortContent.has('img').length > 0) {
-                img = shortContent.children('img');
+            if (content.has('img').length > 0) {
+                img = content.children('img');
             } else {
                 img = $('<img src=' + cM.templateEmotion + '>');
             }
 
-            shortContent.text(text);
-            shortContent.prepend(img);
-            longContent.text(text);
-            longContent.prepend(img.clone(true));
+            content.text(text);
+            content.prepend(img);
 
-
-            this.onlyShowLongContent(commentWrapper, function () {
+            this.openComment(commentWrapper, false, function () {
                 textArea.val('');
                 commentWrapper.removeClass('editing');
-                if (prevLength <= 0) {
-                    cM.currTemplate.fadeIn(200);
-                }
+
                 reset(commentWrapper);
             });
+            if (prevLength <= 0) {
+                cM.currTemplate.fadeIn(200);
+            }
 
             /*
             this.hideTextArea(commentWrapper, function () {
@@ -493,7 +565,7 @@ StoryLine.CommentManager.prototype = {
                 });
             } else {
                 textArea.val(cM.prevText);
-                this.onlyShowLongContent(commentWrapper, function () {
+                this.openComment(commentWrapper, false, function () {
                     commentWrapper.removeClass('editing');
                     reset(commentWrapper);
                 });
@@ -516,7 +588,7 @@ StoryLine.CommentManager.prototype = {
                 }
                 return;
             }
-            if (!cM.isShortContentDisplayed($(this))) {
+            if (!cM.isContentDisplayed($(this))) {
                 disable = true;
             }
         });

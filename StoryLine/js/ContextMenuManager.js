@@ -2,6 +2,7 @@ var StoryLine = StoryLine || {};
 
 StoryLine.ContextMenuManager = function () {
     this.templateContextMenu = null;
+    this.toggling = false;
     this.activeContextMenu = null;
     // Contains the element which it is active for.
     this.activeTarget = null;
@@ -66,21 +67,29 @@ StoryLine.ContextMenuManager.prototype = {
                     if (myIndex > 0) { myIndex /= 2; }
                     // Replace with classes? cause it's flippin' ugly
                     var src = $(this).attr('src');
-                    if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[kletsen].png')) {
-                        if (cMM.activeTarget.hasClass('event')) {
-                            StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "talk");
+                    var activeTarget = StoryLine.ContextMenuManager.activeTarget,
+                        activeContextMenu = StoryLine.ContextMenuManager.activeContextMenu;
+                    if (activeContextMenu) {
+                        if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[kletsen].png')) {
+                            if (activeTarget.hasClass('event')) {
+                                StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "talk");
+                            }
                             hide = true;
-                        }
-                        cMM.activeTarget.attr('src', src);
-                    } else if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[handen].png')) {
-                        if (cMM.activeTarget.hasClass('event')) {
-                            StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "hold-hands");
+                            activeTarget.attr('src', src);
+                        } else if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[handen].png')) {
+                            if (activeTarget.hasClass('event')) {
+                                StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "hold-hands");
+                            }
                             hide = true;
-                        }
-                        cMM.activeTarget.attr('src', src);
-                    } else if ($(this).hasClass('edit')) {
-                        if (cMM.activeTarget.hasClass('commentWrapper')) {
-                            cM.editComment(cMM.activeTarget, function () {}, function () {});
+                            activeTarget.attr('src', src);
+                        } else if ($(this).hasClass('edit')) {
+                            if (activeTarget.hasClass('commentWrapper')) {
+                                StoryLine.CommentManager.editComment(activeTarget, function () {console.log('finish first');}, function (apply) {
+                                    if (!apply) {
+                                        StoryLine.ContextMenuManager.hideContextMenu(menu);
+                                    }
+                                });
+                            }
                         }
                     }
 
@@ -88,7 +97,9 @@ StoryLine.ContextMenuManager.prototype = {
                     if (hide) {
                         StoryLine.ContextMenuManager.hideContextMenu(menu);
                     }
+
                 };
+
             });
             //contextMenu.children('.contextIcon').click();
         }
@@ -110,14 +121,16 @@ StoryLine.ContextMenuManager.prototype = {
         if (!contextMenu) {
             return;
         }
+        this.toggling = true;
         if (!this.isContextMenuDisplayed(contextMenu) || !contextMenu.hasClass('active')) {
             if (contextMenu.is(StoryLine.ContextMenuManager.activeContextMenu)) {
                 this.activeContextMenu = null;
                 this.activeTarget = null;
             }
+            StoryLine.ContextMenuManager.toggling = false;
             return;
         }
-        contextMenu.animate({width: 'toggle', queue: false}, 350, function () {
+        contextMenu.animate({width: 'toggle', duration: 350, queue: false }, function () {
             contextMenu.removeClass('active');
 
             if (contextMenu.is(StoryLine.ContextMenuManager.activeContextMenu)) {
@@ -126,10 +139,12 @@ StoryLine.ContextMenuManager.prototype = {
                 StoryLine.ContextMenuManager.activeTarget = null;
                 StoryLine.Main.unlockScrolling();
             }
+            StoryLine.ContextMenuManager.toggling = false;
             if (callback) {
                 callback();
             }
         });
+        //contextMenu.removeClass('active');
 
         //$(this).toggleClass('active');//.children('.scenario')
     },
@@ -137,6 +152,7 @@ StoryLine.ContextMenuManager.prototype = {
         if (!contextMenu) {
             return;
         }
+        this.toggling = true;
         if (this.isContextMenuDisplayed(contextMenu) || contextMenu.hasClass('active')) {
             if (!this.activeContextMenu || !this.activeContextMenu.is(contextMenu)) {
                 if (this.activeContextMenu) {
@@ -146,6 +162,7 @@ StoryLine.ContextMenuManager.prototype = {
                 this.activeContextMenu = contextMenu;
                 this.activeTarget = menuTarget;
             }
+            this.toggling = false;
             return;
         }
         contextMenu.addClass('active');
@@ -153,6 +170,7 @@ StoryLine.ContextMenuManager.prototype = {
             menuTarget.addClass('highlight');
             StoryLine.ContextMenuManager.activeContextMenu = contextMenu;
             StoryLine.ContextMenuManager.activeTarget = menuTarget;
+            StoryLine.ContextMenuManager.toggling = false;
         });
     },
     openContextMenu: function (scenarioWrapper, menuTarget) {

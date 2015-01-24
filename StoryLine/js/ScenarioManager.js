@@ -57,6 +57,11 @@ StoryLine.ScenarioManager.prototype = {
     initScenario: function (scenarioWrapper) {
         // On click of the scenario
         scenarioWrapper.on('click', function (event) {
+            
+            if (StoryLine.ContextMenuManager.toggling) {
+                return;
+            }
+            
             // The clicked target
             var cM = StoryLine.CommentManager, cMM = StoryLine.ContextMenuManager, sM = StoryLine.ScenarioManager;
             var target = $(event.target);
@@ -96,22 +101,29 @@ StoryLine.ScenarioManager.prototype = {
 
                         // Close that comment and the contextMenu
                         cMM.closeContextMenu(activeScenario, function () {
-                            cM.closeComment(activeElement);
+                            //cM.experimentalToggle(activeElement);
+                            cM.closeComment(activeElement, false);
+                            //cM.closeComment(activeElement);
                         });
                         return;
                     } else if (targetElement.hasClass('commentWrapper')) {
                         // We clicked a different comment
                         cMM.closeContextMenu(activeScenario, function () {
-                            cM.closeComment(activeElement);
+                            cM.closeComment(activeElement, false);
                             if (targetElement.hasClass('template')) {
                                 var newComment = cM.addComment(targetElement);
                                 cMM.openContextMenu(targetScenario, newComment);
-                                cM.editComment(newComment, function () {}, function () {
-                                    cMM.closeContextMenu(targetScenario);
+                                cM.editComment(newComment, function () {}, function (apply) {
+                                    if (!apply) {
+                                        StoryLine.ContextMenuManager.closeContextMenu(targetScenario);
+                                    }
                                 });
                                 cM.currTemplate.hide();
                             } else {
-                                cM.openComment(targetElement);
+                                console.log('open comment');
+                                //cM.experimentalToggle(activeElement);
+                                cM.openComment(targetElement, false);
+                                //cM.openComment(targetElement);
                                 cMM.openContextMenu(targetScenario, targetElement);
                             }
                         });
@@ -127,8 +139,10 @@ StoryLine.ScenarioManager.prototype = {
                             var addComment = function () {
                                 var newComment = cM.addComment(targetElement);
                                 cMM.openContextMenu(targetScenario, newComment);
-                                cM.editComment(newComment, function () {}, function () {
-                                    cMM.closeContextMenu(targetScenario);
+                                cM.editComment(newComment, function () {}, function (apply) {
+                                    if (!apply) {
+                                        StoryLine.ContextMenuManager.closeContextMenu(targetScenario);
+                                    }
                                 });
                                 cM.currTemplate.hide();
                             };
@@ -145,6 +159,7 @@ StoryLine.ScenarioManager.prototype = {
                                 });
                             } else {
                                 cMM.openContextMenu(targetScenario, targetElement);
+                                cM.openComment(targetElement, false);
                             }
                             return;
                         }
@@ -173,11 +188,6 @@ StoryLine.ScenarioManager.prototype = {
                     } else {
                         cMM.openContextMenu(targetScenario, targetElement);
                     }
-                } else if (targetElement.hasClass('commentWrapper')) {
-                    if (targetElement.hasClass('template')) {
-
-                    }
-                    //cMM.openContextMenu(scenario, targetElement);
                 }
             } else {
                 // Close context menu of active or select scenario if none is active
