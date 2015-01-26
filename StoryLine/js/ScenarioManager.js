@@ -1,5 +1,4 @@
 var StoryLine = StoryLine || {};
-var srcAddActionButton = "../src/editButton(full)(action).png";
 
 StoryLine.ScenarioManager = function () {
     this.templateScenario = null;
@@ -305,35 +304,22 @@ StoryLine.ScenarioManager.prototype = {
 
         for (i = 0; i < titles.length; i++) {
             if (event.attr('title') === titles[i]) {
-                // console.log('Setting oldEvent: ' + events[i]);
                 oldEvent = titles[i];
             }
         }
 
-        if (oldEvent && title) {
-            //$(scenarioWrapper).switchClass(oldEvent, event, { duration: 200, children: true });
-            //$(contextMenu).switchClass(oldEvent, event, { duration: 200, children: true });
-
+        if (title) {
             p.text(title);
             event.attr('src', src);
             event.attr('title', title);
-        } else if (title) {
-            //$(scenarioWrapper).addClass(event, { duration: 200, children: true });
-            //$(contextMenu).addClass(event, { duration: 200, children: true });
-            p.text(title);
-            event.attr('src', src);
-            event.attr('title', title);
-        } else if (oldEvent) {
-            //$(scenarioWrapper).removeClass(oldEvent, { duration: 200, children: true });
-            //$(contextMenu).removeClass(oldEvent, { duration: 200, children: true });
+        } else {
             p.text('Geen gebeurtenis');
-            event.attr('src', srcAddActionButton);
+            event.attr('src', this.templateScenario.contents().find('.event').attr('src'));
             event.attr('title', 'Selecteer een actie');
         }
     },
 
-    setScenarioEmotion: function (scenarioWrapper, emotion, button)
-    {
+    setScenarioEmotion: function (scenarioWrapper, emotion, button) {
         if (scenarioWrapper.hasClass('template')) {
             return;
         }
@@ -357,7 +343,7 @@ StoryLine.ScenarioManager.prototype = {
                 // console.log('Setting oldEvent: ' + events[i]);
                 oldTitle = emotions[i];
             }
-            
+
             if (scenarioWrapper.hasClass(emotions[i].toLowerCase())) {
                 oldEmotion = emotions[i].toLowerCase();
             }
@@ -365,25 +351,23 @@ StoryLine.ScenarioManager.prototype = {
 
         var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
 
-        if (oldEmotion && title) {
-            if (changeColor) {
+        if (changeColor) {
+            if (oldEmotion && title) {
                 $(scenarioWrapper).switchClass(oldEmotion, titleClass, { duration: 200, children: true });
                 $(contextMenu).switchClass(oldEmotion, titleClass, { duration: 200, children: true });
-            }
-            emotion.attr('src', src);
-            emotion.attr('title', title);
-        } else if (title) {
-            if (changeColor) {
+            } else if (title) {
                 $(scenarioWrapper).addClass(titleClass, { duration: 200, children: true });
                 $(contextMenu).addClass(titleClass, { duration: 200, children: true });
-            }
-            emotion.attr('src', src);
-            emotion.attr('title', title);
-        } else if (oldEmotion) {
-            if (changeColor) {
+            } else if (oldEmotion) {
                 $(scenarioWrapper).removeClass(oldEmotion, { duration: 200, children: true });
                 $(contextMenu).removeClass(oldEmotion, { duration: 200, children: true });
             }
+        }
+        
+        if (title) {
+            emotion.attr('src', src);
+            emotion.attr('title', title);
+        } else {
             // template:
             emotion.attr('src', this.templateScenario.contents().find('.emotion').attr('src'));
             if (emotion.hasClass('pull-right')) {
