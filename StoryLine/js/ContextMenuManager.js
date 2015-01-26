@@ -74,18 +74,11 @@ StoryLine.ContextMenuManager.prototype = {
                     var activeTarget = StoryLine.ContextMenuManager.activeTarget,
                         activeContextMenu = StoryLine.ContextMenuManager.activeContextMenu;
                     if (activeContextMenu) {
-                        if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[kletsen].png')) {
+                        if ($(this).hasClass('setevent')) {
                             if (activeTarget.hasClass('event')) {
-                                StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "talk");
+                                StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, $(this));
                             }
                             hide = true;
-                            activeTarget.attr('src', src);
-                        } else if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[handen].png')) {
-                            if (activeTarget.hasClass('event')) {
-                                StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "hold-hands");
-                            }
-                            hide = true;
-                            activeTarget.attr('src', src);
                         } else if ($(this).hasClass('edit')) {
                             if (activeTarget.hasClass('commentWrapper')) {
                                 StoryLine.CommentManager.editComment(activeTarget, 
@@ -97,10 +90,13 @@ StoryLine.ContextMenuManager.prototype = {
                             }
                         } else if ($(this).hasClass('delete')){
                             if(activeTarget.hasClass('commentWrapper')){
+                                var commentlist = activeTarget.parent();
                                 $('.active-comment').remove();
+                                StoryLine.CommentManager.initCommentList(commentlist);
                             } else if(activeTarget.hasClass('event')){
                                 StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario);
                             }
+                            hide = true;
                         } else if ($(this).hasClass('apply')) {
                             StoryLine.CommentManager.finishEdit(activeTarget, true);
                         } else if ($(this).hasClass('abort')) {
@@ -113,7 +109,6 @@ StoryLine.ContextMenuManager.prototype = {
                         StoryLine.ContextMenuManager.hideContextMenu(menu);
                     }
                 };
-
             });
             //contextMenu.children('.contextIcon').click();
         }
@@ -133,28 +128,38 @@ StoryLine.ContextMenuManager.prototype = {
                     return;
                 }
             }
+            var showDelete = true;
+            if (menuTarget.hasClass('event') || menuTarget.hasClass('emotion')) {
+                var title = menuTarget.attr('title');
+                if (!title || title.length <= 0) {
+                    showDelete = false;
+                }
+            }
             contextMenu.children().hide();
 
             if (menuTarget.hasClass('scenario')) {
-                contextMenu.children('.other').show();
+                contextMenu.children('.scenario').show();
             } else if (menuTarget.hasClass('event')) {
                 contextMenu.children('.event').show();
-                contextMenu.children('.other').show();
             } else if (menuTarget.hasClass('emotion')) {
                 contextMenu.children('.emotion').show();
-                contextMenu.children('.other').show();
             } else if (menuTarget.hasClass('commentWrapper')) {
                 var commentButtons = contextMenu.children('.comment');
                 commentButtons.show();
                 if (StoryLine.CommentManager.editing) {
-                    contextMenu.children('.other').hide();
+                    showDelete = false;
                     commentButtons.children('.edit').hide();
                     commentButtons.children('.apply, .abort').show();
                 } else {
-                    contextMenu.children('.other').show();
+                    showDelete = true;
                     commentButtons.children('.apply, .abort').hide();
                     commentButtons.children('.edit').show();
                 }
+            }
+            if (showDelete) {
+                contextMenu.children('.other').show();
+            } else {
+                contextMenu.children('.other').hide();
             }
         }
     },

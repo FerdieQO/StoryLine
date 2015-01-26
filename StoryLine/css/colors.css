@@ -50,10 +50,10 @@
 
 
 /* == Kiss colors == */
-.kiss.light.show, .kiss .light.show, .kiss.active .light, .kiss.active .light { background-color: #ccc; } /* Light background */
+.kiss.light.show, .kiss .light.show, .kiss.active .light, .kiss.active.light { background-color: #ccc; } /* Light background */
 .kiss.medium.show, .kiss .medium.show, .kiss.active .medium, .kiss.active.medium { background-color: #bbb; } /* Medium background */
 .kiss.dark.show, .kiss .dark.show, .kiss.active .dark, .kiss.active.dark { background-color: #999; } /* Dark background */
 
-.kiss.light-border.show, .kiss .light-border.show, .kiss.active .light-border, .kiss.active .light-border { border-color: #ccc; outline-color: #ccc; } /* Light border */
+.kiss.light-border.show, .kiss .light-border.show, .kiss.active .light-border, .kiss.active.light-border { border-color: #ccc; outline-color: #ccc; } /* Light border */
 .kiss.medium-border.show, .kiss .medium-border.show, .kiss.active .medium-border, .kiss.active.medium-border { border-color: #bbb; outline-color: #bbb; } /* Medium border */
 .kiss.dark-border.show, .kiss .dark-border.show, .kiss.active .dark-border, .kiss.active.dark-border { border-color: #999; outline-color: #999; } /* Dark border */

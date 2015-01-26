@@ -291,38 +291,47 @@ StoryLine.ScenarioManager.prototype = {
         }
         // how to remove class where you don't know which one it is?
         // Current method is ugly as ****.
+        var title, src;
+        if (event) {
+            title = event.attr('title');
+            src = event.attr('src');
+        }
+        
+        var p = scenarioWrapper.children('.scenario').children('p');
+        var img = scenarioWrapper.children('.scenario').children('img');
 
         // http://stackoverflow.com/questions/1227286/get-class-list-for-element-with-jquery
-        var events = ["talk", "kiss", "cuddle", "hold-hands"], i,
-            titles = ["Kletsen", "Zoenen", "Knuffelen", "Handen vasthouden"],
-            eventTitle,
+        var i, titles = ["Aanraken", "Handen vasthouden", "Kletsen", "Knuffelen", "Kussen", "Seks", "Winkelen", "Spelen", "Trainen", "Vriendschap sluiten"],
             oldEvent;
 
-        for (i = 0; i < events.length; i++) {
-            if (events[i] == event) {
-                eventTitle = titles[i];
-            }
-            if (scenarioWrapper.hasClass(events[i])) {
+        for (i = 0; i < titles.length; i++) {
+            if (img.attr('title') === titles[i]) {
                 // console.log('Setting oldEvent: ' + events[i]);
-                oldEvent = events[i];
+                oldEvent = titles[i];
             }
         }
 
         var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
 
-        if (oldEvent && event) {
-            $(scenarioWrapper).switchClass(oldEvent, event, { duration: 200, children: true });
-            $(contextMenu).switchClass(oldEvent, event, { duration: 200, children: true });
-            scenarioWrapper.children('.scenario').children('p').text(eventTitle);
-        } else if (event) {
-            $(scenarioWrapper).addClass(event, { duration: 200, children: true });
-            $(contextMenu).addClass(event, { duration: 200, children: true });
-            scenarioWrapper.children('.scenario').children('p').text(eventTitle);
+        if (oldEvent && title) {
+            //$(scenarioWrapper).switchClass(oldEvent, event, { duration: 200, children: true });
+            //$(contextMenu).switchClass(oldEvent, event, { duration: 200, children: true });
+            
+            p.text(title);
+            img.attr('src', src);
+            img.attr('title', title);
+        } else if (title) {
+            //$(scenarioWrapper).addClass(event, { duration: 200, children: true });
+            //$(contextMenu).addClass(event, { duration: 200, children: true });
+            p.text(title);
+            img.attr('src', src);
+            img.attr('title', title);
         } else if (oldEvent) {
-            $(scenarioWrapper).removeClass(oldEvent, { duration: 200, children: true });
-            $(contextMenu).removeClass(oldEvent, { duration: 200, children: true });
-            scenarioWrapper.children('.scenario').children('p').text('Geen gebeurtenis.');
-            scenarioWrapper.children('.scenario').children('img').attr('src', srcAddActionButton);
+            //$(scenarioWrapper).removeClass(oldEvent, { duration: 200, children: true });
+            //$(contextMenu).removeClass(oldEvent, { duration: 200, children: true });
+            p.text('Geen gebeurtenis');
+            img.attr('src', srcAddActionButton);
+            img.attr('title', 'Selecteer een actie');
         }
     },
 

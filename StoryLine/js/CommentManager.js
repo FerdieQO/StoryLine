@@ -27,16 +27,6 @@ StoryLine.CommentManager.prototype = {
             }
         });
 
-        // Should eventually be changed to contextMenu
-        $('.commentWrapper .content-edit .button').on("click", function (event) {
-            var apply = $(this).hasClass('apply'),
-                abort = $(this).hasClass('abort'),
-                editingComment = $('.commentWrapper.editing');
-            if (apply || abort) {
-                StoryLine.CommentManager.finishEdit(editingComment, apply);
-            }
-        });
-
         $('.commentWrapper').on("click", function () {
             // Only if the scenario manager allows it and definately not on the template scenario
             var cM = StoryLine.CommentManager,
@@ -538,7 +528,6 @@ StoryLine.CommentManager.prototype = {
             this.openComment(commentWrapper, false, function () {
                 textArea.val('');
                 commentWrapper.removeClass('editing');
-
                 reset(commentWrapper);
             });
             if (prevLength <= 0) {
