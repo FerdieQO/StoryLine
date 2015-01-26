@@ -76,7 +76,7 @@ StoryLine.ContextMenuManager.prototype = {
                     if (activeContextMenu) {
                         if ($(this).hasClass('setevent')) {
                             if (activeTarget.hasClass('event')) {
-                                StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, $(this));
+                                StoryLine.ScenarioManager.setScenarioEvent(activeTarget, $(this));
                             }
                             hide = true;
                         } else if ($(this).hasClass('edit')) {
@@ -88,19 +88,30 @@ StoryLine.ContextMenuManager.prototype = {
                                     StoryLine.ContextMenuManager.updateContextMenu(StoryLine.ScenarioManager.activeScenario);
                                 });
                             }
-                        } else if ($(this).hasClass('delete')){
-                            if(activeTarget.hasClass('commentWrapper')){
+                        } else if ($(this).hasClass('delete')) {
+                            if (activeTarget.hasClass('commentWrapper')) {
                                 var commentlist = activeTarget.parent();
                                 $('.active-comment').remove();
                                 StoryLine.CommentManager.initCommentList(commentlist);
-                            } else if(activeTarget.hasClass('event')){
-                                StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario);
+                            } else if (activeTarget.hasClass('event')) {
+                                StoryLine.ScenarioManager.setScenarioEvent(activeTarget);
+                            } else if (activeTarget.hasClass('emotion')) {
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget);
                             }
                             hide = true;
                         } else if ($(this).hasClass('apply')) {
                             StoryLine.CommentManager.finishEdit(activeTarget, true);
                         } else if ($(this).hasClass('abort')) {
                             StoryLine.CommentManager.finishEdit(activeTarget, false);
+
+                        } else if ($(this).hasClass('setemotion')) {
+                            if (activeTarget.hasClass('emotion medium dark-border')) {
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget, $(this));
+                                hide = true;
+                            } else if (activeTarget.hasClass('emotion medium pull-right dark-border')) {
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget, $(this));
+                                hide = true;
+                            }
                         }
                     }
 
@@ -108,6 +119,7 @@ StoryLine.ContextMenuManager.prototype = {
                     if (hide) {
                         StoryLine.ContextMenuManager.hideContextMenu(menu);
                     }
+
                 };
             });
             //contextMenu.children('.contextIcon').click();
@@ -131,7 +143,7 @@ StoryLine.ContextMenuManager.prototype = {
             var showDelete = true;
             if (menuTarget.hasClass('event') || menuTarget.hasClass('emotion')) {
                 var title = menuTarget.attr('title');
-                if (!title || title.length <= 0) {
+                if (!title || title === 'Selecteer een actie' || title === 'Voeg jouw emotie toe' || title === 'Voeg de emotie van de ander toe') {
                     showDelete = false;
                 }
             }

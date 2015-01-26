@@ -19,41 +19,41 @@
 .dark-border.show, .active .dark-border.show, .active .dark-border, .active.dark-border { border-color: #aaa; outline-color: #aaa;} /* Dark border */
 
 
-/* == Talk colors == */
-.talk.light.show, .talk .light.show, .talk.active .light, .talk.active.light { background-color: #f9c82e; } /* Light background */
-.talk.medium.show, .talk .medium.show, .talk.active .medium, .talk.active.medium { background-color: #e6b61e; } /* Medium background */
-.talk.dark.show, .talk .dark.show, .talk.active .dark, .talk.active.dark { background-color: #d3a30b; } /* Dark background */
+/* == Blij colors == */
+.blij.light.show, .blij .light.show, .blij.active .light, .blij.active.light { background-color: #f9c82e; } /* Light background */
+.blij.medium.show, .blij .medium.show, .blij.active .medium, .blij.active.medium { background-color: #e6b61e; } /* Medium background */
+.blij.dark.show, .blij .dark.show, .blij.active .dark, .blij.active.dark { background-color: #d3a30b; } /* Dark background */
 
-.talk.light-border.show, .talk .light-border.show, .talk.active .light-border, .talk.active.light-border { border-color: #f9c82e; outline-color: #f9c82e; } /* Light border */
-.talk.medium-border.show, .talk .medium-border.show, .talk.active .medium-border, .talk.active.medium-border { border-color: #e6b61e; outline-color: #e6b61e; } /* Medium border */
-.talk.dark-border.show, .talk .dark-border.show, .talk.active .dark-border, .talk.active.dark-border { border-color: #d3a30b; outline-color: #d3a30b; } /* Dark border */
-
-
-/* == Hold hands colors == */
-.hold-hands.light.show, .hold-hands .light.show, .hold-hands.active .light, .hold-hands.active.light { background-color: #c1392b; } /* Light background */
-.hold-hands.medium.show, .hold-hands .medium.show, .hold-hands.active .medium, .hold-hands.active.medium { background-color: #982d22; } /* Medium background */
-.hold-hands.dark.show, .hold-hands .dark.show, .hold-hands.active .dark, .hold-hands.active.dark { background-color: #84291f; } /* Dark background */
-
-.hold-hands.light-border.show, .hold-hands .light-border.show, .hold-hands.active .light-border, .hold-hands.active.light-border { border-color: #c1392b; outline-color: #c1392b; } /* Light border */
-.hold-hands.medium-border.show, .hold-hands .medium-border.show, .hold-hands.active .medium-border, .hold-hands.active.medium-border { border-color: #982d22; outline-color: #982d22; } /* Medium border */
-.hold-hands.dark-border.show, .hold-hands .dark-border.show, .hold-hands.active .dark-border, .hold-hands.active.dark-border { border-color: #84291f; outline-color: #84291f; } /* Dark border */
+.blij.light-border.show, .blij .light-border.show, .blij.active .light-border, .blij.active.light-border { border-color: #f9c82e; outline-color: #f9c82e; } /* Light border */
+.blij.medium-border.show, .blij .medium-border.show, .blij.active .medium-border, .blij.active.medium-border { border-color: #e6b61e; outline-color: #e6b61e; } /* Medium border */
+.blij.dark-border.show, .blij .dark-border.show, .blij.active .dark-border, .blij.active.dark-border { border-color: #d3a30b; outline-color: #d3a30b; } /* Dark border */
 
 
-/* == Cuddle colors == */
-.cuddle.light.show, .cuddle .light.show, .cuddle.active .light, .cuddle.active.light { background-color: #5d2e4e; } /* Light background */
-.cuddle.medium.show, .cuddle .medium.show, .cuddle.active .medium, .cuddle.active.medium { background-color: #4a233d; } /* Medium background */
-.cuddle.dark.show, .cuddle .dark.show, .cuddle.active .dark, .cuddle.active.dark { background-color: #4a233d; } /* Dark background */
+/* == Boos colors == */
+.boos.light.show, .boos .light.show, .boos.active .light, .boos.active.light { background-color: #c1392b; } /* Light background */
+.boos.medium.show, .boos .medium.show, .boos.active .medium, .boos.active.medium { background-color: #ac2518; } /* Medium background */
+.boos.dark.show, .boos .dark.show, .boos.active .dark, .boos.active.dark { background-color: #901003; } /* Dark background */
 
-.cuddle.light-border.show, .cuddle .light-border.show, .cuddle.active .light-border, .cuddle.active.light-border { border-color: #5d2e4e; outline-color: #5d2e4e; } /* Light border */
-.cuddle.medium-border.show, .cuddle .medium-border.show, .cuddle.active .medium-border, .cuddle.active.medium-border { border-color: #4a233d; outline-color: #4a233d; } /* Medium border */
-.cuddle.dark-border.show, .cuddle .dark-border.show, .cuddle.active .dark-border, .cuddle.active.dark-border { border-color: #4a233d; outline-color: #4a233d; } /* Dark border */
+.boos.light-border.show, .boos .light-border.show, .boos.active .light-border, .boos.active.light-border { border-color: #c1392b; outline-color: #c1392b; } /* Light border */
+.boos.medium-border.show, .boos .medium-border.show, .boos.active .medium-border, .boos.active.medium-border { border-color: #ac2518; outline-color: #ac2518; } /* Medium border */
+.boos.dark-border.show, .boos .dark-border.show, .boos.active .dark-border, .boos.active.dark-border { border-color: #901003; outline-color: #901003; } /* Dark border */
 
 
-/* == Kiss colors == */
-.kiss.light.show, .kiss .light.show, .kiss.active .light, .kiss.active.light { background-color: #ccc; } /* Light background */
-.kiss.medium.show, .kiss .medium.show, .kiss.active .medium, .kiss.active.medium { background-color: #bbb; } /* Medium background */
-.kiss.dark.show, .kiss .dark.show, .kiss.active .dark, .kiss.active.dark { background-color: #999; } /* Dark background */
+/* == bang colors == */
+.bang.light.show, .bang .light.show, .bang.active .light, .bang.active.light { background-color: #5d2e4e; } /* Light background */
+.bang.medium.show, .bang .medium.show, .bang.active .medium, .bang.active.medium { background-color: #491d3b; } /* Medium background */
+.bang.dark.show, .bang .dark.show, .bang.active .dark, .bang.active.dark { background-color: #2b0d21; } /* Dark background */
 
-.kiss.light-border.show, .kiss .light-border.show, .kiss.active .light-border, .kiss.active.light-border { border-color: #ccc; outline-color: #ccc; } /* Light border */
-.kiss.medium-border.show, .kiss .medium-border.show, .kiss.active .medium-border, .kiss.active.medium-border { border-color: #bbb; outline-color: #bbb; } /* Medium border */
-.kiss.dark-border.show, .kiss .dark-border.show, .kiss.active .dark-border, .kiss.active.dark-border { border-color: #999; outline-color: #999; } /* Dark border */
+.bang.light-border.show, .bang .light-border.show, .bang.active .light-border, .bang.active.light-border { border-color: #5d2e4e; outline-color: #5d2e4e; } /* Light border */
+.bang.medium-border.show, .bang .medium-border.show, .bang.active .medium-border, .bang.active.medium-border { border-color: #491d3b; outline-color: #491d3b; } /* Medium border */
+.bang.dark-border.show, .bang .dark-border.show, .bang.active .dark-border, .bang.active.dark-border { border-color: #2b0d21; outline-color: #2b0d21; } /* Dark border */
+
+
+/* == bedroefd colors == */
+.bedroefd.light.show, .bedroefd .light.show, .bedroefd.active .light, .bedroefd.active.light { background-color: #999; } /* Light background */
+.bedroefd.medium.show, .bedroefd .medium.show, .bedroefd.active .medium, .bedroefd.active.medium { background-color: #7b7a7a; } /* Medium background */
+.bedroefd.dark.show, .bedroefd .dark.show, .bedroefd.active .dark, .bedroefd.active.dark { background-color: #646363; } /* Dark background */
+
+.bedroefd.light-border.show, .bedroefd .light-border.show, .bedroefd.active .light-border, .bedroefd.active.light-border { border-color: #999; outline-color: #999; } /* Light border */
+.bedroefd.medium-border.show, .bedroefd .medium-border.show, .bedroefd.active .medium-border, .bedroefd.active.medium-border { border-color: #7b7a7a; outline-color: #7b7a7a; } /* Medium border */
+.bedroefd.dark-border.show, .bedroefd .dark-border.show, .bedroefd.active .dark-border, .bedroefd.active.dark-border { border-color: #646363; outline-color: #646363; } /* Dark border */

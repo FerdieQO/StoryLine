@@ -281,57 +281,117 @@ StoryLine.ScenarioManager.prototype = {
             template = this.templateScenario.clone(true, true),
             elements = template.contents();
         elements.appendTo(scenarioWrapper);
-        scenarioWrapper.children('.scenario').children('p').text("New");
+        scenarioWrapper.children('.scenario').children('p').text("Geen gebeurtenis");
         // Return the div, you'll need to hook it into the correct place.
         return scenarioWrapper;
     },
-    setScenarioEvent: function (scenarioWrapper, event) {
-        if (scenarioWrapper.hasClass('template')) {
+    setScenarioEvent: function (event, button) {
+        if (!event) {
             return;
         }
         // how to remove class where you don't know which one it is?
         // Current method is ugly as ****.
         var title, src;
-        if (event) {
-            title = event.attr('title');
-            src = event.attr('src');
+        if (button) {
+            title = button.attr('title');
+            src = button.attr('src');
         }
-        
-        var p = scenarioWrapper.children('.scenario').children('p');
-        var img = scenarioWrapper.children('.scenario').children('img');
+
+        var p = event.parent().children('p');
 
         // http://stackoverflow.com/questions/1227286/get-class-list-for-element-with-jquery
         var i, titles = ["Aanraken", "Handen vasthouden", "Kletsen", "Knuffelen", "Kussen", "Seks", "Winkelen", "Spelen", "Trainen", "Vriendschap sluiten"],
             oldEvent;
 
         for (i = 0; i < titles.length; i++) {
-            if (img.attr('title') === titles[i]) {
+            if (event.attr('title') === titles[i]) {
                 // console.log('Setting oldEvent: ' + events[i]);
                 oldEvent = titles[i];
             }
         }
 
-        var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
-
         if (oldEvent && title) {
             //$(scenarioWrapper).switchClass(oldEvent, event, { duration: 200, children: true });
             //$(contextMenu).switchClass(oldEvent, event, { duration: 200, children: true });
-            
+
             p.text(title);
-            img.attr('src', src);
-            img.attr('title', title);
+            event.attr('src', src);
+            event.attr('title', title);
         } else if (title) {
             //$(scenarioWrapper).addClass(event, { duration: 200, children: true });
             //$(contextMenu).addClass(event, { duration: 200, children: true });
             p.text(title);
-            img.attr('src', src);
-            img.attr('title', title);
+            event.attr('src', src);
+            event.attr('title', title);
         } else if (oldEvent) {
             //$(scenarioWrapper).removeClass(oldEvent, { duration: 200, children: true });
             //$(contextMenu).removeClass(oldEvent, { duration: 200, children: true });
             p.text('Geen gebeurtenis');
-            img.attr('src', srcAddActionButton);
-            img.attr('title', 'Selecteer een actie');
+            event.attr('src', srcAddActionButton);
+            event.attr('title', 'Selecteer een actie');
+        }
+    },
+
+    setScenarioEmotion: function (scenarioWrapper, emotion, button)
+    {
+        if (scenarioWrapper.hasClass('template')) {
+            return;
+        }
+        if (!emotion) {
+            return;
+        }
+
+        var title, titleClass, src;
+        if (button) {
+            title = button.attr('title');
+            titleClass = title.toLowerCase();
+            src = button.attr('src');
+        }
+        var changeColor = !emotion.hasClass('pull-right');
+
+        var emotions = ["Bang", "Bedroefd", "Blij", "Boos"],
+            i, oldEmotion, oldTitle;
+
+        for (i = 0; i < emotions.length; i++) {
+            if (emotion.attr('title') === emotions[i]) {
+                // console.log('Setting oldEvent: ' + events[i]);
+                oldTitle = emotions[i];
+            }
+            
+            if (scenarioWrapper.hasClass(emotions[i].toLowerCase())) {
+                oldEmotion = emotions[i].toLowerCase();
+            }
+        }
+
+        var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
+
+        if (oldEmotion && title) {
+            if (changeColor) {
+                $(scenarioWrapper).switchClass(oldEmotion, titleClass, { duration: 200, children: true });
+                $(contextMenu).switchClass(oldEmotion, titleClass, { duration: 200, children: true });
+            }
+            emotion.attr('src', src);
+            emotion.attr('title', title);
+        } else if (title) {
+            if (changeColor) {
+                $(scenarioWrapper).addClass(titleClass, { duration: 200, children: true });
+                $(contextMenu).addClass(titleClass, { duration: 200, children: true });
+            }
+            emotion.attr('src', src);
+            emotion.attr('title', title);
+        } else if (oldEmotion) {
+            if (changeColor) {
+                $(scenarioWrapper).removeClass(oldEmotion, { duration: 200, children: true });
+                $(contextMenu).removeClass(oldEmotion, { duration: 200, children: true });
+            }
+            // template:
+            emotion.attr('src', this.templateScenario.contents().find('.emotion').attr('src'));
+            if (emotion.hasClass('pull-right')) {
+                title = 'Voeg de emotie van de ander toe';
+            } else {
+                title = 'Voeg jouw emotie toe';
+            }
+            emotion.attr('title', title);
         }
     },
 
