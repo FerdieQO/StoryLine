@@ -100,6 +100,8 @@ StoryLine.ContextMenuManager.prototype = {
                             } else if(activeTarget.hasClass('event')){
                                 StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario);
                             }
+                            
+                            hide = true;
                         }
                     }
 
