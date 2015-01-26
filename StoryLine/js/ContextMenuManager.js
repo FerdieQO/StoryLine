@@ -100,6 +100,7 @@ StoryLine.ContextMenuManager.prototype = {
                             } else if(activeTarget.hasClass('event')){
                                 StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario);
                             }
+                            hide = true;
                         } else if (StoryLine.HelperFunctions.endsWith(src, 'bang%5D.png')){
                             console.log("Clicked emotions");
                             if(activeTarget.hasClass('emotion medium dark-border')){
