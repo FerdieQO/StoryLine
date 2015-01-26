@@ -96,6 +96,8 @@ StoryLine.ContextMenuManager.prototype = {
                             if(activeTarget.hasClass('commentWrapper')){
                                 $('.active-comment').remove();
                             }
+                        } else if ($(this).hasClass('save')){
+                            SaveStoryLine();
                         }
                     }
 
