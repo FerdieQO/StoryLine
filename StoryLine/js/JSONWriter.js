@@ -15,6 +15,12 @@ function StoryLineToJSON()
     JSONString += ']}';
     
     console.log(JSONString);
+    
+    localStorage.setItem("savedScenario", JSONString);
+    
+    var sJSON = localStorage.getItem("savedScenario");
+    
+    console.log(sJSON);
 }
 
 function ConvertToJSON(scenario)
@@ -35,7 +41,7 @@ function ConvertToJSON(scenario)
     for(var i=0;i<comments.length;i++)
     {
         var commentString = '["';
-        commentString += $(comments[i]).find(".img").attr("src") + '",';
+        commentString += $(comments[i]).find("img").attr("src") + '",';
         if(i == comments.length - 1)
         {
             commentString += '"' + $(comments[i]).text() + '"]';
