@@ -325,6 +325,38 @@ StoryLine.ScenarioManager.prototype = {
             scenarioWrapper.children('.scenario').children('img').attr('src', srcAddActionButton);
         }
     },
+    
+    setScenarioEmotion: function (scenarioWrapper, emotion)
+    {
+        if (scenarioWrapper.hasClass('template')) {
+            return;
+        }
+
+        var emotions = ["blij", "boos", "bang", "bedroefd"], 
+            i,
+            oldEmotion;
+
+        for (i = 0; i < emotions.length; i++) {
+            if (scenarioWrapper.hasClass(emotions[i])) {
+                oldEmotion = emotions[i];
+            }
+        }
+
+        var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
+        
+        if (oldEmotion && emotion) {
+            $(scenarioWrapper).switchClass(oldEmotion, emotion, { duration: 200, children: true });
+            $(contextMenu).switchClass(oldEmotion, emotion, { duration: 200, children: true });
+        } else if (emotion) {
+            $(scenarioWrapper).addClass(emotion, { duration: 200, children: true });
+            $(contextMenu).addClass(emotion, { duration: 200, children: true });
+        } else if (oldEmotion) {
+            $(scenarioWrapper).removeClass(oldEmotion, { duration: 200, children: true });
+            $(contextMenu).removeClass(oldEmotion, { duration: 200, children: true });
+            //scenarioWrapper.children('.scenario').children('p').text('Geen gebeurtenis.');
+            //scenarioWrapper.children('.scenario').children('img').attr('src', srcAddActionButton);
+        }
+    },
 
     isScenarioSelected: function (scenarioWrapper) {
         return scenarioWrapper.hasClass('active');

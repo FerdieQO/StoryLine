@@ -100,8 +100,58 @@ StoryLine.ContextMenuManager.prototype = {
                             } else if(activeTarget.hasClass('event')){
                                 StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario);
                             }
-                            
-                            hide = true;
+                        } else if (StoryLine.HelperFunctions.endsWith(src, 'bang%5D.png')){
+                            console.log("Clicked emotions");
+                            if(activeTarget.hasClass('emotion medium dark-border')){
+                                console.log("Clicked leftside emotion");
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario);
+                                hide = true;
+                                activeTarget.attr('src', src);
+                            } else if (activeTarget.hasClass('emotion medium pull-right dark-border')){
+                                console.log("Clicked rightside emotion");
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario);
+                                hide = true;
+                                activeTarget.attr('src', src);
+                            }
+                        } else if (StoryLine.HelperFunctions.endsWith(src, 'boos%5D.png')){
+                            console.log("Clicked emotions");
+                            if(activeTarget.hasClass('emotion medium dark-border')){
+                                console.log("Clicked leftside emotion");
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario);
+                                hide = true;
+                                activeTarget.attr('src', src);
+                            } else if (activeTarget.hasClass('emotion medium pull-right dark-border')){
+                                console.log("Clicked rightside emotion");
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario);
+                                hide = true;
+                                activeTarget.attr('src', src);
+                            }
+                        } else if (StoryLine.HelperFunctions.endsWith(src, 'opgewonden%5D.png')){
+                            console.log("Clicked emotions");
+                            if(activeTarget.hasClass('emotion medium dark-border')){
+                                console.log("Clicked leftside emotion");
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario);
+                                hide = true;
+                                activeTarget.attr('src', src);
+                            } else if (activeTarget.hasClass('emotion medium pull-right dark-border')){
+                                console.log("Clicked rightside emotion");
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario);
+                                hide = true;
+                                activeTarget.attr('src', src);
+                            }
+                        } else if (StoryLine.HelperFunctions.endsWith(src, 'verdrietig%5D.png')){
+                            console.log("Clicked emotions");
+                            if(activeTarget.hasClass('emotion medium dark-border')){
+                                console.log("Clicked leftside emotion");
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario);
+                                hide = true;
+                                activeTarget.attr('src', src);
+                            } else if (activeTarget.hasClass('emotion medium pull-right dark-border')){
+                                console.log("Clicked rightside emotion");
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario);
+                                hide = true;
+                                activeTarget.attr('src', src);
+                            }
                         }
                     }
 
