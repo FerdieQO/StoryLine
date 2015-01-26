@@ -88,10 +88,11 @@ StoryLine.ContextMenuManager.prototype = {
                             activeTarget.attr('src', src);
                         } else if ($(this).hasClass('edit')) {
                             if (activeTarget.hasClass('commentWrapper')) {
-                                StoryLine.CommentManager.editComment(activeTarget, function () {}, function (apply) {
-                                    if (!apply) {
-                                        StoryLine.ContextMenuManager.hideContextMenu(menu);
-                                    }
+                                StoryLine.CommentManager.editComment(activeTarget, 
+                                                                     function () {
+                                    StoryLine.ContextMenuManager.updateContextMenu(StoryLine.ScenarioManager.activeScenario);
+                                }, function (apply) {
+                                    StoryLine.ContextMenuManager.updateContextMenu(StoryLine.ScenarioManager.activeScenario);
                                 });
                             }
                         } else if ($(this).hasClass('delete')){
@@ -100,6 +101,10 @@ StoryLine.ContextMenuManager.prototype = {
                             } else if(activeTarget.hasClass('event')){
                                 StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario);
                             }
+                        } else if ($(this).hasClass('apply')) {
+                            StoryLine.CommentManager.finishEdit(activeTarget, true);
+                        } else if ($(this).hasClass('abort')) {
+                            StoryLine.CommentManager.finishEdit(activeTarget, false);
                         }
                     }
 
@@ -107,7 +112,6 @@ StoryLine.ContextMenuManager.prototype = {
                     if (hide) {
                         StoryLine.ContextMenuManager.hideContextMenu(menu);
                     }
-
                 };
 
             });
@@ -132,18 +136,22 @@ StoryLine.ContextMenuManager.prototype = {
             contextMenu.children().hide();
 
             if (menuTarget.hasClass('scenario')) {
-
+                contextMenu.children('.other').show();
             } else if (menuTarget.hasClass('event')) {
                 contextMenu.children('.event').show();
+                contextMenu.children('.other').show();
             } else if (menuTarget.hasClass('emotion')) {
                 contextMenu.children('.emotion').show();
+                contextMenu.children('.other').show();
             } else if (menuTarget.hasClass('commentWrapper')) {
                 var commentButtons = contextMenu.children('.comment');
                 commentButtons.show();
                 if (StoryLine.CommentManager.editing) {
+                    contextMenu.children('.other').hide();
                     commentButtons.children('.edit').hide();
                     commentButtons.children('.apply, .abort').show();
                 } else {
+                    contextMenu.children('.other').show();
                     commentButtons.children('.apply, .abort').hide();
                     commentButtons.children('.edit').show();
                 }
