@@ -558,8 +558,8 @@ StoryLine.CommentManager.prototype = {
             // if this is a new comment:
             if (prevLength <= 0) {
                 // No new text and no old text: deleting new comment
-                this.hideAllContent(commentWrapper, function () {
-                    commentWrapper.remove();
+                this.hideAllContent(commentWrapper, false, function () {
+                    $(commentWrapper).remove();
                     cM.currTemplate.fadeIn(200);
                     reset(commentWrapper);
                 });

@@ -22,5 +22,20 @@ StoryLine.HelperFunctions.prototype = {
             return false;
         }
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    },
+    
+    getParent: function (element, type, depth) {
+        if (depth === 0) {
+            return false;
+        }
+        if (element.hasClass(type)) {
+            return element;
+        }
+        depth -= 1;
+        if (depth === 0) {
+            return false;
+        } else {
+            return this.getParent(element.parent(), type, depth);
+        }
     }
 };

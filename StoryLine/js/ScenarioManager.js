@@ -1,4 +1,5 @@
 var StoryLine = StoryLine || {};
+var srcAddActionButton = "../src/editButton(full)(action).png";
 
 StoryLine.ScenarioManager = function () {
     this.templateScenario = null;
@@ -57,11 +58,11 @@ StoryLine.ScenarioManager.prototype = {
     initScenario: function (scenarioWrapper) {
         // On click of the scenario
         scenarioWrapper.on('click', function (event) {
-            
+
             if (StoryLine.ContextMenuManager.toggling) {
                 return;
             }
-            
+
             // The clicked target
             var cM = StoryLine.CommentManager, cMM = StoryLine.ContextMenuManager, sM = StoryLine.ScenarioManager;
             var target = $(event.target);
@@ -112,8 +113,10 @@ StoryLine.ScenarioManager.prototype = {
                             cM.closeComment(activeElement, false);
                             if (targetElement.hasClass('template')) {
                                 var newComment = cM.addComment(targetElement);
-                                cMM.openContextMenu(targetScenario, newComment);
-                                cM.editComment(newComment, function () {}, function (apply) {
+
+                                cM.editComment(newComment, function () {
+                                    cMM.openContextMenu(targetScenario, newComment);
+                                }, function (apply) {
                                     if (!apply) {
                                         StoryLine.ContextMenuManager.closeContextMenu(targetScenario);
                                     }
@@ -138,10 +141,14 @@ StoryLine.ScenarioManager.prototype = {
                         if (targetElement.hasClass('template')) {
                             var addComment = function () {
                                 var newComment = cM.addComment(targetElement);
-                                cMM.openContextMenu(targetScenario, newComment);
-                                cM.editComment(newComment, function () {}, function (apply) {
+
+                                cM.editComment(newComment, function () {
+                                    cMM.openContextMenu(targetScenario, newComment);
+                                }, function (apply) {
                                     if (!apply) {
                                         StoryLine.ContextMenuManager.closeContextMenu(targetScenario);
+                                    } else {
+                                        StoryLine.ContextMenuManager.updateContextMenu(targetScenario);
                                     }
                                 });
                                 cM.currTemplate.hide();
@@ -290,7 +297,7 @@ StoryLine.ScenarioManager.prototype = {
             titles = ["Kletsen", "Zoenen", "Knuffelen", "Handen vasthouden"],
             eventTitle,
             oldEvent;
-        
+
         for (i = 0; i < events.length; i++) {
             if (events[i] == event) {
                 eventTitle = titles[i];
@@ -300,7 +307,7 @@ StoryLine.ScenarioManager.prototype = {
                 oldEvent = events[i];
             }
         }
-        
+
         var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
 
         if (oldEvent && event) {
@@ -311,10 +318,11 @@ StoryLine.ScenarioManager.prototype = {
             $(scenarioWrapper).addClass(event, { duration: 200, children: true });
             $(contextMenu).addClass(event, { duration: 200, children: true });
             scenarioWrapper.children('.scenario').children('p').text(eventTitle);
-        } else if (other) {
-            $(scenarioWrapper).removeClass(events[other], { duration: 200, children: true });
-            $(contextMenu).removeClass(events[other], { duration: 200, children: true });
+        } else if (oldEvent) {
+            $(scenarioWrapper).removeClass(oldEvent, { duration: 200, children: true });
+            $(contextMenu).removeClass(oldEvent, { duration: 200, children: true });
             scenarioWrapper.children('.scenario').children('p').text('Geen gebeurtenis.');
+            scenarioWrapper.children('.scenario').children('img').attr('src', srcAddActionButton);
         }
     },
 
