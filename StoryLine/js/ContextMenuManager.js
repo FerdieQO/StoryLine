@@ -90,6 +90,10 @@ StoryLine.ContextMenuManager.prototype = {
                                     }
                                 });
                             }
+                        } else if ($(this).hasClass('delete')){
+                            if(activeTarget.hasClass('commentWrapper')){
+                                $('.active-comment').remove();
+                            }
                         }
                     }
 
