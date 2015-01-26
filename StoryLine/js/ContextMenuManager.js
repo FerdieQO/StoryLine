@@ -74,12 +74,14 @@ StoryLine.ContextMenuManager.prototype = {
                             if (activeTarget.hasClass('event')) {
                                 StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "talk");
                             }
+                            activeTarget.attr("title","talk");
                             hide = true;
                             activeTarget.attr('src', src);
                         } else if (StoryLine.HelperFunctions.endsWith(src, 'actionIcon[handen].png')) {
                             if (activeTarget.hasClass('event')) {
                                 StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario, "hold-hands");
                             }
+                            activeTarget.attr("title","hold-hands");
                             hide = true;
                             activeTarget.attr('src', src);
                         } else if ($(this).hasClass('edit')) {

@@ -307,6 +307,7 @@ StoryLine.ScenarioManager.prototype = {
             $(scenarioWrapper).switchClass(oldEvent, event, { duration: 200, children: true });
             $(contextMenu).switchClass(oldEvent, event, { duration: 200, children: true });
             scenarioWrapper.children('.scenario').children('p').text(eventTitle);
+            
         } else if (event) {
             $(scenarioWrapper).addClass(event, { duration: 200, children: true });
             $(contextMenu).addClass(event, { duration: 200, children: true });
