@@ -94,6 +94,12 @@ StoryLine.ContextMenuManager.prototype = {
                                     }
                                 });
                             }
+                        } else if ($(this).hasClass('delete')){
+                            if(activeTarget.hasClass('commentWrapper')){
+                                $('.active-comment').remove();
+                            } else if(activeTarget.hasClass('event')){
+                                StoryLine.ScenarioManager.setScenarioEvent(StoryLine.ScenarioManager.activeScenario);
+                            }
                         }
                     }
 
