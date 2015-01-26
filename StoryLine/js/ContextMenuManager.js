@@ -54,13 +54,17 @@ StoryLine.ContextMenuManager.prototype = {
         // I'm even tempted to change how the buttons work so they are all in the contextMenu and their visibility gets toggled.
         // A.k.a. keep with the css classes like edit or delete
         if (contextMenu) {
-            var icons = contextMenu.children('.contextIcon');
-            contextMenu.children('.contextIcon').each(function () {
+            if (menuTarget) {
+                this.updateButtons(contextMenu, menuTarget);
+            }
+
+            var icons = contextMenu.children().children('.contextIcon');
+            contextMenu.children().children('.contextIcon').each(function () {
                 //console.log(this);
 
                 // override onclick so it won't be called multiple times
                 this.onclick = function () {
-                    var menu = $(this).parent();
+                    var menu = StoryLine.HelperFunctions.getParent($(this), 'contextMenu', 4);
                     var myIndex = menu.index();
                     var hide;
                     myIndex -= 1;
@@ -84,7 +88,7 @@ StoryLine.ContextMenuManager.prototype = {
                             activeTarget.attr('src', src);
                         } else if ($(this).hasClass('edit')) {
                             if (activeTarget.hasClass('commentWrapper')) {
-                                StoryLine.CommentManager.editComment(activeTarget, function () {console.log('finish first');}, function (apply) {
+                                StoryLine.CommentManager.editComment(activeTarget, function () {}, function (apply) {
                                     if (!apply) {
                                         StoryLine.ContextMenuManager.hideContextMenu(menu);
                                     }
@@ -105,6 +109,40 @@ StoryLine.ContextMenuManager.prototype = {
         }
 
         return contextMenu;
+    },
+    updateContextMenu: function (scenarioWrapper, menuTarget) {
+        var contextMenu = this.getContextMenu(scenarioWrapper);
+        this.updateButtons(contextMenu, menuTarget);
+    },
+    updateButtons: function (contextMenu, menuTarget) {
+        if (contextMenu) {
+            if (!menuTarget) {
+                if (this.activeTarget) {
+                    menuTarget = this.activeTarget;
+                } else {
+                    return;
+                }
+            }
+            contextMenu.children().hide();
+
+            if (menuTarget.hasClass('scenario')) {
+
+            } else if (menuTarget.hasClass('event')) {
+                contextMenu.children('.event').show();
+            } else if (menuTarget.hasClass('emotion')) {
+                contextMenu.children('.emotion').show();
+            } else if (menuTarget.hasClass('commentWrapper')) {
+                var commentButtons = contextMenu.children('.comment');
+                commentButtons.show();
+                if (StoryLine.CommentManager.editing) {
+                    commentButtons.children('.edit').hide();
+                    commentButtons.children('.apply, .abort').show();
+                } else {
+                    commentButtons.children('.apply, .abort').hide();
+                    commentButtons.children('.edit').show();
+                }
+            }
+        }
     },
     isContextMenuDisplayed: function (contextMenu) {
         if (!contextMenu) {

@@ -34,3 +34,19 @@
     margin-bottom: 1em;
     cursor: pointer;
 }
+
+.contextMenu .scenario {
+    display: none;
+}
+
+.contextMenu .event {
+    display: none;
+}
+
+.contextMenu .emotion {
+    display: none;
+}
+
+.contextMenu .comment {
+    display: none;
+}
