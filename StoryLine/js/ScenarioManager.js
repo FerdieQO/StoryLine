@@ -1,4 +1,5 @@
 var StoryLine = StoryLine || {};
+var srcAddActionButton = "../src/editButton(full)(action).png";
 
 StoryLine.ScenarioManager = function () {
     this.templateScenario = null;
@@ -311,10 +312,11 @@ StoryLine.ScenarioManager.prototype = {
             $(scenarioWrapper).addClass(event, { duration: 200, children: true });
             $(contextMenu).addClass(event, { duration: 200, children: true });
             scenarioWrapper.children('.scenario').children('p').text(eventTitle);
-        } else if (other) {
-            $(scenarioWrapper).removeClass(events[other], { duration: 200, children: true });
-            $(contextMenu).removeClass(events[other], { duration: 200, children: true });
+        } else if (oldEvent) {
+            $(scenarioWrapper).removeClass(oldEvent, { duration: 200, children: true });
+            $(contextMenu).removeClass(oldEvent, { duration: 200, children: true });
             scenarioWrapper.children('.scenario').children('p').text('Geen gebeurtenis.');
+            scenarioWrapper.children('.scenario').children('img').attr('src', srcAddActionButton);
         }
     },
 
