@@ -318,7 +318,6 @@ StoryLine.ScenarioManager.prototype = {
             event.attr('title', 'Selecteer een actie');
         }
     },
-
     setScenarioEmotion: function (scenarioWrapper, emotion, button) {
         if (scenarioWrapper.hasClass('template')) {
             return;
@@ -436,6 +435,28 @@ StoryLine.ScenarioManager.prototype = {
                 this.activeScenario = null;
             }
         }
+    },
+    
+    getAbsoluteCenterY: function (scenarioWrapper, element) {
+        // http://stackoverflow.com/questions/3714628/jquery-get-the-location-of-an-element-relative-to-window
+        var elementTop = element.offset().top;
+        var scrollViewTop = scenarioWrapper.scrollTop();
+        console.log(elementTop - scrollViewTop);
+        
+        return (elementTop - scrollViewTop) + (element.height() / 2);
+    },
+    alignButtonsToElement: function (scenarioWrapper, element, buttons) {
+        var height = $(window).height();
+        console.log(height);
+        var targetY = this.getAbsoluteCenterY(scenarioWrapper, element);
+        
+        var bottom = targetY + (buttons.height() / 2);
+        if (bottom > height) {
+            console.log('offscreen');
+            var offset = bottom - height;
+            targetY -= offset;
+        }
+        buttons.offset({ top: targetY - (buttons.height() / 2) });
     },
 
     // Switch from the scenario to the placeholder

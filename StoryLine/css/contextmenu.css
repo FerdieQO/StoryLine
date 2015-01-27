@@ -35,18 +35,18 @@
     cursor: pointer;
 }
 
-.contextMenu .scenario {
+.contextMenu .buttons .scenario {
     display: none;
 }
 
-.contextMenu .event {
+.contextMenu .buttons .event {
     display: none;
 }
 
-.contextMenu .emotion {
+.contextMenu .buttons .emotion {
     display: none;
 }
 
-.contextMenu .comment {
+.contextMenu .buttons .comment {
     display: none;
 }
