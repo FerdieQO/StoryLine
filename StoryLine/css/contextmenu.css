@@ -31,7 +31,8 @@
 {
     width: 2.5em;
     height: auto;
-    margin-bottom: 1em;
+    margin-top: .5em;
+    margin-bottom: .5em;
     cursor: pointer;
 }
 

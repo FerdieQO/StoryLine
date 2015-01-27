@@ -362,7 +362,7 @@ StoryLine.ScenarioManager.prototype = {
                 $(contextMenu).removeClass(oldEmotion, { duration: 200, children: true });
             }
         }
-        
+
         if (title) {
             emotion.attr('src', src);
             emotion.attr('title', title);
@@ -436,27 +436,31 @@ StoryLine.ScenarioManager.prototype = {
             }
         }
     },
-    
-    getAbsoluteCenterY: function (scenarioWrapper, element) {
-        // http://stackoverflow.com/questions/3714628/jquery-get-the-location-of-an-element-relative-to-window
-        var elementTop = element.offset().top;
-        var scrollViewTop = scenarioWrapper.scrollTop();
-        console.log(elementTop - scrollViewTop);
-        
-        return (elementTop - scrollViewTop) + (element.height() / 2);
-    },
+
     alignButtonsToElement: function (scenarioWrapper, element, buttons) {
-        var height = $(window).height();
-        console.log(height);
-        var targetY = this.getAbsoluteCenterY(scenarioWrapper, element);
-        
-        var bottom = targetY + (buttons.height() / 2);
-        if (bottom > height) {
-            console.log('offscreen');
+
+        buttons.css('top', 0);
+        console.log(scenarioWrapper.offset().top);
+        var height = scenarioWrapper.height(),
+            buttonsHeight = GetElementHeight(buttons);
+        var targetY = GetAbsoluteCenterY(scenarioWrapper, element);
+
+        var bottom = targetY + (buttonsHeight / 2);
+        var top = targetY - (buttonsHeight / 2);
+
+        if (top < 0) {
+            console.log('cutoff at top');
+            targetY = (buttonsHeight / 2);
+        } else if (bottom > height) {
+            console.log('cutoff at bottom');
             var offset = bottom - height;
             targetY -= offset;
         }
-        buttons.offset({ top: targetY - (buttons.height() / 2) });
+        targetY += scenarioWrapper.offset().top;
+
+        targetY -= (buttonsHeight / 2);
+        buttons.offset({ top: targetY });
+
     },
 
     // Switch from the scenario to the placeholder

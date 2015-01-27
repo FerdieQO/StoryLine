@@ -65,7 +65,7 @@ StoryLine.ContextMenuManager.prototype = {
 
                 // override onclick so it won't be called multiple times
                 this.onclick = function () {
-                    var menu = StoryLine.HelperFunctions.getParent($(this), 'contextMenu', 4);
+                    var menu = GetParent($(this), 'contextMenu', 4);
                     var myIndex = menu.index();
                     var hide;
                     myIndex -= 1;
@@ -180,7 +180,7 @@ StoryLine.ContextMenuManager.prototype = {
                 otherButtons.hide();
             }
             
-           // StoryLine.ScenarioManager.alignButtonsToElement(scenarioWrapper, menuTarget, contextMenu);
+            // StoryLine.ScenarioManager.alignButtonsToElement(scenarioWrapper, menuTarget, buttons);
         }
     },
     isContextMenuDisplayed: function (contextMenu) {
@@ -247,6 +247,7 @@ StoryLine.ContextMenuManager.prototype = {
             menuTarget.addClass('highlight');
             StoryLine.ContextMenuManager.activeContextMenu = contextMenu;
             StoryLine.ContextMenuManager.activeTarget = menuTarget;
+            StoryLine.ContextMenuManager.updateContextMenu(StoryLine.ScenarioManager.activeScenario, menuTarget);
             StoryLine.ContextMenuManager.toggling = false;
         });
     },
