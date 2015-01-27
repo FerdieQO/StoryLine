@@ -9,9 +9,6 @@ function LoadStoryLine()
     var scenarioWrappers = $(".scenarioWrapper:not(.template)");
     var contextMenus = $(".contextMenu:not(.template)");
     
-    console.log(scenarioWrappers.length);
-    console.log(contextMenus.length);
-    
     //resetting the page
     for(var i=0;i<contextMenus.length;i++)
     {
@@ -20,10 +17,8 @@ function LoadStoryLine()
             var contextMenu = contextMenus[i];
             var scenarioWrapper = scenarioWrappers[i];
             StoryLine.ContextMenuManager.closeContextMenu($(scenarioWrappers[i]),function(){
-                console.log("Deletiiiiiiiing......");
                 $(contextMenu).remove();
                 $(scenarioWrapper).remove();
-                console.log("DELETE AND DESTROY!!!");
             });
         }
         else
@@ -36,6 +31,7 @@ function LoadStoryLine()
     //reading the saved JSON string and creating the scenarios
     for(var i=0;i<scenarios.length;i++)
     {
+        //setting new scenario
         var scInstance = StoryLine.ScenarioManager.cloneScenarioTemplate(),
                         cmInstance = StoryLine.ContextMenuManager.cloneContextMenuTemplate(),
                         list = $('.scenario-list'),
@@ -48,22 +44,55 @@ function LoadStoryLine()
         StoryLine.ContextMenuManager.initContextMenu($(scInstance));
         StoryLine.CommentManager.initCommentList(commentList);
         StoryLine.ScenarioManager.showScenario($(scInstance));
-        StoryLine.ScenarioManager.initScenario($(scInstance));
-        StoryLine.ScenarioManager.selectScenario($(scInstance));
         
+        
+        var eventButtons = $(".contextMenu.template .buttons .event .contextIcon");
+        var emotionButtons = $(".contextMenu.template .buttons .emotion .contextIcon");
+        
+        //set correct action image
         var actie  = JSONObj["scenarios"][i]["actie"];
-        //console.log(actie);
+        
+        for(var count=0;count<eventButtons.length;count++)
+        {
+            if(eventButtons[count].title == actie)
+            {
+                StoryLine.ScenarioManager.setScenarioEvent($(scInstance).children(".scenario").children(".event"), $(eventButtons[count]));
+            }
+        }
+        
+        //set correct emotion images
         var emotions = JSONObj["scenarios"][i]["emotions"];
+        for(var count=0;count<emotionButtons.length;count++)
+        {
+            if(emotionButtons[count].title == emotions[0])
+            {
+                StoryLine.ScenarioManager.setScenarioEmotion($(scInstance), $(scInstance.children(".scenario").children(".emotions").children(".emotion")[0]), $(emotionButtons[count]));
+            }
+            
+            if(emotionButtons[count].title == emotions[1])
+            {
+                StoryLine.ScenarioManager.setScenarioEmotion($(scInstance), $(scInstance.children(".scenario").children(".emotions").children(".emotion")[1]), $(emotionButtons[count]));
+            }
+        }
+        
+        //set correct comments
         var comments = JSONObj["scenarios"][i]["comments"];
-        
-        for(var j=0;j<emotions.length;j++)
+        var template = $(scInstance).children(".scenario").children(".comment-list-wrapper").children(".comment-list").children(".commentWrapper.template");
+        for(var count=0;count<comments.length;count++)
         {
-            //console.log(emotions[j]);
+            var text = comments[count][1];
+            var newComment = StoryLine.CommentManager.addComment($(template));
+            /*
+            StoryLine.CommentManager.editComment(newComment, function () {
+                StoryLine.CommentManager.prevText = text;
+                StoryLine.CommentManager.finishEdit(newComment, false);
+            });*/
+            
+            newComment.children(".content").text(text);
+            StoryLine.CommentManager.closeComment($(newComment));
+            StoryLine.CommentManager.resetEditing($(newComment));
         }
         
-        for(var k=0;k<comments.length;k++)
-        {
-            //console.log(comments[k][1]);
-        }
+        StoryLine.ScenarioManager.initScenario($(scInstance));
     }
 }
