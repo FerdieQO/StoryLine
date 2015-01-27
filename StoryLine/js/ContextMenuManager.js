@@ -55,16 +55,17 @@ StoryLine.ContextMenuManager.prototype = {
         // A.k.a. keep with the css classes like edit or delete
         if (contextMenu) {
             if (menuTarget) {
-                this.updateButtons(contextMenu, menuTarget);
+                this.updateButtons(scenarioWrapper, contextMenu, menuTarget);
             }
 
             var icons = contextMenu.children().children('.contextIcon');
-            contextMenu.children().children('.contextIcon').each(function () {
+            var buttonGroups = contextMenu.children().children();
+            buttonGroups.children('.contextIcon').each(function () {
                 //console.log(this);
 
                 // override onclick so it won't be called multiple times
                 this.onclick = function () {
-                    var menu = StoryLine.HelperFunctions.getParent($(this), 'contextMenu', 4);
+                    var menu = GetParent($(this), 'contextMenu', 4);
                     var myIndex = menu.index();
                     var hide;
                     myIndex -= 1;
@@ -103,7 +104,6 @@ StoryLine.ContextMenuManager.prototype = {
                             StoryLine.CommentManager.finishEdit(activeTarget, true);
                         } else if ($(this).hasClass('abort')) {
                             StoryLine.CommentManager.finishEdit(activeTarget, false);
-
                         } else if ($(this).hasClass('setemotion')) {
                             if (activeTarget.hasClass('emotion medium dark-border')) {
                                 StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget, $(this));
@@ -129,9 +129,9 @@ StoryLine.ContextMenuManager.prototype = {
     },
     updateContextMenu: function (scenarioWrapper, menuTarget) {
         var contextMenu = this.getContextMenu(scenarioWrapper);
-        this.updateButtons(contextMenu, menuTarget);
+        this.updateButtons(scenarioWrapper, contextMenu, menuTarget);
     },
-    updateButtons: function (contextMenu, menuTarget) {
+    updateButtons: function (scenarioWrapper, contextMenu, menuTarget) {
         if (contextMenu) {
             if (!menuTarget) {
                 if (this.activeTarget) {
@@ -140,6 +140,13 @@ StoryLine.ContextMenuManager.prototype = {
                     return;
                 }
             }
+            var buttons = contextMenu.children('.buttons');
+            var scenarioButtons = buttons.children('.scenario'),
+                eventButtons = buttons.children('.event'),
+                emotionButtons = buttons.children('.emotion'),
+                commentButtons = buttons.children('.comment'),
+                otherButtons = buttons.children('.other');
+            
             var showDelete = true;
             if (menuTarget.hasClass('event') || menuTarget.hasClass('emotion')) {
                 var title = menuTarget.attr('title');
@@ -147,16 +154,15 @@ StoryLine.ContextMenuManager.prototype = {
                     showDelete = false;
                 }
             }
-            contextMenu.children().hide();
+            buttons.children().hide();
 
             if (menuTarget.hasClass('scenario')) {
-                contextMenu.children('.scenario').show();
+                scenarioButtons.show();
             } else if (menuTarget.hasClass('event')) {
-                contextMenu.children('.event').show();
+                eventButtons.show();
             } else if (menuTarget.hasClass('emotion')) {
-                contextMenu.children('.emotion').show();
+                emotionButtons.show();
             } else if (menuTarget.hasClass('commentWrapper')) {
-                var commentButtons = contextMenu.children('.comment');
                 commentButtons.show();
                 if (StoryLine.CommentManager.editing) {
                     showDelete = false;
@@ -169,10 +175,12 @@ StoryLine.ContextMenuManager.prototype = {
                 }
             }
             if (showDelete) {
-                contextMenu.children('.other').show();
+                otherButtons.show();
             } else {
-                contextMenu.children('.other').hide();
+                otherButtons.hide();
             }
+            
+            // StoryLine.ScenarioManager.alignButtonsToElement(scenarioWrapper, menuTarget, buttons);
         }
     },
     isContextMenuDisplayed: function (contextMenu) {
@@ -239,6 +247,7 @@ StoryLine.ContextMenuManager.prototype = {
             menuTarget.addClass('highlight');
             StoryLine.ContextMenuManager.activeContextMenu = contextMenu;
             StoryLine.ContextMenuManager.activeTarget = menuTarget;
+            StoryLine.ContextMenuManager.updateContextMenu(StoryLine.ScenarioManager.activeScenario, menuTarget);
             StoryLine.ContextMenuManager.toggling = false;
         });
     },

@@ -318,7 +318,6 @@ StoryLine.ScenarioManager.prototype = {
             event.attr('title', 'Selecteer een actie');
         }
     },
-
     setScenarioEmotion: function (scenarioWrapper, emotion, button) {
         if (scenarioWrapper.hasClass('template')) {
             return;
@@ -363,7 +362,7 @@ StoryLine.ScenarioManager.prototype = {
                 $(contextMenu).removeClass(oldEmotion, { duration: 200, children: true });
             }
         }
-        
+
         if (title) {
             emotion.attr('src', src);
             emotion.attr('title', title);
@@ -436,6 +435,32 @@ StoryLine.ScenarioManager.prototype = {
                 this.activeScenario = null;
             }
         }
+    },
+
+    alignButtonsToElement: function (scenarioWrapper, element, buttons) {
+
+        buttons.css('top', 0);
+        console.log(scenarioWrapper.offset().top);
+        var height = scenarioWrapper.height(),
+            buttonsHeight = GetElementHeight(buttons);
+        var targetY = GetAbsoluteCenterY(scenarioWrapper, element);
+
+        var bottom = targetY + (buttonsHeight / 2);
+        var top = targetY - (buttonsHeight / 2);
+
+        if (top < 0) {
+            console.log('cutoff at top');
+            targetY = (buttonsHeight / 2);
+        } else if (bottom > height) {
+            console.log('cutoff at bottom');
+            var offset = bottom - height;
+            targetY -= offset;
+        }
+        targetY += scenarioWrapper.offset().top;
+
+        targetY -= (buttonsHeight / 2);
+        buttons.offset({ top: targetY });
+
     },
 
     // Switch from the scenario to the placeholder
