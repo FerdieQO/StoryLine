@@ -15,6 +15,8 @@ function StoryLineToJSON()
     JSONString += ']}';
     
     localStorage.setItem("savedScenario", JSONString);
+    
+    alert("StoryLine is opgeslagen");
 }
 
 function ConvertToJSON(scenario)
