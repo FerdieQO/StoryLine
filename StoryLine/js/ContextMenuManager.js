@@ -180,7 +180,7 @@ StoryLine.ContextMenuManager.prototype = {
                 otherButtons.hide();
             }
             
-            // StoryLine.ScenarioManager.alignButtonsToElement(scenarioWrapper, menuTarget, buttons);
+             StoryLine.ScenarioManager.alignButtonsToElement(scenarioWrapper, menuTarget, buttons);
         }
     },
     isContextMenuDisplayed: function (contextMenu) {
@@ -247,7 +247,7 @@ StoryLine.ContextMenuManager.prototype = {
             menuTarget.addClass('highlight');
             StoryLine.ContextMenuManager.activeContextMenu = contextMenu;
             StoryLine.ContextMenuManager.activeTarget = menuTarget;
-            StoryLine.ContextMenuManager.updateContextMenu(StoryLine.ScenarioManager.activeScenario, menuTarget);
+            //StoryLine.ContextMenuManager.updateContextMenu(StoryLine.ScenarioManager.activeScenario, menuTarget);
             StoryLine.ContextMenuManager.toggling = false;
         });
     },

@@ -42,35 +42,45 @@ var GetParent = function (element, type, depth) {
     }
 };
 
-var GetAbsoluteCenterY = function (scenarioWrapper, element) {
-    // http://stackoverflow.com/questions/3714628/jquery-get-the-location-of-an-element-relative-to-window
-    var elementTop = element.offset().top;
-    var scrollViewTop = scenarioWrapper.children('.scenario').scrollTop();
-    
-    var elementHeight = GetElementHeight(element);
-    
-    console.log(elementTop - scrollViewTop + (elementHeight / 2));
-
-    return (elementTop - scrollViewTop) + (elementHeight / 2);
-};
-
-var GetElementHeight = function (element) {
+var GetElementTopOffset = function (element, evenIfHidden) {
     if (!element) {
         return 0;
     }
-    if (element.height() > 0) {
-
-        return element.height();
+    if (!evenIfHidden) {
+        return element.offset().top;
     }
-    var height;
+    var top;
     var parent = element.parent();
     var pPreviousCss = openElement(parent);
     var previousCss = openElement(element);
 
-    height = element.height();
-    if (previousCss) {
-        closeElement(element, previousCss);
+    top = element.offset().top;
+    closeElement(element, previousCss);
+
+    if (pPreviousCss) {
+        closeElement(parent, pPreviousCss);
     }
+    return top;
+};
+
+var GetElementHeight = function (element, evenIfHidden, exclParent) {
+    if (!element) {
+        return 0;
+    }
+    if (!evenIfHidden) {
+        return element.height();
+    }
+    var height;
+    var parent = element.parent();
+    var pPreviousCss;
+    if (!exclParent) {
+        pPreviousCss = openElement(parent);
+    }
+    var previousCss = openElement(element);
+
+    height = element.height();
+    closeElement(element, previousCss);
+
     if (pPreviousCss) {
         closeElement(parent, pPreviousCss);
     }

@@ -438,29 +438,23 @@ StoryLine.ScenarioManager.prototype = {
     },
 
     alignButtonsToElement: function (scenarioWrapper, element, buttons) {
-
         buttons.css('top', 0);
-        console.log(scenarioWrapper.offset().top);
-        var height = scenarioWrapper.height(),
-            buttonsHeight = GetElementHeight(buttons);
-        var targetY = GetAbsoluteCenterY(scenarioWrapper, element);
+        buttons.offset({ top: 0 });
+        var offsetWrapper = GetElementTopOffset(scenarioWrapper),
+            offsetButtons = GetElementTopOffset(buttons, true),
+            offsetElement = GetElementTopOffset(element);
+        var heightButtons = GetElementHeight(buttons, true),
+            heightElement = GetElementHeight(element),
+            heightWrapper = GetElementHeight(scenarioWrapper);
+        
+        offset = offsetElement + (heightElement / 2) - (heightButtons / 2) - offsetWrapper;
 
-        var bottom = targetY + (buttonsHeight / 2);
-        var top = targetY - (buttonsHeight / 2);
-
-        if (top < 0) {
-            console.log('cutoff at top');
-            targetY = (buttonsHeight / 2);
-        } else if (bottom > height) {
-            console.log('cutoff at bottom');
-            var offset = bottom - height;
-            targetY -= offset;
+        if (offset < offsetWrapper) {
+            offset = 0;
+        } else if (offset + heightButtons > offsetWrapper + heightWrapper) {
+            offset = heightWrapper - heightButtons;
         }
-        targetY += scenarioWrapper.offset().top;
-
-        targetY -= (buttonsHeight / 2);
-        buttons.offset({ top: targetY });
-
+        buttons.css('top', offset);
     },
 
     // Switch from the scenario to the placeholder
