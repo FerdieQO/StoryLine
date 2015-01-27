@@ -7,7 +7,9 @@ StoryLine.Main = function () {
     StoryLine.ScenarioManager = new StoryLine.ScenarioManager();
     StoryLine.CommentManager = new StoryLine.CommentManager();
     StoryLine.ContextMenuManager = new StoryLine.ContextMenuManager();
-    StoryLine.PersistenceManager = new StoryLine.PersistenceManager();
+    if (StoryLine.PersistenceManager) {
+        StoryLine.PersistenceManager = new StoryLine.PersistenceManager();
+    }
 };
 
 StoryLine.Main.prototype = {
@@ -17,7 +19,9 @@ StoryLine.Main.prototype = {
         StoryLine.ScenarioManager.create(function () {
             StoryLine.CommentManager.create();
             StoryLine.ContextMenuManager.create();
-            StoryLine.PersistenceManager.create();
+            if (StoryLine.PersistenceManager) {
+                StoryLine.PersistenceManager.create();
+            }
         });
     },
     lockScrollviewToScenario: function (scenarioWrapper) {
