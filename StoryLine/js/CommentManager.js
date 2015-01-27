@@ -466,6 +466,7 @@ StoryLine.CommentManager.prototype = {
         var commentWrapper = $('<div class="commentWrapper light dark-border">');
         // Clone commentWrapper.template
         var newComment = templateComment.clone(true, true);
+        newComment.style = '';
 
         newComment.removeClass('template');
         //elements.appendTo(commentWrapper);

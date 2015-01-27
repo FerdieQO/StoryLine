@@ -14,13 +14,7 @@ function StoryLineToJSON()
     JSONString = JSONString.substr(0, JSONString.length-1);
     JSONString += ']}';
     
-    console.log(JSONString);
-    
     localStorage.setItem("savedScenario", JSONString);
-    
-    var sJSON = localStorage.getItem("savedScenario");
-    
-    console.log(sJSON);
 }
 
 function ConvertToJSON(scenario)
