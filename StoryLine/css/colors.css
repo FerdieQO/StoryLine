@@ -1,9 +1,9 @@
 /* reg. exp: border-color: #.[abcdef1234567890]{1,6}; */
 
 /* == Default colors == */
-.light { background-color: #ddd; } /* Light background */
-.medium { background-color: #ccc; } /* Medium background */
-.dark { background-color: #bbb; } /* Dark background */
+.light { background-color: #ffffff; } /* Light background */
+.medium { background-color: #f4f4f4; } /* Medium background */
+.dark { background-color: #e6e5e5; } /* Dark background */
 
 .light-border { border-color: #ddd; outline-color: #ddd; } /* Light border */
 .medium-border { border-color: #ccc; outline-color: #ccc; } /* Medium border */
