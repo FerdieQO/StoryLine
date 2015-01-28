@@ -90,7 +90,7 @@ StoryLine.ScenarioManager.prototype = {
             // If editing a (new) comment, no focus-change is allowed until the change is completed.
 
             // Special cases for comments, if editing a comment, do nothing since the buttons themself handle the edit
-            if (activeElement && (activeElement.hasClass('commentWrapper') || activeElement.is("img"))) {
+            if (activeElement && (activeElement.hasClass('commentWrapper') || activeElement.hasClass('content-emotion'))) {
                 // The contextMenu is open for a element and the contextMenu is open for a comment
                 if (cM.editing) {
                     // We are editing that comment aswell
@@ -99,7 +99,7 @@ StoryLine.ScenarioManager.prototype = {
                     // We are not editing that comment or any other
                     if (onActiveTarget) {
                         // We clicked the comment that is active
-                        
+                                                
                         // Close that comment and the contextMenu
                         cMM.closeContextMenu(activeScenario, function () {
                             //cM.experimentalToggle(activeElement);
@@ -107,6 +107,11 @@ StoryLine.ScenarioManager.prototype = {
                             //cM.closeComment(activeElement);
                         });
                         return;
+                    } else if (targetElement.hasClass('content-emotion') && sM.getParent(targetElement, 'commentWrapper', 3).is(activeElement)) {
+                        // We clicked the emotion of the active comment
+                        cMM.closeContextMenu(activeScenario, function () {
+                            cMM.openContextMenu(activeScenario, targetElement);
+                        });
                     } else if (targetElement.hasClass('commentWrapper')) {
                         // We clicked a different comment
                         cMM.closeContextMenu(activeScenario, function () {
@@ -216,6 +221,9 @@ StoryLine.ScenarioManager.prototype = {
             return target;
         } else if (target.hasClass('emotion')) { // emotion
             // console.log('Emotion');
+            return target;
+        } else if (target.hasClass("content-emotion")) { // comment emotion
+            console.log('Comment emotion');
             return target;
         } else if (StoryLine.ScenarioManager.hasParent(target, 'commentWrapper', 3)) { // commentWrapper
             // console.log('Comment');

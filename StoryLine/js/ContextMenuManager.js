@@ -108,6 +108,9 @@ StoryLine.ContextMenuManager.prototype = {
                             if (activeTarget.hasClass('emotion')) {
                                 StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget, $(this));
                                 hide = true;
+                            } else if (activeTarget.hasClass('content-emotion')) {
+                                StoryLine.CommentManager.setCommentEmotion($('.active-comment'), activeTarget, $(this));
+                                hide = true;
                             }
                         }
                     }
@@ -157,7 +160,7 @@ StoryLine.ContextMenuManager.prototype = {
                 scenarioButtons.show();
             } else if (menuTarget.hasClass('event')) {
                 eventButtons.show();
-            } else if (menuTarget.hasClass('emotion') || menuTarget.hasClass('commentEmotion')) {
+            } else if (menuTarget.hasClass('emotion') || menuTarget.hasClass('content-emotion')) {
                 emotionButtons.show();
             } else if (menuTarget.hasClass('commentWrapper')) {
                 commentButtons.show();
