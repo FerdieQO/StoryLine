@@ -63,7 +63,9 @@ StoryLine.ScenarioManager.prototype = {
             }
 
             // The clicked target
-            var cM = StoryLine.CommentManager, cMM = StoryLine.ContextMenuManager, sM = StoryLine.ScenarioManager;
+            var cM = StoryLine.CommentManager, 
+                cMM = StoryLine.ContextMenuManager, 
+                sM = StoryLine.ScenarioManager;
             var target = $(event.target);
             // Variables around the clicked element.
             var targetElement = sM.extractElementFromTarget(target);
@@ -88,7 +90,7 @@ StoryLine.ScenarioManager.prototype = {
             // If editing a (new) comment, no focus-change is allowed until the change is completed.
 
             // Special cases for comments, if editing a comment, do nothing since the buttons themself handle the edit
-            if (activeElement && activeElement.hasClass('commentWrapper')) {
+            if (activeElement && (activeElement.hasClass('commentWrapper') || activeElement.is("img"))) {
                 // The contextMenu is open for a element and the contextMenu is open for a comment
                 if (cM.editing) {
                     // We are editing that comment aswell
@@ -98,7 +100,7 @@ StoryLine.ScenarioManager.prototype = {
                     // We are not editing that comment or any other
                     if (onActiveTarget) {
                         // We clicked the comment that is active
-
+                        
                         // Close that comment and the contextMenu
                         cMM.closeContextMenu(activeScenario, function () {
                             //cM.experimentalToggle(activeElement);
