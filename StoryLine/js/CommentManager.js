@@ -381,24 +381,19 @@ StoryLine.CommentManager.prototype = {
         if (commentWrapper.hasClass('template')) {
             return;
         }
-        
+
         if (!emotion) {
             return;
         }
-        
-        var title, titleClass, src;
-        
+
+        var title,  src;
+
         if (button) {
             title = button.attr('title');
             titleClass = title.toLowerCase();
             src = button.attr('src');
         }
-        
-        var emotions = ["Bang", "Bedroefd", "Blij", "Boos"], 
-            i , 
-            oldEmotion, 
-            oldTitle;
-        
+
         if (title) {
             emotion.attr('src', src);
             emotion.attr('title', title);
@@ -458,6 +453,10 @@ StoryLine.CommentManager.prototype = {
             console.log('commentWrapper is null');
             return;
         }
+        var activeCommentWrapper = $('.active-comment');
+        if (activeCommentWrapper) {
+            StoryLine.CommentManager.closeComment(activeCommentWrapper, true);
+        }
         this.onlyShowContent(commentWrapper, instant, function () {
             StoryLine.CommentManager.experimentalOpen(commentWrapper, callback);
         });
@@ -506,10 +505,10 @@ StoryLine.CommentManager.prototype = {
             prevLength = StoryLine.CommentManager.prevText.trim().length,
             content = commentWrapper.children('.content'),
             textArea = commentWrapper.children('.content-edit').children('.form-control'),
-            reset = function (cW) {
+            reset = function (cW, a) {
                 cM.resetEditing(cW);
                 if (cM.finishEditListener) {
-                    cM.finishEditListener(apply);
+                    cM.finishEditListener(a ? apply : false);
                 }
             };
 
@@ -519,16 +518,18 @@ StoryLine.CommentManager.prototype = {
             if (text.length <= 0) {
                 if (prevLength <= 0) {
                     // No new text and no old text: deleting new comment
-                    this.hideAllContent(commentWrapper, function () {
-                        commentWrapper.remove();
+                    this.hideAllContent($(commentWrapper), false, function () {
+                        $(commentWrapper).remove();
                         cM.currTemplate.fadeIn(200);
-                        reset(commentWrapper);
+                        reset($(commentWrapper), false);
                     });
+
+                    
                     return;
                 } else {
                     cM.openComment(commentWrapper, false, function () {
                         commentWrapper.removeClass('editing');
-                        reset(commentWrapper);
+                        reset(commentWrapper, true);
                     });
 
                     /*
@@ -556,7 +557,7 @@ StoryLine.CommentManager.prototype = {
             this.openComment(commentWrapper, false, function () {
                 textArea.val('');
                 commentWrapper.removeClass('editing');
-                reset(commentWrapper);
+                reset(commentWrapper, true);
             });
             if (prevLength <= 0) {
                 cM.currTemplate.fadeIn(200);
@@ -578,13 +579,14 @@ StoryLine.CommentManager.prototype = {
                 this.hideAllContent(commentWrapper, false, function () {
                     $(commentWrapper).remove();
                     cM.currTemplate.fadeIn(200);
-                    reset(commentWrapper);
+                    reset(commentWrapper, false);
                 });
             } else {
                 textArea.val(cM.prevText);
                 this.openComment(commentWrapper, false, function () {
+                    applied = true;
                     commentWrapper.removeClass('editing');
-                    reset(commentWrapper);
+                    reset(commentWrapper, true);
                 });
             }
         }

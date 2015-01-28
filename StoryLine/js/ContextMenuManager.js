@@ -90,6 +90,7 @@ StoryLine.ContextMenuManager.prototype = {
                                 });
                             }
                         } else if ($(this).hasClass('delete')) {
+                            hide = true;
                             if (activeTarget.hasClass('commentWrapper')) {
                                 var commentlist = activeTarget.parent();
                                 $('.active-comment').remove();
@@ -98,8 +99,16 @@ StoryLine.ContextMenuManager.prototype = {
                                 StoryLine.ScenarioManager.setScenarioEvent(activeTarget);
                             } else if (activeTarget.hasClass('emotion')) {
                                 StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget);
+                            } else if (activeTarget.hasClass('scenarioWrapper')) {
+                                var scenario = StoryLine.ScenarioManager.activeScenario;
+                                var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenario);
+                                StoryLine.ContextMenuManager.closeContextMenu(scenario, function () {
+                                    StoryLine.ScenarioManager.unselectScenario(scenario);
+                                    $(scenario).remove();
+                                    $(contextMenu).remove();
+                                });
+                                hide = false;
                             }
-                            hide = true;
                         } else if ($(this).hasClass('apply')) {
                             StoryLine.CommentManager.finishEdit(activeTarget, true);
                         } else if ($(this).hasClass('abort')) {
@@ -111,7 +120,9 @@ StoryLine.ContextMenuManager.prototype = {
                                 });
                             } else if (activeTarget.hasClass('content-emotion')) {
                                 StoryLine.CommentManager.setCommentEmotion($('.active-comment'), activeTarget, $(this));
-                                hide = true;
+                                StoryLine.ContextMenuManager.hideContextMenu(menu, function () {
+                                    StoryLine.ContextMenuManager.openContextMenu(StoryLine.ScenarioManager.activeScenario, GetParent(activeTarget, 'commentWrapper', 3));
+                                });
                             }
                         }
                     }

@@ -101,7 +101,7 @@ StoryLine.ScenarioManager.prototype = {
                     // We are not editing that comment or any other
                     if (onActiveTarget) {
                         // We clicked the comment that is active
-                                                
+
                         // Close that comment and the contextMenu
                         cMM.closeContextMenu(activeScenario, function () {
                             //cM.experimentalToggle(activeElement);
@@ -126,6 +126,8 @@ StoryLine.ScenarioManager.prototype = {
                                 }, function (apply) {
                                     if (!apply) {
                                         StoryLine.ContextMenuManager.closeContextMenu(targetScenario);
+                                    } else {
+                                        StoryLine.ContextMenuManager.updateContextMenu(targetScenario);
                                     }
                                 });
                                 cM.currTemplate.hide();
@@ -509,7 +511,7 @@ StoryLine.ScenarioManager.prototype = {
                 if (targetOffset != newOffset) {
                     newOffset = targetOffset;
                 }
-                
+
                 StoryLine.ScenarioManager.lastOffset = newOffset;
                 $(buttons).css('top', newOffset);
             };
