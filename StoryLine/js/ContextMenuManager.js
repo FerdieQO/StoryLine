@@ -106,8 +106,9 @@ StoryLine.ContextMenuManager.prototype = {
                             StoryLine.CommentManager.finishEdit(activeTarget, false);
                         } else if ($(this).hasClass('setemotion')) {
                             if (activeTarget.hasClass('emotion')) {
-                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget, $(this));
-                                hide = true;
+                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget, $(this), function () {
+                                    StoryLine.ContextMenuManager.hideContextMenu(menu);
+                                });
                             } else if (activeTarget.hasClass('content-emotion')) {
                                 StoryLine.CommentManager.setCommentEmotion($('.active-comment'), activeTarget, $(this));
                                 hide = true;
@@ -146,7 +147,7 @@ StoryLine.ContextMenuManager.prototype = {
                 emotionButtons = buttons.children('.emotion'),
                 commentButtons = buttons.children('.comment'),
                 otherButtons = buttons.children('.other');
-            
+
             var showDelete = true;
             if (menuTarget.hasClass('event') || menuTarget.hasClass('emotion')) {
                 var title = menuTarget.attr('title');
@@ -179,8 +180,8 @@ StoryLine.ContextMenuManager.prototype = {
             } else {
                 otherButtons.hide();
             }
-            
-             StoryLine.ScenarioManager.alignButtonsToElement(scenarioWrapper, menuTarget, buttons);
+
+            StoryLine.ScenarioManager.alignButtonsToElement(scenarioWrapper, menuTarget, buttons, true);
         }
     },
     isContextMenuDisplayed: function (contextMenu) {
@@ -198,6 +199,7 @@ StoryLine.ContextMenuManager.prototype = {
         if (!contextMenu) {
             return;
         }
+        StoryLine.ScenarioManager.stopAlignment(StoryLine.ScenarioManager.activeScenario);
         this.toggling = true;
         if (!this.isContextMenuDisplayed(contextMenu) || !contextMenu.hasClass('active')) {
             if (contextMenu.is(StoryLine.ContextMenuManager.activeContextMenu)) {
@@ -207,7 +209,12 @@ StoryLine.ContextMenuManager.prototype = {
             StoryLine.ContextMenuManager.toggling = false;
             return;
         }
-        contextMenu.animate({width: 'toggle', duration: 350, queue: false }, function () {
+        var visible = true;
+        contextMenu.animate({ width: 'toggle', queue: false }, 350, function () {
+            if (!visible) {
+                return;
+            }
+            visible = false;
             contextMenu.removeClass('active');
 
             if (contextMenu.is(StoryLine.ContextMenuManager.activeContextMenu)) {
@@ -243,7 +250,12 @@ StoryLine.ContextMenuManager.prototype = {
             return;
         }
         contextMenu.addClass('active');
-        contextMenu.animate({width: 'toggle', queue: false}, 350, function () {
+        var visible = false;
+        contextMenu.animate({ width: 'toggle', queue: false}, 350, function () {
+            if (visible) {
+                return;
+            }
+            visible = true;
             menuTarget.addClass('highlight');
             StoryLine.ContextMenuManager.activeContextMenu = contextMenu;
             StoryLine.ContextMenuManager.activeTarget = menuTarget;
