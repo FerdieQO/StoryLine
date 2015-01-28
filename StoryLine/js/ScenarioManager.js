@@ -92,7 +92,6 @@ StoryLine.ScenarioManager.prototype = {
                 // The contextMenu is open for a element and the contextMenu is open for a comment
                 if (cM.editing) {
                     // We are editing that comment aswell
-                    // console.log('Nope.avi: editing.');
                     return; // Block the rest, no change is allowed until the edit is finished
                 } else {
                     // We are not editing that comment or any other

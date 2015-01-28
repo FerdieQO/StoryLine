@@ -105,10 +105,7 @@ StoryLine.ContextMenuManager.prototype = {
                         } else if ($(this).hasClass('abort')) {
                             StoryLine.CommentManager.finishEdit(activeTarget, false);
                         } else if ($(this).hasClass('setemotion')) {
-                            if (activeTarget.hasClass('emotion medium dark-border')) {
-                                StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget, $(this));
-                                hide = true;
-                            } else if (activeTarget.hasClass('emotion medium pull-right dark-border')) {
+                            if (activeTarget.hasClass('emotion')) {
                                 StoryLine.ScenarioManager.setScenarioEmotion(StoryLine.ScenarioManager.activeScenario, activeTarget, $(this));
                                 hide = true;
                             }
@@ -160,7 +157,7 @@ StoryLine.ContextMenuManager.prototype = {
                 scenarioButtons.show();
             } else if (menuTarget.hasClass('event')) {
                 eventButtons.show();
-            } else if (menuTarget.hasClass('emotion')) {
+            } else if (menuTarget.hasClass('emotion') || menuTarget.hasClass('commentEmotion')) {
                 emotionButtons.show();
             } else if (menuTarget.hasClass('commentWrapper')) {
                 commentButtons.show();
