@@ -94,7 +94,6 @@ StoryLine.ScenarioManager.prototype = {
                 // The contextMenu is open for a element and the contextMenu is open for a comment
                 if (cM.editing) {
                     // We are editing that comment aswell
-                    // console.log('Nope.avi: editing.');
                     return; // Block the rest, no change is allowed until the edit is finished
                 } else {
                     // We are not editing that comment or any other
@@ -364,7 +363,7 @@ StoryLine.ScenarioManager.prototype = {
                 $(contextMenu).removeClass(oldEmotion, { duration: 200, children: true });
             }
         }
-        
+
         if (title) {
             emotion.attr('src', src);
             emotion.attr('title', title);
@@ -438,27 +437,25 @@ StoryLine.ScenarioManager.prototype = {
             }
         }
     },
-    
-    getAbsoluteCenterY: function (scenarioWrapper, element) {
-        // http://stackoverflow.com/questions/3714628/jquery-get-the-location-of-an-element-relative-to-window
-        var elementTop = element.offset().top;
-        var scrollViewTop = scenarioWrapper.scrollTop();
-        console.log(elementTop - scrollViewTop);
-        
-        return (elementTop - scrollViewTop) + (element.height() / 2);
-    },
+
     alignButtonsToElement: function (scenarioWrapper, element, buttons) {
-        var height = $(window).height();
-        console.log(height);
-        var targetY = this.getAbsoluteCenterY(scenarioWrapper, element);
+        buttons.css('top', 0);
+        buttons.offset({ top: 0 });
+        var offsetWrapper = GetElementTopOffset(scenarioWrapper),
+            offsetButtons = GetElementTopOffset(buttons, true),
+            offsetElement = GetElementTopOffset(element);
+        var heightButtons = GetElementHeight(buttons, true),
+            heightElement = GetElementHeight(element),
+            heightWrapper = GetElementHeight(scenarioWrapper);
         
-        var bottom = targetY + (buttons.height() / 2);
-        if (bottom > height) {
-            console.log('offscreen');
-            var offset = bottom - height;
-            targetY -= offset;
+        offset = offsetElement + (heightElement / 2) - (heightButtons / 2) - offsetWrapper;
+
+        if (offset < offsetWrapper) {
+            offset = 0;
+        } else if (offset + heightButtons > offsetWrapper + heightWrapper) {
+            offset = heightWrapper - heightButtons;
         }
-        buttons.offset({ top: targetY - (buttons.height() / 2) });
+        buttons.css('top', offset);
     },
 
     // Switch from the scenario to the placeholder

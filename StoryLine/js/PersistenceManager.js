@@ -6,5 +6,8 @@ StoryLine.PersistenceManager.prototype = {
         $(".save").click(function(){
             SaveStoryLine();
         });
+        $(".load").click(function(){
+            LoadStoryLine();
+        });
     }
 };
