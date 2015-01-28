@@ -4,6 +4,8 @@ StoryLine.ScenarioManager = function () {
     this.templateScenario = null;
     // Current active scenario: if the scenario is selected or the context-menu is open on this scenario
     this.activeScenario = null;
+    this.lastOffset = null;
+    this.lastScrollTop = null;
 };
 StoryLine.ScenarioManager.prototype = {
     create: function (callback) {
@@ -317,7 +319,7 @@ StoryLine.ScenarioManager.prototype = {
             event.attr('title', 'Selecteer een actie');
         }
     },
-    setScenarioEmotion: function (scenarioWrapper, emotion, button) {
+    setScenarioEmotion: function (scenarioWrapper, emotion, button, callback) {
         if (scenarioWrapper.hasClass('template')) {
             return;
         }
@@ -347,34 +349,64 @@ StoryLine.ScenarioManager.prototype = {
             }
         }
 
-        var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
-
-        if (changeColor) {
-            if (oldEmotion && title) {
-                $(scenarioWrapper).switchClass(oldEmotion, titleClass, { duration: 200, children: true });
-                $(contextMenu).switchClass(oldEmotion, titleClass, { duration: 200, children: true });
-            } else if (title) {
-                $(scenarioWrapper).addClass(titleClass, { duration: 200, children: true });
-                $(contextMenu).addClass(titleClass, { duration: 200, children: true });
-            } else if (oldEmotion) {
-                $(scenarioWrapper).removeClass(oldEmotion, { duration: 200, children: true });
-                $(contextMenu).removeClass(oldEmotion, { duration: 200, children: true });
-            }
-        }
-
         if (title) {
-            emotion.attr('src', src);
-            emotion.attr('title', title);
+            $(emotion).attr('src', src);
+            $(emotion).attr('title', title);
         } else {
             // template:
-            emotion.attr('src', this.templateScenario.contents().find('.emotion').attr('src'));
+            $(emotion).attr('src', this.templateScenario.contents().find('.emotion').attr('src'));
             if (emotion.hasClass('pull-right')) {
                 title = 'Voeg de emotie van de ander toe';
             } else {
                 title = 'Voeg jouw emotie toe';
             }
-            emotion.attr('title', title);
+            $(emotion).attr('title', title);
         }
+
+        var contextMenu = StoryLine.ContextMenuManager.getContextMenu(scenarioWrapper);
+
+        var completed = false;
+
+        var onComplete = function () {
+            if (completed) {
+                return;
+            }
+            completed = true;
+        };
+
+        var animate = function () {
+            $(scenarioWrapper).stop();
+            $(contextMenu).stop();
+            if (oldEmotion === titleClass) {
+                return;
+            }
+            if (oldEmotion && title) {
+                StoryLine.ScenarioManager.switchColors(scenarioWrapper, contextMenu, oldEmotion, titleClass, onComplete);
+            } else if (title) {
+                StoryLine.ScenarioManager.setColor(scenarioWrapper, contextMenu, titleClass, onComplete);
+            } else if (oldEmotion) {
+                StoryLine.ScenarioManager.removeColor(scenarioWrapper, contextMenu, oldEmotion, onComplete);
+            }
+        };
+
+        if (changeColor) {
+            animate();
+        }
+        if (callback) {
+            callback();
+        }
+    },
+    switchColors: function (scenarioWrapper, contextMenu, oldClass, newClass, callback) {
+        $(scenarioWrapper).switchClass(oldClass, newClass, { duration: 200, children: true, queue: true, complete: callback });
+        $(contextMenu).switchClass(oldClass, newClass, { duration: 200, queue: true, complete: callback });
+    },
+    setColor: function (scenarioWrapper, contextMenu, newClass, callback) {
+        $(scenarioWrapper).addClass(newClass, { duration: 200, children: true, queue: true, complete: callback });
+        $(contextMenu).addClass(newClass, { duration: 200, queue: true, complete: callback });
+    },
+    removeColor: function (scenarioWrapper, contextMenu, oldClass, callback) {
+        $(scenarioWrapper).removeClass(oldClass, { duration: 200, children: true, queue: true, complete: callback });
+        $(contextMenu).removeClass(oldClass, { duration: 200, queue: true, complete: callback });
     },
 
     isScenarioSelected: function (scenarioWrapper) {
@@ -436,7 +468,7 @@ StoryLine.ScenarioManager.prototype = {
         }
     },
 
-    alignButtonsToElement: function (scenarioWrapper, element, buttons) {
+    alignButtonsToElement: function (scenarioWrapper, element, buttons, attachScrollHandler) {
         buttons.css('top', 0);
         buttons.offset({ top: 0 });
         var offsetWrapper = GetElementTopOffset(scenarioWrapper),
@@ -444,16 +476,38 @@ StoryLine.ScenarioManager.prototype = {
             offsetElement = GetElementTopOffset(element);
         var heightButtons = GetElementHeight(buttons, true),
             heightElement = GetElementHeight(element),
-            heightWrapper = GetElementHeight(scenarioWrapper);
-        
-        offset = offsetElement + (heightElement / 2) - (heightButtons / 2) - offsetWrapper;
+            heightWrapper = $(scenarioWrapper).outerHeight(true);
 
-        if (offset < offsetWrapper) {
-            offset = 0;
-        } else if (offset + heightButtons > offsetWrapper + heightWrapper) {
-            offset = heightWrapper - heightButtons;
-        }
+        offset = GetTargetOffset(offsetElement, heightElement, heightButtons, offsetWrapper);
+        offset = ClampOffsetInParent(offset, heightButtons, offsetWrapper, heightWrapper);
+        this.lastOffset = offset;
         buttons.css('top', offset);
+        if (attachScrollHandler) {
+            var handler = function (eventObject) {
+                var last = StoryLine.ScenarioManager.lastOffset;
+                //var lastOffset = buttons.offset().top;
+                var cScroll = $(scenarioWrapper).children('.scenario').scrollTop();
+                var dScroll = cScroll - StoryLine.ScenarioManager.lastScrollTop;
+                StoryLine.ScenarioManager.lastScrollTop = cScroll;
+                //console.log(dScroll);
+                if (dScroll == 0) {
+                    return;
+                }
+                var targetOffset = GetTargetOffset(GetElementTopOffset(element), GetElementHeight(element), GetElementHeight(buttons, true), offsetWrapper);
+                targetOffset = ClampOffsetInParent(targetOffset, GetElementHeight(buttons, true), offsetWrapper, heightWrapper);
+                var newOffset = ClampOffsetInParent(last - dScroll, GetElementHeight(buttons, true), offsetWrapper, heightWrapper);
+                if (targetOffset != newOffset) {
+                    newOffset = targetOffset;
+                }
+                
+                StoryLine.ScenarioManager.lastOffset = newOffset;
+                $(buttons).css('top', newOffset);
+            };
+            scenarioWrapper.children('.scenario').bind('scroll', handler);
+        }
+    },
+    stopAlignment: function (scenarioWrapper) {
+        scenarioWrapper.children('.scenario').unbind('scroll');
     },
 
     // Switch from the scenario to the placeholder

@@ -68,7 +68,7 @@ var GetElementHeight = function (element, evenIfHidden, exclParent) {
         return 0;
     }
     if (!evenIfHidden) {
-        return element.height();
+        return $(element).outerHeight(true);
     }
     var height;
     var parent = element.parent();
@@ -78,7 +78,7 @@ var GetElementHeight = function (element, evenIfHidden, exclParent) {
     }
     var previousCss = openElement(element);
 
-    height = element.height();
+    height = $(element).outerHeight(true);
     closeElement(element, previousCss);
 
     if (pPreviousCss) {
@@ -102,4 +102,18 @@ var openElement = function (element) {
 
 var closeElement = function (element, previousCss) {
     element.attr('style', previousCss ? previousCss : '');
+};
+
+var GetTargetOffset = function (alignToOffset, alignToHeight, alignHeight, wrapperOffset) {
+    return alignToOffset + (alignToHeight / 2) - (alignHeight / 2) - wrapperOffset;
+};
+
+var ClampOffsetInParent = function (elementOffset, elementHeight, parentOffset, parentHeight) {
+    if (elementOffset < parentOffset) {
+        return 0;
+    } else if (elementOffset + elementHeight > parentHeight) {
+        return parentHeight - elementHeight;
+    } else {
+        return elementOffset;
+    }
 };
