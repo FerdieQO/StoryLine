@@ -377,6 +377,33 @@ StoryLine.CommentManager.prototype = {
             });
         }
     },
+    setCommentEmotion: function(commentWrapper, emotion, button) {
+        if (commentWrapper.hasClass('template')) {
+            return;
+        }
+        
+        if (!emotion) {
+            return;
+        }
+        
+        var title, titleClass, src;
+        
+        if (button) {
+            title = button.attr('title');
+            titleClass = title.toLowerCase();
+            src = button.attr('src');
+        }
+        
+        var emotions = ["Bang", "Bedroefd", "Blij", "Boos"], 
+            i , 
+            oldEmotion, 
+            oldTitle;
+        
+        if (title) {
+            emotion.attr('src', src);
+            emotion.attr('title', title);
+        }
+    },
 
     closeComment: function (commentWrapper, instant, callback) {
         if (!commentWrapper) {
