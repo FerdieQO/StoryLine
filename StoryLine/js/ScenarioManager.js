@@ -71,7 +71,7 @@ StoryLine.ScenarioManager.prototype = {
             var target = $(event.target);
             // Variables around the clicked element.
             var targetElement = sM.extractElementFromTarget(target);
-            var targetScenario = sM.getParent(target, 'scenarioWrapper', 7);
+            var targetScenario = GetParent(target, 'scenarioWrapper', 7);
             var targetContextMenu = targetScenario ? cMM.getContextMenu(targetScenario) : false;
 
             // Variables around the active element (that opened the contextMenu).
@@ -104,12 +104,10 @@ StoryLine.ScenarioManager.prototype = {
 
                         // Close that comment and the contextMenu
                         cMM.closeContextMenu(activeScenario, function () {
-                            //cM.experimentalToggle(activeElement);
                             cM.closeComment(activeElement, false);
-                            //cM.closeComment(activeElement);
                         });
                         return;
-                    } else if (targetElement.hasClass('content-emotion') && sM.getParent(targetElement, 'commentWrapper', 3).is(activeElement)) {
+                    } else if (targetElement.hasClass('content-emotion') && GetParent(targetElement, 'commentWrapper', 3).is(activeElement)) {
                         // We clicked the emotion of the active comment
                         cMM.closeContextMenu(activeScenario, function () {
                             cMM.openContextMenu(activeScenario, targetElement);
@@ -132,10 +130,7 @@ StoryLine.ScenarioManager.prototype = {
                                 });
                                 cM.currTemplate.hide();
                             } else {
-                                console.log('open comment');
-                                //cM.experimentalToggle(activeElement);
                                 cM.openComment(targetElement, false);
-                                //cM.openComment(targetElement);
                                 cMM.openContextMenu(targetScenario, targetElement);
                             }
                         });
@@ -207,11 +202,11 @@ StoryLine.ScenarioManager.prototype = {
                 }
             } else {
                 // Close context menu of active or select scenario if none is active
-                if (sM.activeScenario) {
+                if (StoryLine.ScenarioManager.activeScenario) {
                     if (activeContextMenu) {
                         cMM.hideContextMenu(activeContextMenu);
                     } else {
-                        sM.unselectScenario(activeScenario);
+                        StoryLine.ScenarioManager.selectScenario(targetScenario);
                     }
                 } else {
                     sM.selectScenario(targetScenario);
@@ -221,20 +216,15 @@ StoryLine.ScenarioManager.prototype = {
     },
     extractElementFromTarget: function (target) {
         if (target.hasClass('event')) { // event
-            // console.log('Event');
             return target;
         } else if (target.hasClass('emotion')) { // emotion
-            // console.log('Emotion');
             return target;
         } else if (target.hasClass("content-emotion")) { // comment emotion
-            console.log('Comment emotion');
             return target;
         } else if (StoryLine.ScenarioManager.hasParent(target, 'commentWrapper', 3)) { // commentWrapper
-            // console.log('Comment');
-            return StoryLine.ScenarioManager.getParent(target, 'commentWrapper', 3);
+            return GetParent(target, 'commentWrapper', 3);
         } else { // scenarioWrapper
-            // console.log('Scenario');
-            return StoryLine.ScenarioManager.getParent(target, 'scenarioWrapper', 7);
+            return GetParent(target, 'scenarioWrapper', 7);
         }
     },
 
@@ -244,7 +234,7 @@ StoryLine.ScenarioManager.prototype = {
 
         scenarioList.load(scenarioHandler, function (scResponse, scStatus, scXhr) {
             if (scStatus === "error") {
-                console.log("Loading scenario-template failed.");
+                console.warn("Loading scenario-template failed.");
                 callback(false);
             } else {
                 // vervangen door één klikbare sectie (namelijk de scenariowrapper)
@@ -278,7 +268,7 @@ StoryLine.ScenarioManager.prototype = {
                     commentHandler = "templates/comment.html .commentWrapper.template";
                 commentList.load(commentHandler, function (cResponse, cStatus, cXhr) {
                     if (cStatus === "error") {
-                        console.log("Loading comment-template failed.");
+                        console.warn("Loading comment-template failed.");
                         callback(false);
                     } else {
                         callback(true);
@@ -424,55 +414,44 @@ StoryLine.ScenarioManager.prototype = {
     isScenarioSelected: function (scenarioWrapper) {
         return scenarioWrapper.hasClass('active');
     },
-    selectScenario: function (scenarioWrapper) {
+    selectScenario: function (scenarioWrapper, callback) {
         // change color (class)
         // enable sorting comments
+        var select = function () {
+            StoryLine.Main.scrollToScenario(scenarioWrapper, function () {
+                $(scenarioWrapper).addClass('active', { children: true, complete: function () {
+                    if (callback) {
+                        callback();
+                    }
+                } }, 400 );
+                //scenarioWrapper.addClass('active');
+                StoryLine.ScenarioManager.activeScenario = scenarioWrapper;
+            });
+        };
+
         if (this.activeScenario) {
-            this.unselectScenario(this.activeScenario);
-            //this.activeScenario.removeClass('active');
-        }
-        StoryLine.Main.scrollToScenario(scenarioWrapper, function () {
-            $(scenarioWrapper).addClass('active', { duration: 200, children: true });
-            //scenarioWrapper.addClass('active');
-            StoryLine.ScenarioManager.activeScenario = scenarioWrapper;
-        });
-
-        /*
-        var oldWrapper,
-            oldCommentList,
-            commentList = scenarioWrapper.children('.comment-list');
-        if (scenarioWrapper.hasClass('active-scenario')) {
-            // TODO: Comment it out cause this also triggers when clicking
-            // on comments
-            scenarioWrapper.removeClass('active-scenario');
-            this.activeScenario = null;
+            this.unselectScenario(this.activeScenario, select);
         } else {
-            oldWrapper = $('.active-scenario');
-            if (oldWrapper) {
-                oldCommentList = oldWrapper.children('.comment-list');
-                oldCommentList.removeClass('sortable');
-                oldWrapper.toggleClass('active-scenario');
-            }
-
-            scenarioWrapper.toggleClass('active-scenario');
-            commentList.addClass('sortable');
-            this.activeScenario = scenarioWrapper;
+            select();
         }
-        */
     },
-    unselectScenario: function (scenarioWrapper) {
+    unselectScenario: function (scenarioWrapper, callback) {
         if (!scenarioWrapper && !this.activeScenario) {
             return;
         }
         // change color (class)
         // disable sorting comments
         if (scenarioWrapper.is(this.activeScenario)) {
-            StoryLine.ContextMenuManager.closeContextMenu(scenarioWrapper);
-            $(scenarioWrapper).removeClass('active', { duration: 200, children: true });
+            if (StoryLine.ContextMenuManager.activeContextMenu) {
+                StoryLine.ContextMenuManager.closeContextMenu(scenarioWrapper);
+            }
+            $(scenarioWrapper).removeClass('active', { duration: 200, children: true, complete: callback });
             this.activeScenario = null;
         } else {
-            scenarioWrapper.removeClass('active', { duration: 200, children: true });
-            StoryLine.ContextMenuManager.closeContextMenu(scenarioWrapper);
+            scenarioWrapper.removeClass('active', { duration: 200, children: true, complete: callback });
+            if (StoryLine.ContextMenuManager.activeContextMenu) {
+                StoryLine.ContextMenuManager.closeContextMenu(scenarioWrapper);
+            }
             if (this.activeScenario) {
                 this.activeScenario.removeClass('active', { duration: 200, children: true });
                 this.activeScenario = null;

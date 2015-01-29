@@ -47,7 +47,10 @@ StoryLine.Main.prototype = {
                 var w = contextMenu.width();
 
                 // TODO: get correct offset
-                scenarioWrapper.parent('.scenario-list').animate({scrollLeft: index * width}, 200, callback);
+                scenarioWrapper.parent('.scenario-list').animate({scrollLeft: index * width}, 200, function () {
+                    console.log('Done');
+                    callback();
+                });
             } else {
                 callback();
             }
